@@ -1,0 +1,139 @@
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+.mt-40 {
+    margin-top: 40px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+
+
+/* Bootstrap Extenstions -------------------------------------------------------------------------------------*/
+.btn-xs, .btn-group-xs > .btn {
+    padding: 0.15rem 0.4rem;
+    font-size: 0.65rem;
+    line-height: 1.2;
+    border-radius: 0.1rem;
+}
+
+.nav-tabs {
+    cursor: pointer;
+}
+
+.nav-tabs .nav-link {
+    font-size: 1rem;
+}
+
+.table .clearTopBorder {
+    border-top: none;
+}
+
+/* ----------------------------------------------------------------------------------------------------------- */
+
+/* Theme styling override, wasnt able to tweak this in Bootstrap Magic --------------------------------------- */
+.btn-outline-light:hover {
+    color: #222;
+    background-color: #e9ecef;
+    border-color: #e9ecef; 
+}
+
+.input-group .form-control {
+    z-index: 0;
+}
+
+.input-group-text {
+    border: 0;
+    border-radius: 2px;
+}
+
+.input-group-prepend {
+    margin-right: -2px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+/* ----------------------------------------------------------------------------------------------------------- */
+
+
+/* Selecterize overrides ---------------------------------------------------------------------------------------*/
+.Select-control {
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: #222;
+}
+
+
+.Select-menu-outer {
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-top-color: #e6e6e6;
+    color: #222;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+    margin-top: -1px;
+    max-height: 200px;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    z-index: 1;
+    -webkit-overflow-scrolling: touch;
+}
+/* ----------------------------------------------------------------------------------------------------------- */
+
+
+
+/* DayPicker Style Overrides -----------------------------------------------------------------------------------*/
+.DayPicker {
+    color: #222;
+}
+
+.DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+    color: #f0f8ff;
+    background-color: #4a90e2;
+    border-radius: 0;
+}
+
+.DayPicker:not(.DayPicker--interactionDisabled)
+.DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+    background-color: #f0f8ff;
+    border-radius: 0;
+}
+
+.DayPicker-Day--today {
+    color: #d0021b;
+    font-weight: 700;
+}
+
+.DayPickerInput {
+    display: block;
+    width: 100%;
+}
+
+.DayPickerInput input {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.25;
+    color: #495057;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.15rem;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+/* ----------------------------------------------------------------------------------------------------------- */

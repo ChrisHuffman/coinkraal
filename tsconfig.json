@@ -1,0 +1,7 @@
+// Only here so we dont get VS warnings
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "allowJs": true
+    }
+}

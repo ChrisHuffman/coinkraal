@@ -38,10 +38,11 @@
     "superagent-promise": "^1.1.0"
   },
   "scripts": {
-    "start": "node bin/www.js",
-    "nodemon": "nodemon --exec babel-node bin/www.js",
-    "build": "webpack --watch",
-    "dev": "set NODE_ENV=DEV&& npm-run-all --parallel build nodemon"
+    "start": "node app.js",
+    "nodemon": "nodemon --exec babel-node app.js",
+    "build": "webpack",
+    "build:dev": "webpack --watch",
+    "dev": "set NODE_ENV=DEV&& npm-run-all --parallel build:dev nodemon"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

@@ -19,6 +19,9 @@ export default class Login extends React.Component {
 
     responseGoogle(response) {
 
+        console.log("responseGoogle")
+        console.log(response)
+
         this.props.authStore.googleLogin(response.tokenId)
             .then(() => {
                 this.props.history.push("/");

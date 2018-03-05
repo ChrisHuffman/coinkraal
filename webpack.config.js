@@ -11,7 +11,7 @@ var setupAPI = function() {
       googleClientId = JSON.stringify("438822097741-eo7be3r2pk4preadlqmblhsskvfh6jmk.apps.googleusercontent.com");
       break;
     default:
-      apiHost = JSON.stringify("https://coinkraal.azurewebsites.net");
+      apiHost = JSON.stringify("http://default-environment.nak5h357tr.us-east-2.elasticbeanstalk.com");
       googleClientId = JSON.stringify("617395409011-nc7n22gtcg46nig91pe45s5on4uf9p8d.apps.googleusercontent.com");
       break;
   }

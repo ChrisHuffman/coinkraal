@@ -1,10 +1,11 @@
 import React from 'react';
 import { observe, autorun } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import Loader from '../common/Loader'
+import Loader from '../../common/Loader'
+import portfolioChartService from './PortfolioChartService'
 import { Line } from 'react-chartjs-2';
 
-@inject('transactionStore', 'portfolioChartStore')
+@inject('transactionStore')
 @observer
 class PortfolioChart extends React.Component {
 
@@ -26,7 +27,7 @@ class PortfolioChart extends React.Component {
 
     loadData() {
 
-        this.props.portfolioChartStore.getData(this.props.transactionStore.transactions)
+        portfolioChartService.getData(this.props.transactionStore.transactions)
             .then(data => {
                 this.setState({
                     data: data,

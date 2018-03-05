@@ -11,7 +11,6 @@ import commonStore from './stores/commonStore';
 import transactionStore from './stores/transactionStore';
 import authStore from './stores/authStore';
 import currencyStore from './stores/currencyStore';
-import portfolioChartStore from './stores/portfolioChartStore';
 import coinStore from './stores/coinStore';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -28,8 +27,7 @@ const stores = {
   transactionStore,
   authStore,
   currencyStore,
-  coinStore,
-  portfolioChartStore
+  coinStore
 };
 
 // For easier debugging

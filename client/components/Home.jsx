@@ -10,7 +10,7 @@ import classnames from 'classnames';
 import Logout from './common/Logout'
 import TransactionTable from './transactions/TransactionTable'
 import CoinTable from './coins/CoinTable'
-import PortfolioChart from './charts/PortfolioChart'
+import PortfolioChart from './charts/portfolio/PortfolioChart'
 
 @inject('authStore', 'commonStore', 'transactionStore', 'currencyStore')
 @withRouter

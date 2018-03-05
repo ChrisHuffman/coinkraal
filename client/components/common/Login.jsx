@@ -10,6 +10,8 @@ import GoogleLogin from 'react-google-login';
 @observer
 export default class Login extends React.Component {
 
+    googleClientId = __GOOGLE_CLIENT_ID__;
+
     constructor(props) {
         super(props);
         this.responseGoogle = this.responseGoogle.bind(this);
@@ -33,8 +35,7 @@ export default class Login extends React.Component {
                 <div className="row justify-content-md-center mt-40">
                     <div className="col-md-auto">
                         <GoogleLogin
-                            clientId="438822097741-eo7be3r2pk4preadlqmblhsskvfh6jmk.apps.googleusercontent.com" //DEV
-                            //clientId="617395409011-nc7n22gtcg46nig91pe45s5on4uf9p8d.apps.googleusercontent.com" //PROD
+                            clientId={this.googleClientId}
                             buttonText="Sign in with Google"
                             className="btn btn-outline-danger"
                             onSuccess={this.responseGoogle}

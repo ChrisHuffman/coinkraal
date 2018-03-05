@@ -20,8 +20,7 @@ var generateJwt = function (user) {
 router.post('/auth/signin', function (req, res) {
 
     var token = req.body.token;
-    //var clientId = '438822097741-eo7be3r2pk4preadlqmblhsskvfh6jmk.apps.googleusercontent.com'; //DEV
-    var clientId = '617395409011-nc7n22gtcg46nig91pe45s5on4uf9p8d.apps.googleusercontent.com'; //PROD
+    var clientId = config.get('auth.googleClientId');
     var client = new OAuth2Client(clientId, '', '');
 
     client.verifyIdToken({ idToken: token, audiance: clientId }).then(login => {

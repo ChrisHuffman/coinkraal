@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom'
 import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
+import { defaults } from 'react-chartjs-2';
 
 import App from './components/App';
 
@@ -30,11 +31,25 @@ const stores = {
   coinStore
 };
 
-// For easier debugging
-window._____APP_STATE_____ = stores;
-
 promiseFinally.shim();
 useStrict(true);
+
+//Chartjs Defaults
+defaults.global.defaultFontFamily = 'Roboto Mono';
+defaults.global.defaultFontColor = '#e9ecef';
+
+defaults.global.tooltips.cornerRadius = 2;
+defaults.global.tooltips.backgroundColor = 'rgba(233, 236, 239, 1)';
+defaults.global.tooltips.titleFontColor = 'rgba(32, 32, 32, 1)';
+defaults.global.tooltips.bodyFontColor = 'rgba(32, 32, 32, 1)';
+defaults.global.tooltips.borderColor = 'rgba(0,0,0,1)';
+defaults.global.tooltips.borderWidth = 1;
+defaults.global.tooltips.xPadding = 10;
+defaults.global.tooltips.yPadding = 10;
+
+defaults.scale.gridLines.display = false;
+
+
 
 ReactDOM.render(
   <Provider {...stores}>

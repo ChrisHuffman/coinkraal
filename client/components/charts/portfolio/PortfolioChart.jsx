@@ -56,18 +56,43 @@ class PortfolioChart extends React.Component {
                                 options={{
                                     responsive: true,
 					                hoverMode: 'index',
-					                stacked: false,
+                                    stacked: false,
+                                    legend: {
+                                        labels: {
+                                            usePointStyle: true
+                                        }
+                                    },
+                                    tooltips: {
+                                        position: 'nearest',
+                                        mode: 'index',
+                                        intersect: false,
+                                        cornerRadius: 2
+                                    },
                                     scales: {
+                                        xAxes: [{
+                                            type: 'time',
+                                            time: {
+                                                unit: 'month'
+                                            }
+                                        }],
                                         yAxes: [{
                                             type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                                             display: true,
                                             position: 'left',
                                             id: 'y-axis-1',
+                                            ticks: {
+                                                // Include a dollar sign in the ticks
+                                                callback: function(value, index, values) {
+                                                    return '$' + value;
+                                                }
+                                            }
+                                           // type: 'logarithmic',
                                         }, {
                                             type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                                             display: true,
                                             position: 'right',
                                             id: 'y-axis-2',
+                                            //type: 'logarithmic',
                 
                                             // grid line settings
                                             gridLines: {

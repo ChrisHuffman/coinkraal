@@ -2,6 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Table } from 'reactstrap';
 import Loader from '../common/Loader'
+import Percentage from '../common/Percentage'
 
 @inject('coinStore', 'commonStore')
 @observer
@@ -46,14 +47,14 @@ class CoinTable extends React.Component {
         return (
             <div>
 
-                <div className="row justify-content-center">
+                <div className="row justify-content-center mt-20">
                     <div className="col-auto">
                         <Loader visible={this.state.isLoading} />
                     </div>
                 </div>
 
                 {!this.state.isLoading &&
-                    <div className="row mt-20">
+                    <div className="row mt-10">
                         <div className="col-md">
                             <Table size="sm">
                                 <thead>
@@ -73,7 +74,9 @@ class CoinTable extends React.Component {
                                                 <td>{coin.name}</td>
                                                 <td className="text-right">{self.props.commonStore.formatUSD(coin.market_cap_usd)}</td>
                                                 <td className="text-right">{self.props.commonStore.formatUSD(coin.price_usd)}</td>
-                                                <td className="text-right">{coin.percent_change_24h}%</td>
+                                                <td className="text-right">
+                                                    <Percentage value={coin.percent_change_24h}/>
+                                                </td>
                                             </tr>
                                         })
                                     }

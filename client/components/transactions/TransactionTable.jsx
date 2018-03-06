@@ -18,7 +18,7 @@ class TransactionTable extends React.Component {
         return (
             <div>
 
-                <div className="row justify-content-center">
+                <div className="row justify-content-center mt-20">
                     <div className="col-auto">
                         <Loader visible={this.props.transactionStore.isLoading} />
                     </div>
@@ -32,16 +32,16 @@ class TransactionTable extends React.Component {
                             </div>
                         </div>
 
-                        <div className="row mt-20">
+                        <div className="row mt-10">
                             <div className="col-md">
                                 <Table size="sm">
                                     <thead>
                                         <tr>
-                                            <th>Coin</th>
-                                            <th>Amount</th>
-                                            <th>Price</th>
-                                            <th>Date</th>
-                                            <th>Remove</th>
+                                            <th className="clearTopBorder">Coin</th>
+                                            <th className="clearTopBorder">Amount</th>
+                                            <th className="clearTopBorder">Price</th>
+                                            <th className="clearTopBorder">Date</th>
+                                            <th className="clearTopBorder">Remove</th>
                                         </tr>
                                     </thead>
                                     <tbody>

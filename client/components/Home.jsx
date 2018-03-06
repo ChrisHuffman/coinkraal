@@ -69,6 +69,13 @@ export default class Home extends React.Component {
             <NavLink
               className={classnames({ active: this.state.activeTab === '2' })}
               onClick={() => { this.toggle('2'); }}>
+              Transactions
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '3' })}
+              onClick={() => { this.toggle('3'); }}>
               Coins
             </NavLink>
           </NavItem>
@@ -78,16 +85,21 @@ export default class Home extends React.Component {
           <TabPane tabId="1">
 
             <div className="row mt-20">
-              <div className="col-md-6">
+              <div className="col-md-7">
                 <PortfolioChart />
               </div>
-              <div className="col-md-6">
-                <TransactionTable />
+              <div className="col-md-5">
+                
               </div>
             </div>
 
           </TabPane>
+
           <TabPane tabId="2">
+            <TransactionTable />
+          </TabPane>
+
+          <TabPane tabId="3">
             <CoinTable />
           </TabPane>
         </TabContent>

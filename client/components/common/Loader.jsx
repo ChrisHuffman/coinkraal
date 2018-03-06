@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Progress } from 'reactstrap';
-
 class Loader extends React.Component {
 
     constructor(props) {

@@ -23,8 +23,7 @@ export class PortfolioChartService {
             var limit = self.getLimit(transactions);
             var inCurrencies = self.getUniqueInCurrencies(transactions);
 
-            console.log('Starting to load chart data..')
-
+            //console.log('Starting to load chart data..');
 
             self.loadDataPoints(self.getUniqueInCurrencies(transactions), "USD", transactions, limit)
                 .then((dataPointsUSD) => {
@@ -36,16 +35,18 @@ export class PortfolioChartService {
 
                             resolve(data);
 
-                            console.log('Load chart data end')
+                            //console.log('Load chart data end')
                         })
                 });
         });
     }
 
+
+
     loadDataPoints(inCurrencies, toCurrency, transactions, limit) {
 
         var self = this;
-        var dataPoints = {};
+        var dataPoints = self.getInitialseDataPoints(limit);
 
         return new Promise(function (resolve, reject) {
 
@@ -57,49 +58,84 @@ export class PortfolioChartService {
 
         var self = this;
 
-        if(inCurrencies.length == 0)
-        {
+        if (inCurrencies.length == 0) {
             //console.log(dataPoints);
             resolve(dataPoints);
             return;
         }
 
-        var fromCurrency = inCurrencies.pop()
+        var fromCurrency = inCurrencies.pop();
 
-        console.log('loading: ' + fromCurrency + "," + toCurrency);
+        //console.log('loading: ' + fromCurrency + "," + toCurrency);
 
-        agentExt.External.getDailyHistoricalPrice(fromCurrency, toCurrency, limit)
-            .then(dailyData => {
+        if (fromCurrency == toCurrency) {
+            var dailyData = self.getSelfReferenceDailyData(dataPoints);
+            self.loadDataPointsForDailyData(dataPoints, transactions, fromCurrency, dailyData);
+            self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, resolve);
+        }
+        else {
 
-                var coinCount = 0;
-                var previousAmount = 0;
+            agentExt.External.getDailyHistoricalPrice(fromCurrency, toCurrency, limit)
+                .then(dailyData => {
+                    self.loadDataPointsForDailyData(dataPoints, transactions, fromCurrency, dailyData);
+                    self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, resolve);
+                })
+        }
+    }
 
-                dailyData.forEach(d => {
+    loadDataPointsForDailyData(dataPoints, transactions, fromCurrency, dailyData) {
 
-                    var date = moment.unix(d.time).utc().format('YYYY-MM-DD');
+        var self = this;
 
-                    var dataPoint = dataPoints[d.time];
+        var coinCount = 0;
+        var previousAmount = 0;
 
-                    if (!dataPoint) {
-                        dataPoint = new DataPoint(date);
-                        dataPoints[d.time] = dataPoint;
-                    }
+        dailyData.forEach(d => {
 
-                    dataPoint.setPrice(fromCurrency, d.close);
-                    dataPoint.setStartingAmount(fromCurrency, previousAmount)
+            var date = moment.unix(d.time).utc().format('YYYY-MM-DD');
 
-                    var matches = self.getTransactions(transactions, date, fromCurrency);
+            var dataPoint = dataPoints[d.time];
 
-                    matches.forEach((t) => {
-                        dataPoint.addTransaction(t);
-                    })
+            dataPoint.setPrice(fromCurrency, d.close);
+            dataPoint.setStartingAmount(fromCurrency, previousAmount)
 
-                    previousAmount = dataPoint.amounts[fromCurrency];
-                });
+            var matches = self.getTransactions(transactions, date, fromCurrency);
 
-                //Load up next currencies data
-                self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, resolve);
+            matches.forEach((t) => {
+                dataPoint.addTransaction(t);
             })
+
+            previousAmount = dataPoint.amounts[fromCurrency];
+        });
+
+    }
+
+    getSelfReferenceDailyData(dataPoints) {
+        var dailyData = [];
+    
+        for (var t in dataPoints) {
+            if (dataPoints.hasOwnProperty(t)) {
+                //Close will always be one 
+                dailyData.push({
+                    time: t,
+                    close: 1
+                });
+            }
+        }
+        return dailyData;
+    }
+
+    getInitialseDataPoints(limit) {
+
+        var dataPoints = {};
+        var start = moment().utc().startOf('day');
+
+        for (var i = limit; i >= 0; i--) {
+            var date = start.clone().subtract(i, 'days');
+            dataPoints[date.unix()] = new DataPoint(date);
+        }
+
+        return dataPoints;
     }
 
     //How many days to go back
@@ -147,8 +183,8 @@ export class PortfolioChartService {
         return {
             labels: labels,
             datasets: [
-                this.getChartJsDataset(arr1, "USD", "#28a745", "y-axis-1"),
-                this.getChartJsDataset(arr2, "BTC", "#fd7e14", "y-axis-2")
+                this.getChartJsDataset(arr1, "USD", "rgba(40, 167, 69, 0.8)", "y-axis-1"), //, "#28a745"
+                this.getChartJsDataset(arr2, "BTC", "rgba(253, 126, 20, 0.8)", "y-axis-2") //, "#fd7e14"
             ]
         };
     }
@@ -168,7 +204,10 @@ export class PortfolioChartService {
             fill: false,
             pointRadius: 0,
             borderColor: borderColor,
-            yAxisID: yAxisId
+            yAxisID: yAxisId,
+            lineTension: 0.1,
+            pointStyle: 'rectRot'
+            //cubicInterpolationMode: 'monotone'
             //borderColor: 'rgba(0, 123, 255, 0.8)'
         };
     }

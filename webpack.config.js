@@ -6,11 +6,12 @@ var apiRoot = config.get('api.root');
 var googleClientId = config.get('auth.googleClientId');
 
 console.log("Config Settings");
-console.log("===============");
+console.log("========================================");
 console.log("Environment: " + process.env.NODE_ENV || "PROD");
 console.log("API Base: " + apiRoot);
 console.log("Db Connection: " + config.get('db.connection'));
 console.log("Google Client Id: " + googleClientId);
+console.log("========================================");
 
 module.exports = {
 

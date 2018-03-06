@@ -2,14 +2,12 @@
 export class DataPoint {
 
     date = null;
-    dailyData = null;
 
     amounts = { };
     prices = { };
 
-    constructor(date, dailyData) {
+    constructor(date) {
         this.date = date;
-        this.dailyData = dailyData;
         this.setStartingAmount = this.setStartingAmount.bind(this);
         this.addTransaction = this.addTransaction.bind(this);
     }

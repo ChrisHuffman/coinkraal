@@ -1,28 +1,16 @@
 const webpack = require('webpack');
 const path = require('path');
+const config = require('config');
 
-var apiHost;
-var googleClientId;
+var apiRoot = config.get('api.root');
+var googleClientId = config.get('auth.googleClientId');
 
-var setupAPI = function() {
-  switch(process.env.NODE_ENV) {
-    case 'DEV': 
-      apiHost = JSON.stringify("http://localhost:1337");
-      googleClientId = JSON.stringify("438822097741-eo7be3r2pk4preadlqmblhsskvfh6jmk.apps.googleusercontent.com");
-      break;
-    default:
-      apiHost = JSON.stringify("http://default-environment.nak5h357tr.us-east-2.elasticbeanstalk.com");
-      googleClientId = JSON.stringify("617395409011-nc7n22gtcg46nig91pe45s5on4uf9p8d.apps.googleusercontent.com");
-      break;
-  }
-}
-
-setupAPI();
-
-console.log("ENV");
-console.log(process.env.NODE_ENV);
-console.log(apiHost);
-console.log(googleClientId);
+console.log("Config Settings");
+console.log("===============");
+console.log("Environment: " + process.env.NODE_ENV || "PROD");
+console.log("API Base: " + apiRoot);
+console.log("Db Connection: " + config.get('db.connection'));
+console.log("Google Client Id: " + googleClientId);
 
 module.exports = {
 
@@ -53,8 +41,8 @@ module.exports = {
 
   plugins: [
     new webpack.DefinePlugin({
-      __API_ROOT__: apiHost,
-      __GOOGLE_CLIENT_ID__: googleClientId
+      __API_ROOT__: JSON.stringify(apiRoot),
+      __GOOGLE_CLIENT_ID__: JSON.stringify(googleClientId)
     })
   ]
   

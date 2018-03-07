@@ -39,7 +39,7 @@ class TransactionTable extends React.Component {
                                         <tr>
                                             <th className="clearTopBorder">Coin</th>
                                             <th className="clearTopBorder">Amount</th>
-                                            <th className="clearTopBorder">Price</th>
+                                            <th className="clearTopBorder">Purchased with</th>
                                             <th className="clearTopBorder">Date</th>
                                             <th className="clearTopBorder">Remove</th>
                                         </tr>
@@ -48,9 +48,9 @@ class TransactionTable extends React.Component {
                                         {
                                             this.props.transactionStore.transactions.map(function (transaction) {
                                                 return <tr key={transaction._id}>
-                                                    <td>{transaction.in_currency}</td>
-                                                    <td>{transaction.in_amount}</td>
-                                                    <td>{self.props.commonStore.formatUSD(transaction.in_unitPriceUSD)}</td>
+                                                    <td>{transaction.currency}</td>
+                                                    <td>{transaction.amount}</td>
+                                                    <td>{transaction.purchaseCurrency} @ {transaction.purchaseUnitPrice}</td>
                                                     <td>{self.props.commonStore.formatDate(transaction.date)}</td>
                                                     <td><RemoveTransaction id={transaction._id} /></td>
                                                 </tr>

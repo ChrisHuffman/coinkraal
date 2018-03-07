@@ -22,6 +22,10 @@
     margin-bottom: 30px;
 }
 
+.displayBlock {
+    display: block;
+}
+
 
 
 /* Bootstrap Extenstions -------------------------------------------------------------------------------------*/

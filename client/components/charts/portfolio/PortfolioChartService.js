@@ -155,7 +155,7 @@ export class PortfolioChartService {
 
     getUniqueInCurrencies(transactions) {
         var currencies = transactions.map(t => {
-            return t.in_currency;
+            return t.currency;
         })
         return currencies.filter(this.unique);
     }
@@ -167,7 +167,7 @@ export class PortfolioChartService {
     getTransactions(transactions, date, currency) {
 
         return transactions.filter(t => {
-            return (t.date.indexOf(date) == 0 && t.in_currency == currency);
+            return (t.date.indexOf(date) == 0 && t.currency == currency);
         });
     }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import VirtualizedSelect from 'react-virtualized-select';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
+import moment from 'moment';
 import {
     Button, Form, FormGroup, Label, Input, InputGroup, InputGroupText,
     InputGroupAddon, FormText, Modal, ModalHeader, ModalBody, ModalFooter
@@ -17,61 +18,100 @@ class AddTransaction extends React.Component {
         super(props);
 
         this.state = {
-            type: 'buy',
-            in_currency: '',
-            in_amount: '',
-            in_unitPriceUSD: '',
-            date: '',
+            date: new Date(),
+            currency: '',
+            amount: '',
+            purchaseCurrency: 'BTC',
+            purchaseUnitPrice: '',
+            purchaseTotalPrice: '',
+            
             enabled: true,
-            modal: false
+            modal: false,
+
+            errors: { }
         }
 
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleCoinChange = this.handleCoinChange.bind(this);
+        this.handleCurrencyChange = this.handleCurrencyChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.addTransaction = this.addTransaction.bind(this);
-        this.loadInUnitPriceUSD = this.loadInUnitPriceUSD.bind(this);
+        this.loadUnitPrice = this.loadUnitPrice.bind(this);
+        this.loadTotalPrice = this.loadTotalPrice.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.enabled = this.enabled.bind(this);
+        this.getErrorMessage = this.getErrorMessage.bind(this);
 
     }
 
-    loadInUnitPriceUSD() {
+    loadUnitPrice() {
 
-        if(!this.state.in_currency || !this.state.date) {
+        if(!this.state.currency || !this.state.purchaseCurrency || !this.state.date) {
             this.setState({
-                in_unitPriceUSD: ''
+                purchaseUnitPrice: ''
             });
             return;
         }
 
-        this.props.currencyStore.getHistoricalPrice(this.state.in_currency, 'USD', this.props.commonStore.getUnixTimeStamp(this.state.date))
+        var now = moment();
+        var date = moment(this.state.date)
+                    .set({'hour': now.get('hour'), 'minute': now.get('minute')})
+                    .toDate();
+
+        this.props.currencyStore.getHistoricalPrice(this.state.currency, this.state.purchaseCurrency, this.props.commonStore.getUnixTimeStamp(date))
             .then(price => {
                 this.setState({
-                    in_unitPriceUSD: price
-                });
+                    purchaseUnitPrice: price
+                }, this.loadTotalPrice);
             });
+    }
+
+    loadTotalPrice() {
+
+        if(this.state.amount == '' || this.state.purchaseUnitPrice == '')
+            return;
+
+        this.setState({
+            purchaseTotalPrice: this.state.amount * this.state.purchaseUnitPrice
+        });
     }
 
     addTransaction() {
         
         var self = this;
+
+        //Disable form
         self.enabled(false);
 
+        //Clear any errors
+        self.setState({
+            errors: { }
+        });
+
+        var date = self.state.date ? self.state.date.toISOString() : '';
+
         var transaction = {
-            type: self.state.type,
-            in_currency: self.state.in_currency,
-            in_amount: self.state.in_amount,
-            in_unitPriceUSD: self.state.in_unitPriceUSD,
-            date: new Date(self.state.date).toISOString()
+            currency: self.state.currency,
+            amount: self.state.amount,
+            purchaseCurrency: self.state.purchaseCurrency,
+            purchaseUnitPrice: self.state.purchaseUnitPrice,
+            date: date
         };
 
-        this.props.transactionStore.addTransaction(transaction)
+        self.props.transactionStore.addTransaction(transaction)
             .then(function (response) {
                 self.toggleModal();
             })
             .catch((error) => {
-                self.props.commonStore.notify('Error adding transaction', 'error');
+
+                if(!error.response.body.errors) {
+                    self.props.commonStore.notify('Error adding transaction', 'error');
+                    return;
+                }
+
+                self.setState({
+                    errors: error.response.body.errors
+                });
             })
             .then(() => {
                 self.enabled(true);
@@ -79,23 +119,34 @@ class AddTransaction extends React.Component {
     }
 
     handleTextChange(e) {
-        if (e.target.name == "in_amount") {
+        if (e.target.name == "amount") {
             this.setState({
-                in_amount: e.target.value
-            });
+                amount: e.target.value
+            }, this.loadTotalPrice);
+        }
+        if (e.target.name == "purchaseUnitPrice") {
+            this.setState({
+                purchaseUnitPrice: e.target.value
+            }, this.loadTotalPrice);
         }
     }
 
     handleCoinChange(newValue) {
         this.setState({
-            in_currency: newValue
-        }, this.loadInUnitPriceUSD);
+            currency: newValue
+        }, this.loadUnitPrice);
+    }
+
+    handleCurrencyChange(newValue) {
+        this.setState({
+            purchaseCurrency: newValue
+        }, this.loadUnitPrice);
     }
 
     handleDateChange(newValue) {
         this.setState({
             date: newValue
-        }, this.loadInUnitPriceUSD);
+        }, this.loadUnitPrice);
     }
 
     toggleModal() {
@@ -108,6 +159,20 @@ class AddTransaction extends React.Component {
         this.setState({
             enabled: enabled
         });
+    }
+
+    getErrorMessage(fieldName, message) {
+        var error = this.state.errors[fieldName];
+        if(!error)
+            return '';
+        return message || error.message;
+    }
+
+    getErrorClass(fieldName) {
+        var error = this.state.errors[fieldName];
+        if(!error)
+            return '';
+        return 'is-invalid';
     }
 
     render() {
@@ -127,40 +192,83 @@ class AddTransaction extends React.Component {
                                     onDayChange={this.handleDateChange}
                                     value={this.state.date}
                                 />
+                                <div className="invalid-feedback displayBlock">
+                                    {this.getErrorMessage('date', 'Date required')}
+                                </div>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="in_currency">Coin</Label>
-                                <VirtualizedSelect ref="in_currency"
+                                <Label for="currency">Coin</Label>
+                                <VirtualizedSelect ref="currency"
+                                    name="currency"
                                     options={this.props.currencyStore.currencies}
-                                    simpleValue
-                                    clearable
-                                    name="in_currency"
-                                    value={this.state.in_currency}
+                                    searchable={true}
+                                    simpleValue={true}
+                                    clearable={false}
+                                    value={this.state.currency}
                                     onChange={this.handleCoinChange}
-                                    searchable
+                                    labelKey="FullName"
+                                    valueKey="Symbol"
+                                />
+                                <div className="invalid-feedback displayBlock">
+                                    {this.getErrorMessage('currency')}
+                                </div>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="amount">Amount</Label>
+                                <Input
+                                    className={this.getErrorClass('amount')}
+                                    name="amount"
+                                    id="amount"
+                                    type="number"
+                                    value={this.state.amount}
+                                    onChange={this.handleTextChange} />
+                                    <div className="invalid-feedback">
+                                        {this.getErrorMessage('amount')}
+                                    </div>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="purchaseCurrency">Purchased with</Label>
+                                <VirtualizedSelect ref="purchaseCurrency"
+                                    options={this.props.currencyStore.purchaseCurrencies}
+                                    searchable={true}
+                                    simpleValue={true}
+                                    clearable={false}
+                                    name="purchaseCurrency"
+                                    value={this.state.purchaseCurrency}
+                                    onChange={this.handleCurrencyChange}
                                     labelKey="FullName"
                                     valueKey="Symbol"
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="in_amount">Amount</Label>
-                                <Input
-                                    name="in_amount"
-                                    id="in_amount"
-                                    placeholder="10"
-                                    value={this.state.in_amount}
-                                    onChange={this.handleTextChange} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="in_unitPriceUSD">Unit Price (USD)</Label>
+                                <Label for="purchaseUnitPrice">Unit Price</Label>
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
-                                        $
+                                        {this.state.purchaseCurrency}
                                     </InputGroupAddon>
                                     <Input
-                                        name="in_unitPriceUSD"
-                                        id="in_unitPriceUSD"
-                                        value={this.state.in_unitPriceUSD} />
+                                        name="purchaseUnitPrice"
+                                        id="purchaseUnitPrice"
+                                        type="number"
+                                        className={this.getErrorClass('purchaseUnitPrice')}
+                                        value={this.state.purchaseUnitPrice}
+                                        onChange={this.handleTextChange} />
+                                    <div className="invalid-feedback">
+                                        {this.getErrorMessage('purchaseUnitPrice')}
+                                    </div>
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="purchaseUnitPrice">Total Price</Label>
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        {this.state.purchaseCurrency}
+                                    </InputGroupAddon>
+                                    <Input
+                                        name="purchaseTotalPrice"
+                                        id="purchaseTotalPrice"
+                                        disabled={true}
+                                        value={this.state.purchaseTotalPrice} />
                                 </InputGroup>
                             </FormGroup>
 

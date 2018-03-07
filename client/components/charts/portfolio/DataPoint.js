@@ -21,7 +21,7 @@ export class DataPoint {
     }
 
     addTransaction = function(transaction) {
-        this.amounts[transaction.in_currency] += transaction.in_amount;
+        this.amounts[transaction.currency] += transaction.amount;
     }
 
     getTotal = function() {

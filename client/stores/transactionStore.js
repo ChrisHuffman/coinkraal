@@ -4,10 +4,9 @@ import agent from '../agent';
 export class TransactionStore {
 
   @observable isLoading = false;
-  @observable transactions = observable([]);
+  @observable transactions = observable([{}]); //Slight hack, set a empty obj so that an empty list of transactions with still trigger obs events
 
   constructor() {
-    
   }
 
   @action loadTransactions() {

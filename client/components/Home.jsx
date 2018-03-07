@@ -26,6 +26,7 @@ export default class Home extends React.Component {
 
     this.props.transactionStore.loadTransactions();
     this.props.currencyStore.loadCurrencies();
+    this.props.currencyStore.loadPurchaseCurrencies();
 
     this.toggle = this.toggle.bind(this);
   }

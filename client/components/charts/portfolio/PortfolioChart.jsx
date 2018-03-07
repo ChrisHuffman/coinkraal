@@ -14,24 +14,28 @@ class PortfolioChart extends React.Component {
         super(props);
 
         this.state = {
-            data: {},
-            hasData: false
+            data: { },
+            isLoading: true
         }
 
         this.loadData = this.loadData.bind(this);
 
         observe(this.props.transactionStore.transactions, () => {
-            this.loadData();
+           this.loadData();
         });
     }
 
     loadData() {
 
+        this.setState({
+            isLoading: true
+        });
+
         portfolioChartService.getData(this.props.transactionStore.transactions)
             .then(data => {
                 this.setState({
                     data: data,
-                    hasData: true
+                    isLoading: false
                 });
             });
 
@@ -44,11 +48,19 @@ class PortfolioChart extends React.Component {
 
                 <div className="row justify-content-center">
                     <div className="col-auto">
-                        <Loader visible={!this.state.hasData} />
+                        <Loader visible={this.state.isLoading} />
                     </div>
                 </div>
 
-                {this.state.hasData &&
+                {(!this.state.isLoading && this.props.transactionStore.transactions.length == 0) &&
+                    <div className="row">
+                        <div className="col">
+                            No transactions.
+                        </div>
+                    </div>
+                }
+
+                {(!this.state.isLoading && this.props.transactionStore.transactions.length != 0) &&
                     <div className="row">
                         <div className="col">
                             <Line 

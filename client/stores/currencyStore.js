@@ -5,8 +5,20 @@ export class CurrencyStore {
 
   @observable isLoading = false;
   @observable currencies = observable([]);
+  @observable purchaseCurrencies = observable([]);
 
   constructor() {
+    
+  }
+
+  @action loadPurchaseCurrencies() {
+    this.purchaseCurrencies.replace([
+      { Symbol: 'BTC', FullName: 'Bitcoin (BTC)' },
+      { Symbol: 'ETH', FullName: 'Ethereum (ETH)' },
+      { Symbol: 'USD', FullName: 'US Dollar (USD)' },
+      { Symbol: 'EUR', FullName: 'Euro (EUR)' },
+      { Symbol: 'GBP', FullName: 'Pound (GBP)' }
+    ]);
   }
 
   @action loadCurrencies() {

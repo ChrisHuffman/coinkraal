@@ -24,20 +24,18 @@ router.route('/api/transactions/add').post(function (req, res) {
 
   var transaction = new Transaction();
   transaction.userId = 1; //get from login in user
-  transaction.type = req.body.type;
-  transaction.in_currency = req.body.in_currency;
-  transaction.in_amount = req.body.in_amount;
-  transaction.in_unitPriceUSD = req.body.in_unitPriceUSD;
-  transaction.out_currency = req.body.out_currency;
-  transaction.out_amount = req.body.out_amount;
-  transaction.out_unitPriceUSD = req.body.out_unitPriceUSD;
   transaction.date = new Date(req.body.date);
   transaction.exchange = req.body.exchange;
   transaction.notes = req.body.notes;
+  transaction.currency = req.body.currency;
+  transaction.amount = req.body.amount;
+  transaction.purchaseCurrency = req.body.purchaseCurrency;
+  transaction.purchaseUnitPrice = req.body.purchaseUnitPrice;
+  transaction.sell = [];
 
   transactionRepository.addTransaction(transaction)
     .then(() => res.send(""))
-    .catch((error) => res.status(500).send(''));
+    .catch((error) => res.status(400).send(error));
 })
 
 router.route('/api/transactions/update').post(function (req, res) {

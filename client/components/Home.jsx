@@ -47,7 +47,6 @@ export default class Home extends React.Component {
 
         <h3 className="display-4 text-center mt-20">
           CoinKraal
-          <small class="text-muted">keep those cryptos in check</small>
         </h3>
        
 

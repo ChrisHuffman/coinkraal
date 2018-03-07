@@ -45,7 +45,11 @@ export default class Home extends React.Component {
 
         <Notifications options={{ zIndex: 5000, timeout: 15000 }} />
 
-        <h3 className="display-4 text-center mt-20">CoinKraal</h3>
+        <h3 className="display-4 text-center mt-20">
+          CoinKraal
+          <small class="text-muted">keep those cryptos in check</small>
+        </h3>
+       
 
         <div className="row justify-content-md-center mb-30">
           <div className="col-md-auto">

@@ -46,8 +46,8 @@
     cursor: pointer;
 }
 
-.nav-tabs .nav-link {
-    font-size: 1rem;
+.navbar-brand {
+    font-size: 1.5rem;
 }
 
 .table .clearTopBorder {

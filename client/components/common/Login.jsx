@@ -32,8 +32,8 @@ export default class Login extends React.Component {
 
                 <h3 className="display-4 text-center mt-30">CoinKraal</h3>
 
-                <div className="row justify-content-md-center mt-40">
-                    <div className="col-md-auto">
+                <div className="row justify-content-center mt-40">
+                    <div className="col-auto">
                         <GoogleLogin
                             clientId={this.googleClientId}
                             buttonText="Sign in with Google"

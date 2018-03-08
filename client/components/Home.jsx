@@ -7,7 +7,7 @@ import Notifications from 'react-notify-toast';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 
-import Logout from './common/Logout'
+import Header from './common/Header'
 import TransactionTable from './transactions/TransactionTable'
 import CoinTable from './coins/CoinTable'
 import PortfolioChart from './charts/portfolio/PortfolioChart'
@@ -46,20 +46,11 @@ export default class Home extends React.Component {
 
         <Notifications options={{ zIndex: 5000, timeout: 15000 }} />
 
-        <h3 className="display-4 text-center mt-20">
-          CoinKraal
-        </h3>
-       
+        <Header />
 
-        <div className="row justify-content-md-center mb-30">
-          <div className="col-md-auto">
+        <div className="mb-10" />
 
-          </div>
-          <div className="col-md-auto">
-            <Logout />
-          </div>
-        </div>
-
+        <div className="container-fluid">
 
         <Nav tabs>
           <NavItem>
@@ -85,28 +76,33 @@ export default class Home extends React.Component {
           </NavItem>
         </Nav>
 
-        <TabContent activeTab={this.state.activeTab}>
-          <TabPane tabId="1">
+        
 
-            <div className="row mt-20">
-              <div className="col-md-7">
-                <PortfolioChart />
+          <TabContent activeTab={this.state.activeTab}>
+            <TabPane tabId="1">
+
+              <div className="row mt-20">
+                <div className="col-md-7">
+                  <PortfolioChart />
+                </div>
+                <div className="col-md-5">
+
+                </div>
               </div>
-              <div className="col-md-5">
-                
-              </div>
-            </div>
 
-          </TabPane>
+            </TabPane>
 
-          <TabPane tabId="2">
-            <TransactionTable />
-          </TabPane>
+            <TabPane tabId="2">
+              <TransactionTable />
+            </TabPane>
 
-          <TabPane tabId="3">
-            <CoinTable />
-          </TabPane>
-        </TabContent>
+            <TabPane tabId="3">
+              <CoinTable />
+            </TabPane>
+          </TabContent>
+
+        </div>
+
       </div>
     );
   }

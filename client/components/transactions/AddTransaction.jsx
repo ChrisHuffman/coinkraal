@@ -54,11 +54,12 @@ class AddTransaction extends React.Component {
         }
 
         var now = moment();
-        var date = moment(this.state.date)
-                    .set({'hour': now.get('hour'), 'minute': now.get('minute')})
-                    .toDate();
+        var date = moment(this.state.date);
 
-        this.props.currencyStore.getHistoricalPrice(this.state.currency, this.state.purchaseCurrency, this.props.commonStore.getUnixTimeStamp(date))
+        var isToday = now.diff(date, 'days') == 0;
+        var unix = isToday ? now.unix() : date.unix(); 
+
+        this.props.currencyStore.getHistoricalPrice(this.state.currency, this.state.purchaseCurrency, unix)
             .then(price => {
                 this.setState({
                     purchaseUnitPrice: price

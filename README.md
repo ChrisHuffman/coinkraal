@@ -3,11 +3,15 @@
 
 TODO
 ---
+
 - set user id when add transaction
 - validate the google client id
+- why do we need to root api?
 - why do we keep getting a 401?
 - add Nav header
 - validation on the add form
+- have sell and buy dots on the chart
+
 
 - nodejs warnings
     npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 

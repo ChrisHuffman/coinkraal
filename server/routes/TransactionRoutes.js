@@ -36,19 +36,23 @@ router.route('/api/transactions/add').post(function (req, res) {
   transactionRepository.addTransaction(transaction)
     .then(() => res.send(""))
     .catch((error) => res.status(400).send(error));
-})
+});
 
-router.route('/api/transactions/update').post(function (req, res) {
-  // const balance = {
-  //   cointicker: req.body.cointicker,
-  //   balance: req.body.balance
-  // };
+router.route('/api/transactions/update').put(function (req, res) {
 
-  // Transactionsupdate({ _id: req.body._id }, balance, function (err, result) {
-  //   if (err)
-  //     res.send(err);
-  //   res.send('Transaction successfully updated!');
-  // });
+  var transaction = {
+    date: new Date(req.body.date),
+    exchange: req.body.exchange,
+    notes: req.body.notes,
+    currency: req.body.currency,
+    amount: req.body.amount,
+    purchaseCurrency: req.body.purchaseCurrency,
+    purchaseUnitPrice: req.body.purchaseUnitPrice
+  };
+
+  transactionRepository.updateTransaction(req.body._id, transaction)
+    .then(() => res.send(""))
+    .catch((error) => res.status(400).send(error));
 });
 
 router.route('/api/transactions/remove').delete(function (req, res) {

@@ -58,6 +58,7 @@ const Auth = {
 const Transactions = {
   getTransactions: () => requests.get(`/api/transactions`),
   add: transaction => requests.post('/api/transactions/add', transaction),
+  update: transaction => requests.put('/api/transactions/update', transaction),
   remove: transactionId => requests.del(`/api/transactions/remove?id=${transactionId}`)
 };
 

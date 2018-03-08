@@ -31,6 +31,20 @@ class TransactionRepository {
         });
     }
 
+    updateTransaction(id, transaction) {
+
+        return new Promise(function (resolve, reject) {
+
+            var opts = { runValidators: true };
+            Transaction.update({ _id: id }, { $set: transaction }, opts, function (err) {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+    }
+
     removeTransaction(transactionId) {
 
         return new Promise(function (resolve, reject) {

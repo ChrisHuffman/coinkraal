@@ -12,7 +12,6 @@ class RemoveTransaction extends React.Component {
 
         this.state = {
             enabled: true,
-            modal: false
         }
 
         this.removeTransaction = this.removeTransaction.bind(this);
@@ -21,13 +20,16 @@ class RemoveTransaction extends React.Component {
     }
 
     removeTransaction() {
+
         var self = this;
         self.enabled(false);
-        this.props.transactionStore.removeTransaction(this.props.id)
+
+        self.props.transactionStore.removeTransaction(self.props.transactionStore.selectedTransaction._id)
             .then(function (response) {
-                self.toggleModal();
+               self.toggleModal();
             })
             .catch((error) => {
+                console.log(error);
                 self.props.commonStore.notify('Error removing transaction', 'error');
             })
             .then(() => {
@@ -36,9 +38,7 @@ class RemoveTransaction extends React.Component {
     }
 
     toggleModal() {
-        this.setState({
-            modal: !this.state.modal
-        });
+        this.props.transactionStore.toggleRemoveTransactionModal();
     }
 
     enabled(enabled) {
@@ -52,9 +52,7 @@ class RemoveTransaction extends React.Component {
         return (
             <div>
 
-                <Button outline color="light" size="xs" onClick={this.toggleModal}>X</Button>
-
-                <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                <Modal isOpen={this.props.transactionStore.removeTransactionModal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Remove Transaction</ModalHeader>
                     <ModalBody>
                        

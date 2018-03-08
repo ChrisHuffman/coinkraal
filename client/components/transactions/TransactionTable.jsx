@@ -1,22 +1,37 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Table } from 'reactstrap';
+import { Table, Button } from 'reactstrap';
 import Loader from '../common/Loader'
 import RemoveTransaction from './RemoveTransaction'
+import EditTransaction from './EditTransaction'
 import AddTransaction from './AddTransaction'
 
 @inject('transactionStore', 'commonStore')
 @observer
 class TransactionTable extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+
+        this.removeTransaction = this.removeTransaction.bind(this);
+        this.editTransaction = this.editTransaction.bind(this);
+    }
+
+    removeTransaction(transaction) {
+        this.props.transactionStore.toggleRemoveTransactionModal(transaction);
+    }
+
+    editTransaction(transaction) {
+        this.props.transactionStore.toggleEditTransactionModal(transaction);
     }
 
     render() {
         var self = this;
         return (
             <div>
+
+                <RemoveTransaction />
+                <EditTransaction transaction={self.props.transactionStore.selectedTransaction}/>
 
                 <div className="row justify-content-center mt-20">
                     <div className="col-auto">
@@ -41,7 +56,7 @@ class TransactionTable extends React.Component {
                                             <th className="clearTopBorder">Amount</th>
                                             <th className="clearTopBorder">Purchased with</th>
                                             <th className="clearTopBorder">Date</th>
-                                            <th className="clearTopBorder">Remove</th>
+                                            <th className="clearTopBorder">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -52,7 +67,10 @@ class TransactionTable extends React.Component {
                                                     <td>{transaction.amount}</td>
                                                     <td>{transaction.purchaseCurrency} @ {transaction.purchaseUnitPrice}</td>
                                                     <td>{self.props.commonStore.formatDate(transaction.date)}</td>
-                                                    <td><RemoveTransaction id={transaction._id} /></td>
+                                                    <td>
+                                                        <Button outline color="secondary" size="xs" className="mr-10" onClick={self.removeTransaction.bind(null, transaction)}>Remove</Button>
+                                                        <Button outline color="secondary" size="xs" onClick={self.editTransaction.bind(null, transaction)}>Edit</Button>
+                                                    </td>
                                                 </tr>
                                             })
                                         }

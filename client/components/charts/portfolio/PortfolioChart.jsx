@@ -1,5 +1,5 @@
 import React from 'react';
-import { observe, autorun } from 'mobx';
+import { observe } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import Loader from '../../common/Loader'
 import portfolioChartService from './PortfolioChartService'

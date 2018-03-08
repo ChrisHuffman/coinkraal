@@ -10,7 +10,6 @@ TODO
 - validation on the add form
 
 - nodejs warnings
-    npm WARN deprecated guid@0.0.12: Please use node-uuid instead. It is much better.
     npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 
 
 

@@ -4,7 +4,7 @@
 gcloud
 ---
 
-gcloud app deploy -v alpha-01 --promote --stop-previous-version
+gcloud app deploy -v alpha-02 --promote --stop-previous-version
 
 Links:
 https://console.cloud.google.com/cloudshell/editor?project=coinkraal

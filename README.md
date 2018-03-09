@@ -1,6 +1,17 @@
 # CoinKraal
 ### keep those cryptos in check
 
+gcloud
+---
+
+gcloud app deploy -v alpha-01 --promote --stop-previous-version
+
+Links:
+https://console.cloud.google.com/cloudshell/editor?project=coinkraal
+https://cloud.google.com/sdk/gcloud/reference/app/deploy
+https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
+
+
 TODO
 ---
 

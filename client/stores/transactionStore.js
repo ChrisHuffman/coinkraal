@@ -9,6 +9,7 @@ export class TransactionStore {
   @observable selectedTransaction = null;
   @observable removeTransactionModal = false;
   @observable editTransactionModal = false;
+  @observable addSaleModal = false;
 
   constructor() {
   }
@@ -53,6 +54,11 @@ export class TransactionStore {
   @action toggleRemoveTransactionModal(transaction) {
     this.selectedTransaction = transaction;
     this.removeTransactionModal = !this.removeTransactionModal;
+  }
+
+  @action toggleAddSaleModal(transaction) {
+    this.selectedTransaction = transaction;
+    this.addSaleModal = !this.addSaleModal;
   }
 }
 

@@ -85,11 +85,13 @@ class EditTransaction extends React.Component {
 
     loadTotalPrice() {
 
-        if (this.state.amount == '' || this.state.purchaseUnitPrice == '')
-            return;
+        var totalPrice = '';
+
+        if(this.state.amount != '' && this.state.purchaseUnitPrice != '')
+            totalPrice = this.state.amount * this.state.purchaseUnitPrice;
 
         this.setState({
-            purchaseTotalPrice: this.state.amount * this.state.purchaseUnitPrice
+            purchaseTotalPrice: totalPrice
         });
     }
 

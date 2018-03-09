@@ -5,6 +5,7 @@ import Loader from '../common/Loader'
 import RemoveTransaction from './RemoveTransaction'
 import EditTransaction from './EditTransaction'
 import AddTransaction from './AddTransaction'
+import AddSale from './AddSale'
 
 @inject('transactionStore', 'commonStore')
 @observer
@@ -13,16 +14,21 @@ class TransactionTable extends React.Component {
     constructor(props) {
         super(props);
 
-        this.removeTransaction = this.removeTransaction.bind(this);
         this.editTransaction = this.editTransaction.bind(this);
+        this.removeTransaction = this.removeTransaction.bind(this);
+        this.addSale = this.addSale.bind(this);
+    }
+
+    editTransaction(transaction) {
+        this.props.transactionStore.toggleEditTransactionModal(transaction);
     }
 
     removeTransaction(transaction) {
         this.props.transactionStore.toggleRemoveTransactionModal(transaction);
     }
 
-    editTransaction(transaction) {
-        this.props.transactionStore.toggleEditTransactionModal(transaction);
+    addSale(transaction) {
+        this.props.transactionStore.toggleAddSaleModal(transaction);
     }
 
     render() {
@@ -30,8 +36,10 @@ class TransactionTable extends React.Component {
         return (
             <div>
 
-                <RemoveTransaction />
                 <EditTransaction transaction={self.props.transactionStore.selectedTransaction}/>
+                <RemoveTransaction />
+
+                <AddSale />
 
                 <div className="row justify-content-center mt-20">
                     <div className="col-auto">
@@ -68,6 +76,7 @@ class TransactionTable extends React.Component {
                                                     <td>{transaction.purchaseCurrency} @ {transaction.purchaseUnitPrice}</td>
                                                     <td>{self.props.commonStore.formatDate(transaction.date)}</td>
                                                     <td>
+                                                        <Button outline color="secondary" size="xs" className="mr-10" onClick={self.addSale.bind(null, transaction)}>Sell</Button>
                                                         <Button outline color="secondary" size="xs" className="mr-10" onClick={self.removeTransaction.bind(null, transaction)}>Remove</Button>
                                                         <Button outline color="secondary" size="xs" onClick={self.editTransaction.bind(null, transaction)}>Edit</Button>
                                                     </td>

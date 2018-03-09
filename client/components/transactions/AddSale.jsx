@@ -24,10 +24,10 @@ class AddSale extends React.Component {
             saleCurrency: 'BTC',
             saleUnitPrice: '',
             saleTotalPrice: '',
-            
+
             enabled: true,
 
-            errors: { }
+            errors: {}
         }
 
         this.handleTextChange = this.handleTextChange.bind(this);
@@ -43,7 +43,7 @@ class AddSale extends React.Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if(!nextProps.transaction)
+        if (!nextProps.transaction)
             return;
 
         this.setState({
@@ -56,19 +56,19 @@ class AddSale extends React.Component {
         this.props.currencyStore
             .getUnitPrice(this.state.transaction.currency, this.state.saleCurrency, this.state.date)
 
-                .then(price => {
+            .then(price => {
 
-                    this.setState({
-                        saleUnitPrice: price
-                    }, this.loadTotalPrice);
-                });
+                this.setState({
+                    saleUnitPrice: price
+                }, this.loadTotalPrice);
+            });
     }
 
     loadTotalPrice() {
 
         var totalPrice = '';
 
-        if(this.state.amount != '' && this.state.saleUnitPrice != '')
+        if (this.state.amount != '' && this.state.saleUnitPrice != '')
             totalPrice = this.state.amount * this.state.saleUnitPrice;
 
         this.setState({
@@ -77,7 +77,7 @@ class AddSale extends React.Component {
     }
 
     addSale() {
-        
+
         var self = this;
 
         //Disable form
@@ -85,7 +85,7 @@ class AddSale extends React.Component {
 
         //Clear any errors
         self.setState({
-            errors: { }
+            errors: {}
         });
 
         var date = self.state.date ? self.state.date.toISOString() : '';
@@ -98,16 +98,13 @@ class AddSale extends React.Component {
             notes: ''
         };
 
-        console.log(self.props.selectedTransaction);
-        console.log(sale);
-
         self.props.transactionStore.addSale(self.state.transaction._id, sale)
             .then(function (response) {
                 self.toggleModal();
             })
             .catch((error) => {
 
-                if(!error.response.body.errors) {
+                if (!error.response.body.errors) {
                     self.props.commonStore.notify('Error adding sale', 'error');
                     return;
                 }
@@ -158,14 +155,14 @@ class AddSale extends React.Component {
 
     getErrorMessage(fieldName, message) {
         var error = this.state.errors[fieldName];
-        if(!error)
+        if (!error)
             return '';
         return message || error.message;
     }
 
     getErrorClass(fieldName) {
         var error = this.state.errors[fieldName];
-        if(!error)
+        if (!error)
             return '';
         return 'is-invalid';
     }
@@ -190,20 +187,25 @@ class AddSale extends React.Component {
                                 </div>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="amount">Amount</Label>
-                                <Input
-                                    className={this.getErrorClass('amount')}
-                                    name="amount"
-                                    id="amount"
-                                    type="number"
-                                    value={this.state.amount}
-                                    onChange={this.handleTextChange} />
+                                <Label for="amount">Sell</Label>
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        {this.state.transaction ? this.state.transaction.currency : ''}
+                                    </InputGroupAddon>
+                                    <Input
+                                        className={this.getErrorClass('amount')}
+                                        name="amount"
+                                        id="amount"
+                                        type="number"
+                                        value={this.state.amount}
+                                        onChange={this.handleTextChange} />
                                     <div className="invalid-feedback">
                                         {this.getErrorMessage('amount')}
                                     </div>
+                                </InputGroup>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="saleCurrency">sale with</Label>
+                                <Label for="saleCurrency">For</Label>
                                 <VirtualizedSelect ref="saleCurrency"
                                     options={this.props.currencyStore.purchaseCurrencies}
                                     searchable={true}
@@ -217,7 +219,7 @@ class AddSale extends React.Component {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="saleUnitPrice">Unit Price</Label>
+                                <Label for="saleUnitPrice">At Unit Price</Label>
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
                                         {this.state.saleCurrency}
@@ -235,7 +237,7 @@ class AddSale extends React.Component {
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="saleUnitPrice">Total Price</Label>
+                                <Label for="saleUnitPrice">Total Sales</Label>
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
                                         {this.state.saleCurrency}

@@ -32,14 +32,24 @@
     display: block;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 
 
 /* Bootstrap Extenstions -------------------------------------------------------------------------------------*/
 .btn-xs, .btn-group-xs > .btn {
-    padding: 0.15rem 0.4rem;
-    font-size: 0.65rem;
-    line-height: 1.2;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    line-height: 1.3;
     border-radius: 0.1rem;
+}
+
+.table td.min-padding {
+    /* padding: 0.6rem; */
+    padding: 0rem;
+    vertical-align: middle;
 }
 
 .nav-tabs {
@@ -110,6 +120,10 @@
 
 
 /* DayPicker Style Overrides -----------------------------------------------------------------------------------*/
+.DayPickerInput input {
+    cursor: pointer;
+}
+
 .DayPicker {
     color: #202020;
 }

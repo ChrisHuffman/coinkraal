@@ -59,7 +59,7 @@ export class TransactionStore {
   addSale(transactionId, sale) {
     return agent.Sales.add(transactionId, sale)
       .then(action(() => {
-        //this.loadTransactions();
+        this.loadTransactions();
       }));
   }
 

@@ -5,21 +5,21 @@ import moment from 'moment';
 export class CurrencyStore {
 
   @observable isLoading = false;
-  @observable currencies = observable([]);
-  @observable purchaseCurrencies = observable([]);
+  currencies = [];
+  purchaseCurrencies = [];
 
   constructor() {
 
   }
 
   @action loadPurchaseCurrencies() {
-    this.purchaseCurrencies.replace([
+    this.purchaseCurrencies = [
       { Symbol: 'BTC', FullName: 'Bitcoin (BTC)' },
       { Symbol: 'ETH', FullName: 'Ethereum (ETH)' },
       { Symbol: 'USD', FullName: 'US Dollar (USD)' },
       { Symbol: 'EUR', FullName: 'Euro (EUR)' },
       { Symbol: 'GBP', FullName: 'Pound (GBP)' }
-    ]);
+    ];
   }
 
   @action loadCurrencies() {
@@ -37,7 +37,7 @@ export class CurrencyStore {
         currencies.sort((a, b) => {
           return a.SortOrder - b.SortOrder;
         })
-        this.currencies.replace(currencies);
+        this.currencies = currencies;
       }))
       .finally(action(() => { this.isLoading = false; }));
   }

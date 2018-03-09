@@ -56,7 +56,7 @@ class CoinTable extends React.Component {
                 {!this.state.isLoading &&
                     <div className="row mt-10">
                         <div className="col-md">
-                            <Table size="sm">
+                            <Table responsive size="sm">
                                 <thead>
                                     <tr>
                                         <th className="clearTopBorder">#</th>

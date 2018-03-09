@@ -46,8 +46,6 @@ class AddTransaction extends React.Component {
 
     loadUnitPrice() {
 
-        console.log(this.state);
-
         if(!this.state.currency || !this.state.purchaseCurrency || !this.state.date) {
             this.setState({
                 purchaseUnitPrice: ''
@@ -185,10 +183,10 @@ class AddTransaction extends React.Component {
         return (
             <div>
 
-                <Button outline color="primary" size="sm" onClick={this.toggleModal}>Add Coin</Button>
+                <Button outline color="primary" size="sm" onClick={this.toggleModal}>Add Transaction</Button>
 
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Add Coin</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Add Transaction</ModalHeader>
                     <ModalBody>
                         <Form>
                             <FormGroup>
@@ -234,7 +232,8 @@ class AddTransaction extends React.Component {
                             <FormGroup>
                                 <Label for="purchaseCurrency">Purchased with</Label>
                                 <VirtualizedSelect ref="purchaseCurrency"
-                                    options={this.props.currencyStore.purchaseCurrencies}
+                                    //options={this.props.currencyStore.purchaseCurrencies}
+                                    options={[]}
                                     searchable={true}
                                     simpleValue={true}
                                     clearable={false}
@@ -282,7 +281,7 @@ class AddTransaction extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>Cancel</Button>
-                        <Button outline color="light" onClick={this.addTransaction} disabled={!this.state.enabled}>Add Coin</Button>
+                        <Button outline color="light" onClick={this.addTransaction} disabled={!this.state.enabled}>Add Transaction</Button>
                     </ModalFooter>
                 </Modal>
             </div>

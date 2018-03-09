@@ -232,8 +232,7 @@ class AddTransaction extends React.Component {
                             <FormGroup>
                                 <Label for="purchaseCurrency">Purchased with</Label>
                                 <VirtualizedSelect ref="purchaseCurrency"
-                                    //options={this.props.currencyStore.purchaseCurrencies}
-                                    options={[]}
+                                    options={this.props.currencyStore.purchaseCurrencies}
                                     searchable={true}
                                     simpleValue={true}
                                     clearable={false}

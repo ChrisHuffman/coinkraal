@@ -17,6 +17,9 @@ TODO
     npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 
 
 
+"deploy": "gcloud app deploy"
+
+
 Db Design
 ---
 ### transaction

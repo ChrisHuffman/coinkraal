@@ -50,10 +50,17 @@ export class TransactionStore {
         this.loadTransactions();
       }));
   }
-
+  
   @action toggleRemoveTransactionModal(transaction) {
     this.selectedTransaction = transaction;
     this.removeTransactionModal = !this.removeTransactionModal;
+  }
+
+  addSale(transactionId, sale) {
+    return agent.Sales.add(transactionId, sale)
+      .then(action(() => {
+        //this.loadTransactions();
+      }));
   }
 
   @action toggleAddSaleModal(transaction) {

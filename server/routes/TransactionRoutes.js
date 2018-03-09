@@ -56,10 +56,40 @@ router.route('/api/transactions/update').put(function (req, res) {
 });
 
 router.route('/api/transactions/remove').delete(function (req, res) {
+
   var id = req.query.id;
   transactionRepository.removeTransaction(id)
     .then(() => res.send(''))
     .catch((error) => res.status(500).send(''));
+
+});
+
+router.get('/api/transactions/:id/sales', function (req, res) {
+
+  transactionRepository.getSales(req.params.id).then(
+    function (sales) {
+      res.json(sales);
+    },
+    function (err) {
+      res.send(err);
+    }
+  );
+
+});
+
+router.route('/api/transactions/:id/sales/add').post(function (req, res) {
+
+  var sale = {
+    date: new Date(req.body.date),
+    amount: req.body.amount,
+    saleCurrency: req.body.saleCurrency,
+    saleUnitPrice: req.body.saleUnitPrice,
+    notes: req.body.notes
+  };
+
+  transactionRepository.addSale(req.params.id, sale)
+    .then(() => res.send(""))
+    .catch((error) => res.status(400).send(error));
 });
 
 

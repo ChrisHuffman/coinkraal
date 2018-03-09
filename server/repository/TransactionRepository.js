@@ -3,6 +3,20 @@ var Transaction = require('../models/Transaction');
 
 class TransactionRepository {
 
+    getTransaction(transactionId) {
+
+        return new Promise(function (resolve, reject) {
+
+            Transaction.findOne({ _id: transactionId })
+                .exec(function (error, transaction) {
+                    if (error)
+                        reject(error);
+                    else
+                        resolve(transaction);
+                });
+        })
+    }
+
     getTransactions(userId) {
 
         return new Promise(function (resolve, reject) {
@@ -55,6 +69,46 @@ class TransactionRepository {
                 else
                     resolve();
             })
+        });
+    }
+
+    getSales(transactionId) {
+
+        var self = this;
+
+        return new Promise(function (resolve, reject) {
+
+            Transaction.find({ _id: transactionId})
+                .select('sales')
+                .sort({ date: 'asc' })
+                .exec(function (error, sales) {
+                    if (error)
+                        reject(error);
+                    else
+                        resolve(sales);
+                });
+        })
+    }
+
+    addSale(transactionId, sale) {
+
+        var self = this;
+
+        return new Promise(function (resolve, reject) {
+
+            self.getTransaction(transactionId)
+                .then(transaction => {
+
+                    transaction.sales.push(sale);
+
+                    transaction.save(function (err) {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve();
+                    });
+
+                })
         });
     }
 

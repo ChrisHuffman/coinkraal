@@ -18,8 +18,8 @@ class AddSale extends React.Component {
         super(props);
 
         this.state = {
+            transaction: null,
             date: new Date(),
-            currency: '',
             amount: '',
             saleCurrency: 'BTC',
             saleUnitPrice: '',
@@ -31,24 +31,30 @@ class AddSale extends React.Component {
         }
 
         this.handleTextChange = this.handleTextChange.bind(this);
-        this.handleCoinChange = this.handleCoinChange.bind(this);
-        this.handleCurrencyChange = this.handleCurrencyChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.addSale = this.addSale.bind(this);
+        this.handleCurrencyChange = this.handleCurrencyChange.bind(this);
         this.loadUnitPrice = this.loadUnitPrice.bind(this);
         this.loadTotalPrice = this.loadTotalPrice.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.enabled = this.enabled.bind(this);
         this.getErrorMessage = this.getErrorMessage.bind(this);
+    }
 
+    componentWillReceiveProps(nextProps) {
+
+        if(!nextProps.transaction)
+            return;
+
+        this.setState({
+            transaction: nextProps.transaction
+        }, this.loadUnitPrice);
     }
 
     loadUnitPrice() {
 
-     
-
         this.props.currencyStore
-            .getUnitPrice(this.state.currency, this.state.saleCurrency, this.state.date)
+            .getUnitPrice(this.state.transaction.currency, this.state.saleCurrency, this.state.date)
 
                 .then(price => {
 
@@ -85,15 +91,17 @@ class AddSale extends React.Component {
         var date = self.state.date ? self.state.date.toISOString() : '';
 
         var sale = {
-            transactionId: self.props.transactionStore.selectedTransaction._id,
-            currency: self.state.currency,
+            date: date,
             amount: self.state.amount,
             saleCurrency: self.state.saleCurrency,
             saleUnitPrice: self.state.saleUnitPrice,
-            date: date
+            notes: ''
         };
 
-        self.props.transactionStore.addSale(sale)
+        console.log(self.props.selectedTransaction);
+        console.log(sale);
+
+        self.props.transactionStore.addSale(self.state.transaction._id, sale)
             .then(function (response) {
                 self.toggleModal();
             })
@@ -124,12 +132,6 @@ class AddSale extends React.Component {
                 saleUnitPrice: e.target.value
             }, this.loadTotalPrice);
         }
-    }
-
-    handleCoinChange(newValue) {
-        this.setState({
-            currency: newValue
-        }, this.loadUnitPrice);
     }
 
     handleCurrencyChange(newValue) {
@@ -185,23 +187,6 @@ class AddSale extends React.Component {
                                 />
                                 <div className="invalid-feedback displayBlock">
                                     {this.getErrorMessage('date', 'Date required')}
-                                </div>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="currency">Coin</Label>
-                                <VirtualizedSelect ref="currency"
-                                    name="currency"
-                                    options={this.props.currencyStore.currencies}
-                                    searchable={true}
-                                    simpleValue={true}
-                                    clearable={false}
-                                    value={this.state.currency}
-                                    onChange={this.handleCoinChange}
-                                    labelKey="FullName"
-                                    valueKey="Symbol"
-                                />
-                                <div className="invalid-feedback displayBlock">
-                                    {this.getErrorMessage('currency')}
                                 </div>
                             </FormGroup>
                             <FormGroup>
@@ -268,7 +253,7 @@ class AddSale extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>Cancel</Button>
-                        <Button outline color="light" onClick={this.addTransaction} disabled={!this.state.enabled}>Sell Coin</Button>
+                        <Button outline color="light" onClick={this.addSale} disabled={!this.state.enabled}>Sell Coin</Button>
                     </ModalFooter>
                 </Modal>
             </div>

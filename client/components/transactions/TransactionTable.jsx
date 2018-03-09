@@ -36,10 +36,10 @@ class TransactionTable extends React.Component {
         return (
             <div>
 
-                <EditTransaction transaction={self.props.transactionStore.selectedTransaction}/>
+                <EditTransaction transaction={self.props.transactionStore.selectedTransaction} />
                 <RemoveTransaction />
 
-                <AddSale />
+                <AddSale transaction={self.props.transactionStore.selectedTransaction} />
 
                 <div className="row justify-content-center mt-20">
                     <div className="col-auto">

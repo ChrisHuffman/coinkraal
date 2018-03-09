@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var sellScheme = new Schema({
+var saleScheme = new Schema({
   date: {
     type: Date,
     required: [true, 'Date required']
@@ -11,11 +11,11 @@ var sellScheme = new Schema({
     type: Number,
     required: [true, 'Amount required']
   },
-  sellCurrency: {
+  saleCurrency: {
     type: String,
     required: [true, 'Currency required']
   },
-  sellUnitPrice: {
+  saleUnitPrice: {
     type: Number,
     required: [true, 'Unit Price required']
   },
@@ -51,7 +51,7 @@ var transactionSchema = new Schema({
     required: [true, 'Unit Price required']
   },
 
-  sell: [sellScheme]
+  sales: [saleScheme]
 });
 
 module.exports = mongoose.model('Transaction', transactionSchema);

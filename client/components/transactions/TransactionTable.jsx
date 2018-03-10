@@ -2,6 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Table, Button } from 'reactstrap';
 import Loader from '../common/Loader'
+import CoinLogo from '../common/CoinLogo'
 import RemoveTransaction from './RemoveTransaction'
 import EditTransaction from './EditTransaction'
 import AddTransaction from './AddTransaction'
@@ -65,6 +66,9 @@ class TransactionTable extends React.Component {
                 <td className='min-padding'>
                    {this.state.expandedRows.includes(transaction._id) ? <ChevronDown size={22} /> : <ChevronRight size={22} />}
                 </td>
+                <td>
+                    <CoinLogo coin={transaction.currency} />
+                </td>
                 <td>{transaction.currency}</td>
                 <td>{transaction.amount}</td>
                 <td>{transaction.purchaseCurrency} @ {transaction.purchaseUnitPrice}</td>
@@ -83,6 +87,7 @@ class TransactionTable extends React.Component {
 
                 rows.push(
                     <tr key={'sale-' + sale._id}>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td>{sale.amount}</td>
@@ -135,6 +140,7 @@ class TransactionTable extends React.Component {
                                         <tr>
                                             <th className="clearTopBorder"></th>
                                             <th className="clearTopBorder">Coin</th>
+                                            <th className="clearTopBorder"></th>
                                             <th className="clearTopBorder">Amount</th>
                                             <th className="clearTopBorder">Purchased with</th>
                                             <th className="clearTopBorder">Date</th>

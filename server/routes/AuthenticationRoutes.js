@@ -27,8 +27,11 @@ router.post('/auth/signin', function (req, res) {
         var payload = login.getPayload();
         var googleId = payload.sub;
 
-        //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //match payload.aud
+         if(payload.aud != clientId)
+        {
+            res.status(500).send({ error: 'bad google client id' });
+            return;
+        }
 
         userRespository.getUserByGoogleId(googleId)
             .then(user => {

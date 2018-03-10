@@ -8,6 +8,7 @@ var jwt = require('express-jwt');
 var defaultRoutes = require('./server/routes/DefaultRoutes.js')
 var authenticationRoutes = require('./server/routes/AuthenticationRoutes.js')
 var transactionRoutes = require('./server/routes/TransactionRoutes.js')
+var coinRoutes = require('./server/routes/CoinRoutes.js')
 
 var app = express();
 
@@ -17,13 +18,14 @@ app.set('views', path.join(__dirname, './dist'));
 app.use(express.static(path.join(__dirname, './dist')));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
-app.use(jwt({ secret: config.get('auth.jwtPrivateKey')}).unless({path: ['/', '/auth/signin', '/favicon.ico']}));
+app.use(jwt({ secret: config.get('auth.jwtPrivateKey')}).unless({path: ['/', '/auth/signin', '/favicon.ico', new RegExp('\/api\/coins\/(.*)\/logo')]}));
 
 mongoose.connect(config.get('db.connection'));
 
 app.use('/', defaultRoutes);
 app.use('/', authenticationRoutes);
 app.use('/', transactionRoutes);
+app.use('/', coinRoutes);
 
 var port = process.env.PORT || 1337
 

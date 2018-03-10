@@ -209,8 +209,8 @@ class AddTransaction extends React.Component {
                                     clearable={false}
                                     value={this.state.currency}
                                     onChange={this.handleCoinChange}
-                                    labelKey="FullName"
-                                    valueKey="Symbol"
+                                    labelKey="fullName"
+                                    valueKey="symbol"
                                 />
                                 <div className="invalid-feedback displayBlock">
                                     {this.getErrorMessage('currency')}
@@ -239,8 +239,8 @@ class AddTransaction extends React.Component {
                                     name="purchaseCurrency"
                                     value={this.state.purchaseCurrency}
                                     onChange={this.handleCurrencyChange}
-                                    labelKey="FullName"
-                                    valueKey="Symbol"
+                                    labelKey="fullName"
+                                    valueKey="symbol"
                                 />
                             </FormGroup>
                             <FormGroup>

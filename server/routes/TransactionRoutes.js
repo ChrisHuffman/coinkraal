@@ -9,7 +9,7 @@ var transactionRepository = new TransactionRepository();
 
 router.get('/api/transactions', function (req, res) {
 
-  transactionRepository.getTransactions(1).then(
+  transactionRepository.getTransactions(req.user._id).then(
     function (transactions) {
       res.json(transactions);
     },
@@ -23,7 +23,7 @@ router.get('/api/transactions', function (req, res) {
 router.route('/api/transactions/add').post(function (req, res) {
 
   var transaction = new Transaction();
-  transaction.userId = 1; //get from login in user
+  transaction.userId = req.user._id;
   transaction.date = new Date(req.body.date);
   transaction.exchange = req.body.exchange;
   transaction.notes = req.body.notes;

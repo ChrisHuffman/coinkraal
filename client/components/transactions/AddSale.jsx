@@ -2,6 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import VirtualizedSelect from 'react-virtualized-select';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
+import CoinLogo from '../common/CoinLogo'
 import moment from 'moment';
 import {
     Button, Form, FormGroup, Label, Input, InputGroup, InputGroupText,
@@ -173,7 +174,10 @@ class AddSale extends React.Component {
             <div>
 
                 <Modal isOpen={this.props.transactionStore.addSaleModal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Sell Coin</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>
+                        <CoinLogo coin={this.state.transaction ? this.state.transaction.currency : ""} />
+                        Sell Coin
+                    </ModalHeader>
                     <ModalBody>
                         <Form>
                             <FormGroup>
@@ -214,8 +218,8 @@ class AddSale extends React.Component {
                                     name="saleCurrency"
                                     value={this.state.saleCurrency}
                                     onChange={this.handleCurrencyChange}
-                                    labelKey="FullName"
-                                    valueKey="Symbol"
+                                    labelKey="fullName"
+                                    valueKey="symbol"
                                 />
                             </FormGroup>
                             <FormGroup>

@@ -4,7 +4,7 @@
 gcloud
 ---
 
-gcloud app deploy -v alpha-02 --promote --stop-previous-version
+gcloud app deploy -v alpha-03 --promote --stop-previous-version
 
 Links:
 https://console.cloud.google.com/cloudshell/editor?project=coinkraal
@@ -15,12 +15,9 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 TODO
 ---
 
-- set user id when add transaction
-- validate the google client id
 - why do we need to root api?
 - why do we keep getting a 401?
 - add Nav header
-- validation on the add form
 - have sell and buy dots on the chart
 
 

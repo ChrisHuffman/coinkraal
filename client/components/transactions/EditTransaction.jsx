@@ -223,7 +223,7 @@ class EditTransaction extends React.Component {
                                     clearable={false}
                                     value={this.state.currency}
                                     onChange={this.handleCoinChange}
-                                    labelKey="FullName"
+                                    labelKey="fullName"
                                     valueKey="Symbol"
                                 />
                                 <div className="invalid-feedback displayBlock">
@@ -253,7 +253,7 @@ class EditTransaction extends React.Component {
                                     name="purchaseCurrency"
                                     value={this.state.purchaseCurrency}
                                     onChange={this.handleCurrencyChange}
-                                    labelKey="FullName"
+                                    labelKey="fullName"
                                     valueKey="Symbol"
                                 />
                             </FormGroup>

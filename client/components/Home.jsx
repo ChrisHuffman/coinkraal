@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import axios from 'axios';
 import { inject, observer } from 'mobx-react';
 import Notifications from 'react-notify-toast';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';

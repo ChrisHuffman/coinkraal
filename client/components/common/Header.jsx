@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { inject, observer } from 'mobx-react';
 import {
     Collapse,

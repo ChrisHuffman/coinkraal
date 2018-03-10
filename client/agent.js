@@ -69,8 +69,14 @@ const Sales = {
   remove: (transactionId, saleId) => requests.del(`/api/transactions/${transactionId}/sales/remove?id=${saleId}`)
 };
 
+const Coins = {
+  getCoins: () => requests.get(`/api/coins`),
+  getCoinLogo: (coinId) => requests.get(`/api/coins/${coinId}/logo`)
+};
+
 export default {
   Auth,
   Transactions,
-  Sales
+  Sales,
+  Coins
 };

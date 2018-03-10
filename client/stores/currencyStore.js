@@ -1,4 +1,5 @@
 import { observable, action, computed } from 'mobx';
+import agent from '../agent';
 import agentExt from '../agent-ext';
 import moment from 'moment';
 
@@ -14,30 +15,22 @@ export class CurrencyStore {
 
   @action loadPurchaseCurrencies() {
     this.purchaseCurrencies = [
-      { Symbol: 'BTC', FullName: 'Bitcoin (BTC)' },
-      { Symbol: 'ETH', FullName: 'Ethereum (ETH)' },
-      { Symbol: 'USD', FullName: 'US Dollar (USD)' },
-      { Symbol: 'EUR', FullName: 'Euro (EUR)' },
-      { Symbol: 'GBP', FullName: 'Pound (GBP)' }
+      { symbol: 'BTC', fullName: 'Bitcoin (BTC)' },
+      { symbol: 'ETH', fullName: 'Ethereum (ETH)' },
+      { symbol: 'USD', fullName: 'US Dollar (USD)' },
+      { symbol: 'EUR', fullName: 'Euro (EUR)' },
+      { symbol: 'GBP', fullName: 'Pound (GBP)' }
     ];
   }
 
   @action loadCurrencies() {
     this.isLoading = true;
-    return agentExt.External.getCoinDataList()
+    return agent.Coins.getCoins()
       .then(action((coins) => {
-        var currencies = [];
-        for (var symbol in coins) {
-          if (coins.hasOwnProperty(symbol)) {
-            var c = coins[symbol];
-            c.SortOrder = parseInt(c.SortOrder);
-            currencies.push(c);
-          }
-        }
-        currencies.sort((a, b) => {
-          return a.SortOrder - b.SortOrder;
-        })
-        this.currencies = currencies;
+        this.currencies = coins.map(c => {
+          c.fullName = `${c.name} (${c.symbol})`;
+          return c;
+        });
       }))
       .finally(action(() => { this.isLoading = false; }));
   }

@@ -75,8 +75,6 @@ export default class Home extends React.Component {
           </NavItem>
         </Nav>
 
-        
-
           <TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="1">
 

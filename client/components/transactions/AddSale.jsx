@@ -174,10 +174,13 @@ class AddSale extends React.Component {
             <div>
 
                 <Modal isOpen={this.props.transactionStore.addSaleModal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>
+
+                    <div className="modal-header">
                         <CoinLogo coin={this.state.transaction ? this.state.transaction.currency : ""} />
-                        Sell Coin
-                    </ModalHeader>
+                        <h5 className="modal-title ml-10">Sell {this.state.transaction ? this.state.transaction.currency : ""}</h5>
+                        <button type="button" className="close" aria-label="Close" onClick={this.toggleModal}><span aria-hidden="true">&times;</span></button>
+                    </div>
+
                     <ModalBody>
                         <Form>
                             <FormGroup>

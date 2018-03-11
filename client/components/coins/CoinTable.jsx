@@ -3,6 +3,8 @@ import { inject, observer } from 'mobx-react';
 import { Table } from 'reactstrap';
 import Loader from '../common/Loader'
 import Percentage from '../common/Percentage'
+import CoinLogo from '../common/CoinLogo'
+import CoinSummary from './CoinSummary'
 
 @inject('coinStore', 'commonStore')
 @observer
@@ -20,6 +22,7 @@ class CoinTable extends React.Component {
         }
 
         this.loadCoins = this.loadCoins.bind(this);
+        this.coinSummary = this.coinSummary.bind(this);
     }
 
     componentDidMount() {
@@ -41,11 +44,23 @@ class CoinTable extends React.Component {
             });
     }
 
+    coinSummary(coin, event) {
+        this.stopPropagation(event);
+        this.props.coinStore.toggleCoinSummaryModal(coin);
+    }
+
+    stopPropagation(event) {
+        event.stopPropagation();
+        event.nativeEvent.stopImmediatePropagation();
+    }
+
     render() {
         var self = this;
         var coins = this.state.coins;
         return (
             <div>
+
+                <CoinSummary coin={this.props.coinStore.selectedCoin} />
 
                 <div className="row justify-content-center mt-20">
                     <div className="col-auto">
@@ -61,6 +76,7 @@ class CoinTable extends React.Component {
                                     <tr>
                                         <th className="clearTopBorder">#</th>
                                         <th className="clearTopBorder">Coin</th>
+                                        <th className="clearTopBorder"></th>
                                         <th className="clearTopBorder text-right">Market Cap</th>
                                         <th className="clearTopBorder text-right">Price</th>
                                         <th className="clearTopBorder text-right">Change (24Hr)</th>
@@ -69,8 +85,9 @@ class CoinTable extends React.Component {
                                 <tbody>
                                     {
                                         coins.map(function (coin) {
-                                            return <tr key={coin.id}>
+                                            return <tr key={coin.id} onClick={self.coinSummary.bind(event, coin)} className='clickable'>
                                                 <td>{coin.rank}</td>
+                                                <td><CoinLogo coin={coin.symbol} /></td>
                                                 <td>{coin.name}</td>
                                                 <td className="text-right">{self.props.commonStore.formatUSD(coin.market_cap_usd)}</td>
                                                 <td className="text-right">{self.props.commonStore.formatUSD(coin.price_usd)}</td>

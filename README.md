@@ -15,9 +15,14 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 TODO
 ---
 
+- Common form functions - sell
 - why do we need to root api?
 - why do we keep getting a 401?
-- add Nav header
+- component cleanup 
+    - imports that are unused
+    - inject
+    - @withrouter
+    - @observer
 - have sell and buy dots on the chart
 
 

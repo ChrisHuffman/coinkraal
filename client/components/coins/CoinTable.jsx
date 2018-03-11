@@ -5,6 +5,7 @@ import Loader from '../common/Loader'
 import Percentage from '../common/Percentage'
 import CoinLogo from '../common/CoinLogo'
 import CoinSummary from './CoinSummary'
+import Layout from '../Layout'
 
 @inject('coinStore', 'commonStore')
 @observer
@@ -58,7 +59,7 @@ class CoinTable extends React.Component {
         var self = this;
         var coins = this.state.coins;
         return (
-            <div>
+            <Layout>
 
                 <CoinSummary coin={this.props.coinStore.selectedCoin} />
 
@@ -103,7 +104,7 @@ class CoinTable extends React.Component {
                     </div>
                 }
 
-            </div>
+            </Layout>
         );
     }
 }

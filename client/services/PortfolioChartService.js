@@ -1,8 +1,8 @@
 import { observable, action, computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import agentExt from '../../../agent-ext';
+import agentExt from '../agent-ext';
 import moment from 'moment';
-import DataPoint from './DataPoint';
+import PortfolioChartServiceDataPoint from './PortfolioChartServiceDataPoint';
 
 export class PortfolioChartService {
 
@@ -112,7 +112,7 @@ export class PortfolioChartService {
 
     getSelfReferenceDailyData(dataPoints) {
         var dailyData = [];
-    
+
         for (var t in dataPoints) {
             if (dataPoints.hasOwnProperty(t)) {
                 //Close will always be one 
@@ -132,7 +132,7 @@ export class PortfolioChartService {
 
         for (var i = limit; i >= 0; i--) {
             var date = start.clone().subtract(i, 'days');
-            dataPoints[date.unix()] = new DataPoint(date);
+            dataPoints[date.unix()] = new PortfolioChartServiceDataPoint(date);
         }
 
         return dataPoints;
@@ -223,4 +223,4 @@ export class PortfolioChartService {
     }
 }
 
-export default new PortfolioChartService();
+export default PortfolioChartService;

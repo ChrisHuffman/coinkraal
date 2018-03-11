@@ -1,5 +1,5 @@
 
-export class DataPoint {
+export class PortfolioChartServiceDataPoint {
 
     date = null;
 
@@ -37,5 +37,5 @@ export class DataPoint {
     }
 }
 
-export default DataPoint;
+export default PortfolioChartServiceDataPoint;
 

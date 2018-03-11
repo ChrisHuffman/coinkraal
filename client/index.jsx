@@ -8,12 +8,6 @@ import { defaults } from 'react-chartjs-2';
 
 import App from './components/App';
 
-import commonStore from './stores/commonStore';
-import transactionStore from './stores/transactionStore';
-import authStore from './stores/authStore';
-import currencyStore from './stores/currencyStore';
-import coinStore from './stores/coinStore';
-
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
@@ -23,12 +17,38 @@ import './css/bootstrap-theme.css';
 import './css/app.css';
 import './css/loader.css';
 
+//Stores
+import authStore from './stores/authStore';
+import TransactionStore from './stores/transactionStore';
+import CommonStore from './stores/commonStore';
+import CurrencyStore from './stores/currencyStore';
+import CoinStore from './stores/coinStore';
+
+var transactionStore = new TransactionStore();
+var commonStore = new CommonStore();
+var currencyStore = new CurrencyStore();
+var coinStore = new CoinStore();
+
+
+//Services
+import PortfolioChartService from './services/PortfolioChartService';
+
+var portfolioChartService = new PortfolioChartService();
+
+
+//PageState
+import PortfolioPageState from './components/portfolio/PortfolioPageState';
+
+var portfolioPageState = new PortfolioPageState(transactionStore, portfolioChartService);
+
+
 const stores = {
   commonStore,
   transactionStore,
   authStore,
   currencyStore,
-  coinStore
+  coinStore,
+  portfolioPageState
 };
 
 promiseFinally.shim();

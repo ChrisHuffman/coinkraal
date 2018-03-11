@@ -65,4 +65,4 @@ export class CurrencyStore {
 
 }
 
-export default new CurrencyStore();
+export default CurrencyStore;

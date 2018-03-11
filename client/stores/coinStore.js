@@ -20,4 +20,4 @@ export class CoinStore {
 
 }
 
-export default new CoinStore();
+export default CoinStore;

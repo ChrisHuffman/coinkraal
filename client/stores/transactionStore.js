@@ -19,6 +19,7 @@ export class TransactionStore {
     return agent.Transactions.getTransactions()
       .then(action((transactions) => {
         this.transactions.replace(transactions);
+        console.log('TransactionStore: transactions loaded')
       }))
       .finally(action(() => { this.isLoading = false; }));
   }
@@ -69,4 +70,4 @@ export class TransactionStore {
   }
 }
 
-export default new TransactionStore();
+export default TransactionStore;

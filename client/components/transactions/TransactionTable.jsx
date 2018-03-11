@@ -9,7 +9,7 @@ import AddTransaction from './AddTransaction'
 import AddSale from './AddSale'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
 import ChevronDown from 'react-feather/dist/icons/chevron-down';
-
+import Layout from '../Layout'
 
 @inject('transactionStore', 'commonStore')
 @observer
@@ -111,7 +111,7 @@ class TransactionTable extends React.Component {
         });
 
         return (
-            <div>
+            <Layout>
                 
 
                 <EditTransaction transaction={this.props.transactionStore.selectedTransaction} />
@@ -155,7 +155,7 @@ class TransactionTable extends React.Component {
                         </div>
                     </div>
                 }
-            </div>
+            </Layout>
         );
     }
 

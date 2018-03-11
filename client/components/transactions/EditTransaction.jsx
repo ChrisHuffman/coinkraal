@@ -224,7 +224,7 @@ class EditTransaction extends React.Component {
                                     value={this.state.currency}
                                     onChange={this.handleCoinChange}
                                     labelKey="fullName"
-                                    valueKey="Symbol"
+                                    valueKey="symbol"
                                 />
                                 <div className="invalid-feedback displayBlock">
                                     {this.getErrorMessage('currency')}
@@ -254,7 +254,7 @@ class EditTransaction extends React.Component {
                                     value={this.state.purchaseCurrency}
                                     onChange={this.handleCurrencyChange}
                                     labelKey="fullName"
-                                    valueKey="Symbol"
+                                    valueKey="symbol"
                                 />
                             </FormGroup>
                             <FormGroup>

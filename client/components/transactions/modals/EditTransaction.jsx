@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 
 
-@inject('transactionStore', 'currencyStore', 'commonStore')
+@inject('transactionsPageState', 'transactionStore', 'currencyStore', 'commonStore')
 @observer
 class EditTransaction extends React.Component {
 
@@ -170,7 +170,7 @@ class EditTransaction extends React.Component {
     }
 
     toggleModal() {
-        this.props.transactionStore.toggleEditTransactionModal();
+        this.props.transactionsPageState.toggleEditTransactionModal();
     }
 
     enabled(enabled) {
@@ -199,7 +199,7 @@ class EditTransaction extends React.Component {
 
             <div>
 
-                <Modal isOpen={this.props.transactionStore.editTransactionModal} toggle={this.toggleModal}>
+                <Modal isOpen={this.props.transactionsPageState.editTransactionModal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Edit Transaction</ModalHeader>
                     <ModalBody>
                         <Form>

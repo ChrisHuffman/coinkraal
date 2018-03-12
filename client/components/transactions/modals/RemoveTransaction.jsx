@@ -2,7 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-@inject('transactionStore', 'commonStore')
+@inject('transactionsPageState', 'transactionStore', 'commonStore')
 @observer
 class RemoveTransaction extends React.Component {
 
@@ -24,7 +24,7 @@ class RemoveTransaction extends React.Component {
         var self = this;
         self.enabled(false);
 
-        self.props.transactionStore.removeTransaction(self.props.transactionStore.selectedTransaction._id)
+        self.props.transactionStore.removeTransaction(self.props.transactionsPageState.selectedTransaction._id)
             .then(function (response) {
                self.toggleModal();
             })
@@ -38,7 +38,7 @@ class RemoveTransaction extends React.Component {
     }
 
     toggleModal() {
-        this.props.transactionStore.toggleRemoveTransactionModal();
+        this.props.transactionsPageState.toggleRemoveTransactionModal();
     }
 
     enabled(enabled) {
@@ -52,7 +52,7 @@ class RemoveTransaction extends React.Component {
         return (
             <div>
 
-                <Modal isOpen={this.props.transactionStore.removeTransactionModal} toggle={this.toggleModal}>
+                <Modal isOpen={this.props.transactionsPageState.removeTransactionModal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Remove Transaction</ModalHeader>
                     <ModalBody>
                        

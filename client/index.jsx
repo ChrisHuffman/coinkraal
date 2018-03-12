@@ -23,32 +23,32 @@ import TransactionStore from './stores/transactionStore';
 import CommonStore from './stores/commonStore';
 import CurrencyStore from './stores/currencyStore';
 import CoinStore from './stores/coinStore';
-
 var transactionStore = new TransactionStore();
 var commonStore = new CommonStore();
 var currencyStore = new CurrencyStore();
 var coinStore = new CoinStore();
 
-
 //Services
 import PortfolioChartService from './services/PortfolioChartService';
-
 var portfolioChartService = new PortfolioChartService();
 
 
 //PageState
 import PortfolioPageState from './components/portfolio/PortfolioPageState';
-
+import TransactionsPageState from './components/transactions/TransactionsPageState'
 var portfolioPageState = new PortfolioPageState(transactionStore, portfolioChartService);
-
+var transactionsPageState = new TransactionsPageState();
 
 const stores = {
+  authStore,
+
   commonStore,
   transactionStore,
-  authStore,
   currencyStore,
   coinStore,
-  portfolioPageState
+
+  portfolioPageState,
+  transactionsPageState
 };
 
 promiseFinally.shim();

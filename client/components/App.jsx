@@ -5,7 +5,7 @@ import { observer, inject } from 'mobx-react';
 
 import PortfolioPage from './portfolio/PortfolioPage'
 import CoinTable from './coins/CoinTable'
-import TransactionTable from './transactions/TransactionTable'
+import TransactionsPage from './transactions/TransactionsPage'
 import Login from './common/Login'
 import SecureRoute from './common/SecureRoute'
 
@@ -30,7 +30,7 @@ export default class App extends React.Component {
       <div>
         <Switch>
           <Route path="/login" component={Login} />
-          <SecureRoute path="/transactions" component={TransactionTable} />
+          <SecureRoute path="/transactions" component={TransactionsPage} />
           <SecureRoute path="/coins" component={CoinTable} />
           <SecureRoute path="/" component={PortfolioPage} />
         </Switch>

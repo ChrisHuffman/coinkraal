@@ -3,15 +3,15 @@ import { inject, observer } from 'mobx-react';
 import { Table, Button } from 'reactstrap';
 import Loader from '../common/Loader'
 import CoinLogo from '../common/CoinLogo'
-import RemoveTransaction from './RemoveTransaction'
-import EditTransaction from './EditTransaction'
-import AddTransaction from './AddTransaction'
-import AddSale from './AddSale'
+import RemoveTransaction from './modals/RemoveTransaction'
+import EditTransaction from './modals/EditTransaction'
+import AddTransaction from './modals/AddTransaction'
+import AddSale from './modals/AddSale'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
 import ChevronDown from 'react-feather/dist/icons/chevron-down';
 import Layout from '../Layout'
 
-@inject('transactionStore', 'commonStore')
+@inject('transactionsPageState', 'transactionStore', 'commonStore')
 @observer
 class TransactionTable extends React.Component {
 
@@ -29,17 +29,17 @@ class TransactionTable extends React.Component {
 
     editTransaction(transaction, event) {
         this.stopPropagation(event);
-        this.props.transactionStore.toggleEditTransactionModal(transaction);
+        this.props.transactionsPageState.toggleEditTransactionModal(transaction);
     }
 
     removeTransaction(transaction, event) {
         this.stopPropagation(event);
-        this.props.transactionStore.toggleRemoveTransactionModal(transaction);
+        this.props.transactionsPageState.toggleRemoveTransactionModal(transaction);
     }
 
     addSale(transaction, event) {
         this.stopPropagation(event);
-        this.props.transactionStore.toggleAddSaleModal(transaction);
+        this.props.transactionsPageState.toggleAddSaleModal(transaction);
     }
 
     stopPropagation(event) {
@@ -64,7 +64,7 @@ class TransactionTable extends React.Component {
         const rows = [
             <tr onClick={clickCallback} key={'transaction-' + transaction._id} className='clickable'>
                 <td className='min-padding'>
-                   {this.state.expandedRows.includes(transaction._id) ? <ChevronDown size={22} /> : <ChevronRight size={22} />}
+                    {this.state.expandedRows.includes(transaction._id) ? <ChevronDown size={22} /> : <ChevronRight size={22} />}
                 </td>
                 <td>
                     <CoinLogo coin={transaction.currency} />
@@ -111,13 +111,13 @@ class TransactionTable extends React.Component {
         });
 
         return (
-            <Layout>
-                
+            <div>
 
-                <EditTransaction transaction={this.props.transactionStore.selectedTransaction} />
+
+                <EditTransaction transaction={this.props.transactionsPageState.selectedTransaction} />
                 <RemoveTransaction />
 
-                <AddSale transaction={this.props.transactionStore.selectedTransaction} />
+                <AddSale transaction={this.props.transactionsPageState.selectedTransaction} />
 
                 <div className="row justify-content-center mt-20">
                     <div className="col-auto">
@@ -126,36 +126,28 @@ class TransactionTable extends React.Component {
                 </div>
 
                 {!this.props.transactionStore.isLoading &&
-                    <div>
-                        <div className="row justify-content-end">
-                            <div className="col-auto">
-                                <AddTransaction />
-                            </div>
-                        </div>
-
-                        <div className="row mt-10">
-                            <div className="col-md">
-                                <Table responsive>
-                                    <thead>
-                                        <tr>
-                                            <th className="clearTopBorder"></th>
-                                            <th className="clearTopBorder">Coin</th>
-                                            <th className="clearTopBorder"></th>
-                                            <th className="clearTopBorder">Amount</th>
-                                            <th className="clearTopBorder">Purchased with</th>
-                                            <th className="clearTopBorder">Date</th>
-                                            <th className="clearTopBorder">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {allTransactionRows}
-                                    </tbody>
-                                </Table>
-                            </div>
+                    <div className="row mt-10">
+                        <div className="col-md">
+                            <Table responsive>
+                                <thead>
+                                    <tr>
+                                        <th className="clearTopBorder"></th>
+                                        <th className="clearTopBorder">Coin</th>
+                                        <th className="clearTopBorder"></th>
+                                        <th className="clearTopBorder">Amount</th>
+                                        <th className="clearTopBorder">Purchased with</th>
+                                        <th className="clearTopBorder">Date</th>
+                                        <th className="clearTopBorder">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {allTransactionRows}
+                                </tbody>
+                            </Table>
                         </div>
                     </div>
                 }
-            </Layout>
+            </div>
         );
     }
 

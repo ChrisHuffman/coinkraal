@@ -23,10 +23,12 @@ import TransactionStore from './stores/transactionStore';
 import CommonStore from './stores/commonStore';
 import CurrencyStore from './stores/currencyStore';
 import CoinStore from './stores/coinStore';
+import SocialStore from './stores/socialStore';
 var transactionStore = new TransactionStore();
 var commonStore = new CommonStore();
 var currencyStore = new CurrencyStore();
 var coinStore = new CoinStore();
+var socialStore = new SocialStore();
 
 //Services
 import PortfolioChartService from './services/PortfolioChartService';
@@ -46,6 +48,7 @@ const stores = {
   transactionStore,
   currencyStore,
   coinStore,
+  socialStore,
 
   portfolioPageState,
   transactionsPageState

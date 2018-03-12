@@ -16,6 +16,7 @@ const handleErrors = err => {
 };
 
 const responseBody = res => res.body;
+const responseText = res => res.text;
 
 const tokenPlugin = req => {
   if (authStore.token) {
@@ -36,6 +37,12 @@ const requests = {
       .use(tokenPlugin)
       .end(handleErrors)
       .then(responseBody),
+  getText: url =>
+    superagent
+      .get(`${API_ROOT}${url}`)
+      .use(tokenPlugin)
+      .end(handleErrors)
+      .then(responseText),
   put: (url, body) =>
     superagent
       .put(`${API_ROOT}${url}`, body)
@@ -74,9 +81,14 @@ const Coins = {
   getCoinLogo: (coinId) => requests.get(`/api/coins/${coinId}/logo`)
 };
 
+const Social = {
+  getRedditContent: (url) => requests.getText(`/api/social/reddit?url=${encodeURIComponent(url)}`)
+};
+
 export default {
   Auth,
   Transactions,
   Sales,
-  Coins
+  Coins,
+  Social
 };

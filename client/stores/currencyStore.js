@@ -27,10 +27,12 @@ export class CurrencyStore {
     this.isLoading = true;
     return agent.Coins.getCoins()
       .then(action((coins) => {
+        console.log('currencies loaded 1.')
         this.currencies = coins.map(c => {
           c.fullName = `${c.name} (${c.symbol})`;
           return c;
         });
+        console.log('currencies loaded 2.')
       }))
       .finally(action(() => { this.isLoading = false; }));
   }
@@ -60,6 +62,12 @@ export class CurrencyStore {
         .then(price => {
           resolve(price);
         });
+    });
+  }
+
+  getCurrency(symbol) {
+    return this.currencies.find(function(c) {
+      return c.symbol == symbol;
     });
   }
 

@@ -9,6 +9,7 @@ var defaultRoutes = require('./server/routes/DefaultRoutes.js')
 var authenticationRoutes = require('./server/routes/AuthenticationRoutes.js')
 var transactionRoutes = require('./server/routes/TransactionRoutes.js')
 var coinRoutes = require('./server/routes/CoinRoutes.js')
+var socialRoutes = require('./server/routes/SocialRoutes.js')
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use('/', defaultRoutes);
 app.use('/', authenticationRoutes);
 app.use('/', transactionRoutes);
 app.use('/', coinRoutes);
+app.use('/', socialRoutes);
 
 var port = process.env.PORT || 1337
 

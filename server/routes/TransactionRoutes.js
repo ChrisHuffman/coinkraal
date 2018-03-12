@@ -71,7 +71,7 @@ router.get('/api/transactions/:id/sales', function (req, res) {
       res.json(sales);
     },
     function (err) {
-      res.send(err);
+      res.status(500).send('');
     }
   );
 

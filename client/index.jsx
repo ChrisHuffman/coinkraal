@@ -32,7 +32,9 @@ var socialStore = new SocialStore();
 
 //Services
 import PortfolioChartService from './services/PortfolioChartService';
+import CoinChartService from './services/CoinChartService';
 var portfolioChartService = new PortfolioChartService();
+var coinChartService = new CoinChartService();
 
 
 //PageState
@@ -41,7 +43,7 @@ import TransactionsPageState from './components/transactions/TransactionsPageSta
 import CoinsPageState from './components/coins/CoinsPageState'
 var portfolioPageState = new PortfolioPageState(transactionStore, portfolioChartService);
 var transactionsPageState = new TransactionsPageState();
-var coinsPageState = new CoinsPageState();
+var coinsPageState = new CoinsPageState(coinChartService);
 
 const stores = {
   authStore,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { Table } from 'reactstrap';
 import Loader from '../common/Loader'
 import Percentage from '../common/Percentage'
@@ -7,6 +7,7 @@ import CoinLogo from '../common/CoinLogo'
 import CoinSummary from './CoinSummary'
 
 @inject('coinStore', 'commonStore', 'coinsPageState')
+@observer
 class CoinTable extends React.Component {
 
     constructor(props) {

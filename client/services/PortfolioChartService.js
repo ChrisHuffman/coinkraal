@@ -1,5 +1,3 @@
-import { observable, action, computed } from 'mobx';
-import { inject, observer } from 'mobx-react';
 import agentExt from '../agent-ext';
 import moment from 'moment';
 import PortfolioChartServiceDataPoint from './PortfolioChartServiceDataPoint';

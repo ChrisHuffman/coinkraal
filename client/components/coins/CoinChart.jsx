@@ -1,7 +1,7 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
-class PortfolioChart extends React.Component {
+class CoinChart extends React.Component {
 
     constructor(props) {
 
@@ -104,4 +104,4 @@ class PortfolioChart extends React.Component {
         );
     }
 }
-export default PortfolioChart;
+export default CoinChart;

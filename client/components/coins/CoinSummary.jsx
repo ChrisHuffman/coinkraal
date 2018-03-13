@@ -1,6 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import CoinLogo from '../common/CoinLogo'
+import CoinChart from './CoinChart'
 import { Button, TabContent, TabPane, Nav, NavItem, NavLink, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classnames from 'classnames';
 
@@ -35,7 +36,11 @@ class CoinSummary extends React.Component {
             coin: nextProps.coin
         });
 
-        var curr = nextProps.currencyStore.getCurrency(nextProps.coin.symbol);
+        console.log('componentWillReceiveProps', nextProps);
+
+        this.props.coinsPageState.loadCoinChartData(nextProps.coin.symbol);
+
+        var curr = nextProps.currencyStore.getCoin(nextProps.coin.symbol);
 
         this.setState({
             twitterUrl: curr.twitterUrl
@@ -122,7 +127,7 @@ class CoinSummary extends React.Component {
                         </Nav>
                         <TabContent activeTab={this.state.activeTab}>
                             <TabPane tabId="1">
-                                Summary
+                                <CoinChart data={this.props.coinsPageState.coinChartData} />
                             </TabPane>
                             <TabPane tabId="2">
                                 <div className="mb-10" />

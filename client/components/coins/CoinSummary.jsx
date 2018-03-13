@@ -17,6 +17,7 @@ class CoinSummary extends React.Component {
         this.state = {
             coin: null,
             activeTab: '1',
+            twitterUrl: '',
             redditContent: {
                 __html: ""
             }
@@ -24,6 +25,7 @@ class CoinSummary extends React.Component {
 
         this.toggleModal = this.toggleModal.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
+        this.setTab = this.setTab.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -37,8 +39,11 @@ class CoinSummary extends React.Component {
 
         var curr = nextProps.currencyStore.getCurrency(nextProps.coin.symbol);
 
-        if(curr.redditUrl)
-        {
+        this.setState({
+            twitterUrl: curr.twitterUrl
+        });
+
+        if (curr.redditUrl) {
             //Load reddit content
             this.props.socialStore.getRedditContent(curr.redditUrl)
                 .then(content => {
@@ -58,24 +63,34 @@ class CoinSummary extends React.Component {
         }
     }
 
+    setTab(tab) {
+        this.setState({
+            activeTab: tab
+        });
+    }
+
     toggleModal() {
         this.props.coinStore.toggleCoinSummaryModal();
     }
 
     toggleTab(tab) {
         if (this.state.activeTab !== tab) {
-          this.setState({
-            activeTab: tab
-          });
+            this.setState({
+                activeTab: tab
+            }, this.loadTwitterContent);
         }
-      }
+    }
+
+    loadTwitterContent() {
+        twttr.widgets.load();
+    }
 
     render() {
 
         return (
             <div>
 
-                <Modal isOpen={this.props.coinStore.coinSummaryModal} toggle={this.toggleModal} size='lg'>
+                <Modal isOpen={this.props.coinStore.coinSummaryModal} toggle={this.toggleModal} onOpened={this.setTab.bind(null, '1')} size='lg'>
 
                     <div className="modal-header">
                         <CoinLogo coin={this.state.coin ? this.state.coin.symbol : ""} />
@@ -99,14 +114,29 @@ class CoinSummary extends React.Component {
                                     Reddit
                                 </NavLink>
                             </NavItem>
+                            <NavItem>
+                                <NavLink
+                                    className={classnames({ active: this.state.activeTab === '3' })}
+                                    onClick={() => { this.toggleTab('3'); }}>
+                                    Twitter
+                                </NavLink>
+                            </NavItem>
                         </Nav>
                         <TabContent activeTab={this.state.activeTab}>
                             <TabPane tabId="1">
                                 Summary
                             </TabPane>
                             <TabPane tabId="2">
-                                <div id='reddit'></div>
+                                <div className="mb-10" />
                                 <div dangerouslySetInnerHTML={this.state.redditContent} />
+                            </TabPane>
+                            <TabPane tabId="3">
+                                <div className="mb-10" />
+                                <div className="row justify-content-lg-center">
+                                    <div className="col col-lg-9">
+                                        <a className="twitter-timeline text-muted data-dnt='true' data-theme='dark' data-link-color='#007bff'" href={this.state.twitterUrl}>loading...</a>
+                                    </div>
+                                </div>
                             </TabPane>
                         </TabContent>
                     </ModalBody>
@@ -120,3 +150,4 @@ class CoinSummary extends React.Component {
     }
 }
 export default CoinSummary;
+

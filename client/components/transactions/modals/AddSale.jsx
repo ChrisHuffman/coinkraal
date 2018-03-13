@@ -39,7 +39,6 @@ class AddSale extends React.Component {
         this.loadTotalPrice = this.loadTotalPrice.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.enabled = this.enabled.bind(this);
-        this.getErrorMessage = this.getErrorMessage.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -105,14 +104,24 @@ class AddSale extends React.Component {
             })
             .catch((error) => {
 
-                if (!error.response.body.errors) {
+                var errors = error.response.body.errors 
+
+                if (!errors) {
                     self.props.commonStore.notify('Error adding sale', 'error');
                     return;
                 }
+                
+                //Format errors make sales.1.amount -> amount
+                var errorsFormatted = { };
+                Object.keys(errors).forEach(function(key){
+                    var keyFormatted = key.split('.').pop();
+                    errorsFormatted[keyFormatted] = errors[key];
+                });
 
                 self.setState({
-                    errors: error.response.body.errors
+                    errors: errorsFormatted
                 });
+
             })
             .then(() => {
                 self.enabled(true);
@@ -154,20 +163,6 @@ class AddSale extends React.Component {
         });
     }
 
-    getErrorMessage(fieldName, message) {
-        var error = this.state.errors[fieldName];
-        if (!error)
-            return '';
-        return message || error.message;
-    }
-
-    getErrorClass(fieldName) {
-        var error = this.state.errors[fieldName];
-        if (!error)
-            return '';
-        return 'is-invalid';
-    }
-
     render() {
 
         return (
@@ -190,7 +185,7 @@ class AddSale extends React.Component {
                                     value={this.state.date}
                                 />
                                 <div className="invalid-feedback displayBlock">
-                                    {this.getErrorMessage('date', 'Date required')}
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date', 'Date required')}
                                 </div>
                             </FormGroup>
                             <FormGroup>
@@ -200,14 +195,14 @@ class AddSale extends React.Component {
                                         {this.state.transaction ? this.state.transaction.currency : ''}
                                     </InputGroupAddon>
                                     <Input
-                                        className={this.getErrorClass('amount')}
+                                        className={this.props.commonStore.getErrorClass(this.state.errors, 'amount')}
                                         name="amount"
                                         id="amount"
                                         type="number"
                                         value={this.state.amount}
                                         onChange={this.handleTextChange} />
                                     <div className="invalid-feedback">
-                                        {this.getErrorMessage('amount')}
+                                        {this.props.commonStore.getErrorMessage(this.state.errors, 'amount')}
                                     </div>
                                 </InputGroup>
                             </FormGroup>
@@ -235,11 +230,11 @@ class AddSale extends React.Component {
                                         name="saleUnitPrice"
                                         id="saleUnitPrice"
                                         type="number"
-                                        className={this.getErrorClass('saleUnitPrice')}
+                                        className={this.props.commonStore.getErrorClass(this.state.errors, 'saleUnitPrice')}
                                         value={this.state.saleUnitPrice}
                                         onChange={this.handleTextChange} />
                                     <div className="invalid-feedback">
-                                        {this.getErrorMessage('saleUnitPrice')}
+                                        {this.props.commonStore.getErrorMessage(this.state.errors, 'saleUnitPrice')}
                                     </div>
                                 </InputGroup>
                             </FormGroup>

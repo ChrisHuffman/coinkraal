@@ -40,27 +40,15 @@ class AddTransaction extends React.Component {
         this.loadTotalPrice = this.loadTotalPrice.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.enabled = this.enabled.bind(this);
-        this.getErrorMessage = this.getErrorMessage.bind(this);
-
     }
 
     loadUnitPrice() {
 
-        if(!this.state.currency || !this.state.purchaseCurrency || !this.state.date) {
-            this.setState({
-                purchaseUnitPrice: ''
-            });
-            return;
-        }
+        this.props.currencyStore
+            .getUnitPrice(this.state.currency, this.state.purchaseCurrency, this.state.date)
 
-        var now = moment();
-        var date = moment(this.state.date);
-
-        var isToday = now.diff(date, 'days') == 0;
-        var unix = isToday ? now.unix() : date.unix(); 
-
-        this.props.currencyStore.getHistoricalPrice(this.state.currency, this.state.purchaseCurrency, unix)
             .then(price => {
+
                 this.setState({
                     purchaseUnitPrice: price
                 }, this.loadTotalPrice);
@@ -164,20 +152,6 @@ class AddTransaction extends React.Component {
         });
     }
 
-    getErrorMessage(fieldName, message) {
-        var error = this.state.errors[fieldName];
-        if(!error)
-            return '';
-        return message || error.message;
-    }
-
-    getErrorClass(fieldName) {
-        var error = this.state.errors[fieldName];
-        if(!error)
-            return '';
-        return 'is-invalid';
-    }
-
     render() {
 
         return (
@@ -196,14 +170,14 @@ class AddTransaction extends React.Component {
                                     value={this.state.date}
                                 />
                                 <div className="invalid-feedback displayBlock">
-                                    {this.getErrorMessage('date', 'Date required')}
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date', 'Date required')}
                                 </div>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="currency">Coin</Label>
                                 <VirtualizedSelect ref="currency"
                                     name="currency"
-                                    options={this.props.currencyStore.currencies}
+                                    options={this.props.currencyStore.coins}
                                     searchable={true}
                                     simpleValue={true}
                                     clearable={false}
@@ -213,20 +187,20 @@ class AddTransaction extends React.Component {
                                     valueKey="symbol"
                                 />
                                 <div className="invalid-feedback displayBlock">
-                                    {this.getErrorMessage('currency')}
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'currency')}
                                 </div>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="amount">Amount</Label>
                                 <Input
-                                    className={this.getErrorClass('amount')}
+                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'amount')}
                                     name="amount"
                                     id="amount"
                                     type="number"
                                     value={this.state.amount}
                                     onChange={this.handleTextChange} />
                                     <div className="invalid-feedback">
-                                        {this.getErrorMessage('amount')}
+                                        {this.props.commonStore.getErrorMessage(this.state.errors, 'amount')}
                                     </div>
                             </FormGroup>
                             <FormGroup>
@@ -253,11 +227,11 @@ class AddTransaction extends React.Component {
                                         name="purchaseUnitPrice"
                                         id="purchaseUnitPrice"
                                         type="number"
-                                        className={this.getErrorClass('purchaseUnitPrice')}
+                                        className={this.props.commonStore.getErrorClass(this.state.errors, 'purchaseUnitPrice')}
                                         value={this.state.purchaseUnitPrice}
                                         onChange={this.handleTextChange} />
                                     <div className="invalid-feedback">
-                                        {this.getErrorMessage('purchaseUnitPrice')}
+                                        {this.props.commonStore.getErrorMessage(this.state.errors, 'purchaseUnitPrice')}
                                     </div>
                                 </InputGroup>
                             </FormGroup>

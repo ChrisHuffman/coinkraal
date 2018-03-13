@@ -1,14 +1,12 @@
 import React from 'react';
-import { inject, observer } from 'mobx-react';
+import { inject } from 'mobx-react';
 import { Table } from 'reactstrap';
 import Loader from '../common/Loader'
 import Percentage from '../common/Percentage'
 import CoinLogo from '../common/CoinLogo'
 import CoinSummary from './CoinSummary'
-import Layout from '../Layout'
 
-@inject('coinStore', 'commonStore')
-@observer
+@inject('coinStore', 'commonStore', 'coinsPageState')
 class CoinTable extends React.Component {
 
     constructor(props) {
@@ -47,7 +45,7 @@ class CoinTable extends React.Component {
 
     coinSummary(coin, event) {
         this.stopPropagation(event);
-        this.props.coinStore.toggleCoinSummaryModal(coin);
+        this.props.coinsPageState.toggleCoinSummaryModal(coin);
     }
 
     stopPropagation(event) {
@@ -59,9 +57,9 @@ class CoinTable extends React.Component {
         var self = this;
         var coins = this.state.coins;
         return (
-            <Layout>
+            <div>
 
-                <CoinSummary coin={this.props.coinStore.selectedCoin} />
+                <CoinSummary coin={this.props.coinsPageState.selectedCoin} />
 
                 <div className="row justify-content-center mt-20">
                     <div className="col-auto">
@@ -104,7 +102,7 @@ class CoinTable extends React.Component {
                     </div>
                 }
 
-            </Layout>
+            </div>
         );
     }
 }

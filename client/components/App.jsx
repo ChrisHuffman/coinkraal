@@ -4,7 +4,7 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
 
 import PortfolioPage from './portfolio/PortfolioPage'
-import CoinTable from './coins/CoinTable'
+import CoinsPage from './coins/CoinsPage'
 import TransactionsPage from './transactions/TransactionsPage'
 import Login from './common/Login'
 import SecureRoute from './common/SecureRoute'
@@ -18,7 +18,7 @@ export default class App extends React.Component {
     super(props);
 
     if (props.authStore.token) {
-      this.props.currencyStore.loadCurrencies();
+      this.props.currencyStore.loadCoins();
       this.props.currencyStore.loadPurchaseCurrencies();
       this.props.transactionStore.loadTransactions();
     }
@@ -31,7 +31,7 @@ export default class App extends React.Component {
         <Switch>
           <Route path="/login" component={Login} />
           <SecureRoute path="/transactions" component={TransactionsPage} />
-          <SecureRoute path="/coins" component={CoinTable} />
+          <SecureRoute path="/coins" component={CoinsPage} />
           <SecureRoute path="/" component={PortfolioPage} />
         </Switch>
       </div>

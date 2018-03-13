@@ -6,7 +6,7 @@ import moment from 'moment';
 export class CurrencyStore {
 
   @observable isLoading = false;
-  currencies = [];
+  coins = [];
   purchaseCurrencies = [];
 
   constructor() {
@@ -23,16 +23,14 @@ export class CurrencyStore {
     ];
   }
 
-  @action loadCurrencies() {
+  @action loadCoins() {
     this.isLoading = true;
     return agent.Coins.getCoins()
       .then(action((coins) => {
-        console.log('currencies loaded 1.')
-        this.currencies = coins.map(c => {
+        this.coins = coins.map(c => {
           c.fullName = `${c.name} (${c.symbol})`;
           return c;
         });
-        console.log('currencies loaded 2.')
       }))
       .finally(action(() => { this.isLoading = false; }));
   }
@@ -65,8 +63,8 @@ export class CurrencyStore {
     });
   }
 
-  getCurrency(symbol) {
-    return this.currencies.find(function(c) {
+  getCoin(symbol) {
+    return this.coins.find(function(c) {
       return c.symbol == symbol;
     });
   }

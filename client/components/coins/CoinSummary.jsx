@@ -1,12 +1,10 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import CoinLogo from '../common/CoinLogo'
-import moment from 'moment';
 import { Button, TabContent, TabPane, Nav, NavItem, NavLink, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classnames from 'classnames';
 
-
-@inject('coinStore', 'commonStore', 'socialStore', 'currencyStore')
+@inject('socialStore', 'currencyStore', 'coinsPageState')
 @observer
 class CoinSummary extends React.Component {
 
@@ -70,7 +68,7 @@ class CoinSummary extends React.Component {
     }
 
     toggleModal() {
-        this.props.coinStore.toggleCoinSummaryModal();
+        this.props.coinsPageState.toggleCoinSummaryModal();
     }
 
     toggleTab(tab) {
@@ -90,7 +88,7 @@ class CoinSummary extends React.Component {
         return (
             <div>
 
-                <Modal isOpen={this.props.coinStore.coinSummaryModal} toggle={this.toggleModal} onOpened={this.setTab.bind(null, '1')} size='lg'>
+                <Modal isOpen={this.props.coinsPageState.coinSummaryModal} toggle={this.toggleModal} onOpened={this.setTab.bind(null, '1')} size='lg'>
 
                     <div className="modal-header">
                         <CoinLogo coin={this.state.coin ? this.state.coin.symbol : ""} />
@@ -134,7 +132,7 @@ class CoinSummary extends React.Component {
                                 <div className="mb-10" />
                                 <div className="row justify-content-lg-center">
                                     <div className="col col-lg-9">
-                                        <a className="twitter-timeline text-muted data-dnt='true' data-theme='dark' data-link-color='#007bff'" href={this.state.twitterUrl}>loading...</a>
+                                        <a className="twitter-timeline text-muted" data-dnt="true" data-theme="dark" data-link-color="#007bff" href={this.state.twitterUrl}>loading...</a>
                                     </div>
                                 </div>
                             </TabPane>

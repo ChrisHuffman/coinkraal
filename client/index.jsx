@@ -38,8 +38,10 @@ var portfolioChartService = new PortfolioChartService();
 //PageState
 import PortfolioPageState from './components/portfolio/PortfolioPageState';
 import TransactionsPageState from './components/transactions/TransactionsPageState'
+import CoinsPageState from './components/coins/CoinsPageState'
 var portfolioPageState = new PortfolioPageState(transactionStore, portfolioChartService);
 var transactionsPageState = new TransactionsPageState();
+var coinsPageState = new CoinsPageState();
 
 const stores = {
   authStore,
@@ -51,7 +53,8 @@ const stores = {
   socialStore,
 
   portfolioPageState,
-  transactionsPageState
+  transactionsPageState,
+  coinsPageState
 };
 
 promiseFinally.shim();

@@ -1,11 +1,15 @@
-import { observable, observe, action } from 'mobx';
+import { observable, action } from 'mobx';
 
 export class TransactionsPageState {
 
     @observable selectedTransaction = null;
     @observable removeTransactionModal = false;
     @observable editTransactionModal = false;
+
+    @observable selectedSale = null;
     @observable addSaleModal = false;
+    @observable editSaleModal = false;
+    @observable removeSaleModal = false;
 
     constructor() {
     }
@@ -23,6 +27,18 @@ export class TransactionsPageState {
     @action toggleAddSaleModal(transaction) {
         this.selectedTransaction = transaction;
         this.addSaleModal = !this.addSaleModal;
+    }
+
+    @action toggleEditSaleModal(transaction, sale) {
+        this.selectedTransaction = transaction;
+        this.selectedSale = sale;
+        this.editSaleModal = !this.editSaleModal;
+    }
+
+    @action toggleRemoveSaleModal(transaction, sale) {
+        this.selectedTransaction = transaction;
+        this.selectedSale = sale;
+        this.removeSaleModal = !this.removeSaleModal;
     }
 }
 

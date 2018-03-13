@@ -40,7 +40,21 @@ var transactionSchema = new Schema({
   },
   amount: {
     type: Number,
-    required: [true, 'Amount required']
+    required: [true, 'Amount required'],
+    validate: {
+      validator: function (value) {
+
+        var totalSales = 0;
+        this.sales.forEach(sale => {
+          totalSales += sale.amount;
+        });
+
+        if (totalSales > value)
+          throw new Error(`Total sales of ${totalSales} ${this.currency} must be less than the transaction amount of ${value} ${this.currency}.`);
+
+        return true;
+      }
+    }
   },
   purchaseCurrency: {
     type: String,

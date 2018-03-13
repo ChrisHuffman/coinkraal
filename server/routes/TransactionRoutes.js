@@ -64,19 +64,6 @@ router.route('/api/transactions/remove').delete(function (req, res) {
 
 });
 
-router.get('/api/transactions/:id/sales', function (req, res) {
-
-  transactionRepository.getSales(req.params.id).then(
-    function (sales) {
-      res.json(sales);
-    },
-    function (err) {
-      res.status(500).send('');
-    }
-  );
-
-});
-
 router.route('/api/transactions/:id/sales/add').post(function (req, res) {
 
   var sale = {
@@ -90,6 +77,31 @@ router.route('/api/transactions/:id/sales/add').post(function (req, res) {
   transactionRepository.addSale(req.params.id, sale)
     .then(() => res.send(""))
     .catch((error) => res.status(400).send(error));
+});
+
+router.route('/api/transactions/:id/sales/update').put(function (req, res) {
+
+  var sale = {
+    _id: req.body._id,
+    date: new Date(req.body.date),
+    amount: req.body.amount,
+    saleCurrency: req.body.saleCurrency,
+    saleUnitPrice: req.body.saleUnitPrice,
+    notes: req.body.notes
+  };
+
+  transactionRepository.updateSale(req.params.id, sale)
+    .then(() => res.send(""))
+    .catch((error) => res.status(400).send(error));
+});
+
+router.route('/api/transactions/:id/sales/remove').delete(function (req, res) {
+
+  var saleId = req.query.id;
+  transactionRepository.removeSale(saleId)
+    .then(() => res.send(''))
+    .catch((error) => res.status(500).send(''));
+
 });
 
 

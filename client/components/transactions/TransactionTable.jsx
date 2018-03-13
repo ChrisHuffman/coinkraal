@@ -7,6 +7,8 @@ import RemoveTransaction from './modals/RemoveTransaction'
 import EditTransaction from './modals/EditTransaction'
 import AddTransaction from './modals/AddTransaction'
 import AddSale from './modals/AddSale'
+import EditSale from './modals/EditSale'
+import RemoveSale from './modals/RemoveSale'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
 import ChevronDown from 'react-feather/dist/icons/chevron-down';
 import Layout from '../Layout'
@@ -25,6 +27,8 @@ class TransactionTable extends React.Component {
         this.editTransaction = this.editTransaction.bind(this);
         this.removeTransaction = this.removeTransaction.bind(this);
         this.addSale = this.addSale.bind(this);
+        this.editSale = this.editSale.bind(this);
+        this.removeSale = this.removeSale.bind(this);
     }
 
     editTransaction(transaction, event) {
@@ -40,6 +44,16 @@ class TransactionTable extends React.Component {
     addSale(transaction, event) {
         this.stopPropagation(event);
         this.props.transactionsPageState.toggleAddSaleModal(transaction);
+    }
+
+    editSale(transaction, sale, event) {
+        this.stopPropagation(event);
+        this.props.transactionsPageState.toggleEditSaleModal(transaction, sale);
+    }
+
+    removeSale(transaction, sale, event) {
+        this.stopPropagation(event);
+        this.props.transactionsPageState.toggleRemoveSaleModal(transaction, sale);
     }
 
     stopPropagation(event) {
@@ -74,9 +88,9 @@ class TransactionTable extends React.Component {
                 <td>{transaction.purchaseCurrency} @ {transaction.purchaseUnitPrice}</td>
                 <td>{this.props.commonStore.formatDate(transaction.date)}</td>
                 <td className='min-padding'>
-                    <Button outline color="secondary" size="xs" className="mr-10" onClick={this.addSale.bind(event, transaction)}>Sell</Button>
+                    <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editTransaction.bind(event, transaction)}>Edit</Button>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.removeTransaction.bind(event, transaction)}>Remove</Button>
-                    <Button outline color="secondary" size="xs" onClick={this.editTransaction.bind(event, transaction)}>Edit</Button>
+                    <Button outline color="secondary" size="xs" onClick={this.addSale.bind(event, transaction)}>Sell</Button>
                 </td>
             </tr>
         ];
@@ -93,7 +107,10 @@ class TransactionTable extends React.Component {
                         <td>{sale.amount}</td>
                         <td>{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
                         <td>{this.props.commonStore.formatDate(sale.date)}</td>
-                        <td></td>
+                        <td className='min-padding'>
+                            <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editSale.bind(event, transaction, sale)}>Edit</Button>
+                            <Button outline color="secondary" size="xs" onClick={this.removeSale.bind(event, transaction, sale)}>Remove</Button>
+                        </td>
                     </tr>
                 );
             })
@@ -113,13 +130,14 @@ class TransactionTable extends React.Component {
         return (
             <div>
 
-
                 <EditTransaction transaction={this.props.transactionsPageState.selectedTransaction} />
                 <RemoveTransaction />
 
                 <AddSale transaction={this.props.transactionsPageState.selectedTransaction} />
+                <EditSale transaction={this.props.transactionsPageState.selectedTransaction} sale={this.props.transactionsPageState.selectedSale} />
+                <RemoveSale />
 
-                <div className="row justify-content-center mt-20">
+                <div className="row justify-content-center">
                     <div className="col-auto">
                         <Loader visible={this.props.transactionStore.isLoading} />
                     </div>

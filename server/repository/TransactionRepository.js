@@ -7,8 +7,8 @@ class TransactionRepository {
 
         return new Promise(function (resolve, reject) {
 
-            Transaction.findOne({ _id: transactionId })
-                .exec(function (error, transaction) {
+            Transaction.findOne({ _id: transactionId },
+                function (error, transaction) {
                     if (error)
                         reject(error);
                     else
@@ -47,15 +47,29 @@ class TransactionRepository {
 
     updateTransaction(id, transaction) {
 
+        var self = this;
+
         return new Promise(function (resolve, reject) {
 
-            var opts = { runValidators: true };
-            Transaction.update({ _id: id }, { $set: transaction }, opts, function (err) {
-                if (err)
-                    reject(err);
-                else
-                    resolve();
-            });
+            self.getTransaction(id)
+                .then(toUpdate => {
+
+                    toUpdate.date = transaction.date;
+                    toUpdate.exchange = transaction.exchange;
+                    toUpdate.notes = transaction.notes;
+                    toUpdate.currency = transaction.currency;
+                    toUpdate.amount = transaction.amount;
+                    toUpdate.purchaseCurrency = transaction.purchaseCurrency;
+                    toUpdate.purchaseUnitPrice = transaction.purchaseUnitPrice;
+
+                    toUpdate.save(function (err) {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve();
+                    });
+
+                });
         });
     }
 
@@ -70,24 +84,6 @@ class TransactionRepository {
                     resolve();
             })
         });
-    }
-
-    getSales(transactionId) {
-
-        var self = this;
-
-        return new Promise(function (resolve, reject) {
-
-            Transaction.find({ _id: transactionId})
-                .select('sales')
-                .sort({ date: 'asc' })
-                .exec(function (error, sales) {
-                    if (error)
-                        reject(error);
-                    else
-                        resolve(sales);
-                });
-        })
     }
 
     addSale(transactionId, sale) {
@@ -109,6 +105,49 @@ class TransactionRepository {
                     });
 
                 })
+        });
+    }
+
+    updateSale(transactionId, sale) {
+
+        var self = this;
+
+        return new Promise(function (resolve, reject) {
+
+            self.getTransaction(transactionId)
+                .then(transaction => {
+
+                    var toUpdate = transaction.sales.id(sale._id);
+                    toUpdate.date = sale.date;
+                    toUpdate.amount = sale.amount;
+                    toUpdate.saleCurrency = sale.saleCurrency;
+                    toUpdate.saleUnitPrice = sale.saleUnitPrice;
+                    toUpdate.notes = sale.notes;
+
+                    transaction.save(function (err) {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve();
+                    });
+
+                })
+        });
+    }
+
+    removeSale(saleId) {
+
+        return new Promise(function (resolve, reject) {
+
+            Transaction.findOne({ 'sales._id': saleId }, function (err, transaction) {
+                if (err)
+                    reject(err);
+                else {
+                    transaction.sales.id(saleId).remove()
+                    transaction.save();
+                    resolve();
+                }
+            })
         });
     }
 

@@ -48,6 +48,21 @@ export class TransactionStore {
         this.loadTransactions();
       }));
   }
+
+  updateSale(transactionId, sale) {
+    return agent.Sales.update(transactionId, sale)
+      .then(action(() => {
+        this.loadTransactions();
+      }));
+  }
+
+  removeSale(transactionId, saleId) {
+    return agent.Sales.remove(transactionId, saleId)
+      .then(action(() => {
+        //TODO: rather just remove the sale from the list
+        this.loadTransactions();
+      }));
+  }
 }
 
 export default TransactionStore;

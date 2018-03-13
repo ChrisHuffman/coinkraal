@@ -70,7 +70,6 @@ const Transactions = {
 };
 
 const Sales = {
-  getSales: (transactionId) => requests.get(`/api/transactions/${transactionId}/sales`),
   add: (transactionId, sale) => requests.post(`/api/transactions/${transactionId}/sales/add`, sale),
   update: (transactionId, sale) => requests.put(`/api/transactions/${transactionId}/sales/update`, sale),
   remove: (transactionId, saleId) => requests.del(`/api/transactions/${transactionId}/sales/remove?id=${saleId}`)

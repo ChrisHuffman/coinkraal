@@ -17,13 +17,13 @@ class TransactionsPage extends React.Component {
         return (
             <Layout>
                 <div>
-                    <div className="row justify-content-end">
+                    <div className="row justify-content-end mt-10">
                         <div className="col-auto">
                             <AddTransaction />
                         </div>
                     </div>
 
-                    <div className="row mt-10">
+                    <div className="row">
                         <div className="col-md">
                             <TransactionTable />
                         </div>

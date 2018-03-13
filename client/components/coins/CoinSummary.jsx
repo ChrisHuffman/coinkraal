@@ -36,8 +36,6 @@ class CoinSummary extends React.Component {
             coin: nextProps.coin
         });
 
-        console.log('componentWillReceiveProps', nextProps);
-
         this.props.coinsPageState.loadCoinChartData(nextProps.coin.symbol);
 
         var curr = nextProps.currencyStore.getCoin(nextProps.coin.symbol);
@@ -135,11 +133,19 @@ class CoinSummary extends React.Component {
                             </TabPane>
                             <TabPane tabId="3">
                                 <div className="mb-10" />
+
+                                {!this.state.twitterUrl &&
+                                    <span>No twitter feed.</span>
+                                }
+
+                                {this.state.twitterUrl &&
                                 <div className="row justify-content-lg-center">
                                     <div className="col col-lg-9">
                                         <a className="twitter-timeline text-muted" data-dnt="true" data-theme="dark" data-link-color="#007bff" href={this.state.twitterUrl}>loading...</a>
                                     </div>
                                 </div>
+                                }
+
                             </TabPane>
                         </TabContent>
                     </ModalBody>

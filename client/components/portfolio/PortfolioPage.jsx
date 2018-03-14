@@ -9,6 +9,12 @@ class PortfolioPage extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.onFiltersChanged = this.onFiltersChanged.bind(this);
+    }
+
+    onFiltersChanged(filters) {
+        this.props.portfolioPageState.portfolioChartSetFilters(filters);
     }
 
     render() {
@@ -18,7 +24,13 @@ class PortfolioPage extends React.Component {
             <Layout>
                 <div className="row mt-20">
                     <div className="col-md-7">
-                        <PortfolioChart data={this.props.portfolioPageState.portfolioChartData} />
+                        <PortfolioChart 
+                            data={this.props.portfolioPageState.portfolioChartData} 
+                            onFiltersChanged={this.onFiltersChanged} 
+                            filters={{
+                                selectedFiat: this.props.portfolioPageState.portfolioChartSelectedFiat,
+                                selectedCoin: this.props.portfolioPageState.portfolioChartSelectedCoin
+                            }}/>
                     </div>
                     <div className="col-md-5">
                     </div>

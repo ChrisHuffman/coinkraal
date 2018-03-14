@@ -6,6 +6,8 @@ export class PortfolioPageState {
     portfolioChartService = null;
 
     @observable portfolioChartData = { };
+    portfolioChartSelectedFiat = "USD";
+    portfolioChartSelectedCoin = "BTC";
     
     constructor(transactionStore, portfolioChartService) {
 
@@ -13,16 +15,21 @@ export class PortfolioPageState {
         this.portfolioChartService = portfolioChartService;
         
         observe(transactionStore.transactions, () => {
-            this.loadPortfolioChartData();
+            this.portfolioChartLoadData();
         });
     }
 
-    @action loadPortfolioChartData() {
-        this.portfolioChartService.getData(this.transactionStore.transactions)
+    @action portfolioChartLoadData() {
+        this.portfolioChartService.getData(this.transactionStore.transactions, this.portfolioChartSelectedFiat, this.portfolioChartSelectedCoin)
             .then(action(data => {
                 this.portfolioChartData = data;
             }));
+    }
 
+    portfolioChartSetFilters(filters) {
+        this.portfolioChartSelectedFiat = filters.selectedFiat;
+        this.portfolioChartSelectedCoin = filters.selectedCoin;
+        this.portfolioChartLoadData();
     }
 }
 

@@ -4,7 +4,7 @@ import PortfolioChartServiceDataPoint from './PortfolioChartServiceDataPoint';
 
 export class PortfolioChartService {
 
-    getData(transactions) {
+    getData(transactions, currency1, currency2) {
 
         var self = this;
 
@@ -23,13 +23,13 @@ export class PortfolioChartService {
 
             //console.log('Starting to load chart data..');
 
-            self.loadDataPoints(self.getUniqueInCurrencies(transactions), "USD", transactions, limit)
-                .then((dataPointsUSD) => {
+            self.loadDataPoints(self.getUniqueInCurrencies(transactions), currency1, transactions, limit)
+                .then((dataPoints1) => {
 
-                    self.loadDataPoints(self.getUniqueInCurrencies(transactions), "BTC", transactions, limit)
-                        .then((dataPointsBTC) => {
+                    self.loadDataPoints(self.getUniqueInCurrencies(transactions), currency2, transactions, limit)
+                        .then((dataPoints2) => {
 
-                            var data = self.getChartJsData(dataPointsUSD, dataPointsBTC);
+                            var data = self.getChartJsData(currency1, dataPoints1, currency2, dataPoints2);
 
                             resolve(data);
 
@@ -38,8 +38,6 @@ export class PortfolioChartService {
                 });
         });
     }
-
-
 
     loadDataPoints(inCurrencies, toCurrency, transactions, limit) {
 
@@ -57,7 +55,6 @@ export class PortfolioChartService {
         var self = this;
 
         if (inCurrencies.length == 0) {
-            //console.log(dataPoints);
             resolve(dataPoints);
             return;
         }
@@ -109,7 +106,6 @@ export class PortfolioChartService {
                 dataPoint.addSale(fromCurrency, s);
             })
 
-
             previousAmount = dataPoint.amounts[fromCurrency];
         });
 
@@ -152,7 +148,7 @@ export class PortfolioChartService {
         var transaction = transactions[0];
 
         var firstDate = moment(transaction.date);
-        var now = moment();
+        var now = moment().startOf('day');
 
         var duration = moment.duration(now.diff(firstDate));
         return Math.ceil(duration.asDays());
@@ -182,11 +178,11 @@ export class PortfolioChartService {
 
         transactions.forEach(transaction => {
 
-            if(transaction.currency != currency)
+            if (transaction.currency != currency)
                 return;
 
             transaction.sales.forEach(sale => {
-                if(sale.date.indexOf(date) == 0)
+                if (sale.date.indexOf(date) == 0)
                     sales.push(sale);
             })
         })
@@ -194,7 +190,7 @@ export class PortfolioChartService {
         return sales;
     }
 
-    getChartJsData(dataPoints1, dataPoints2) {
+    getChartJsData(currency1, dataPoints1, currency2, dataPoints2) {
 
         var arr1 = this.objectToArray(dataPoints1);
         var arr2 = this.objectToArray(dataPoints2);
@@ -206,8 +202,8 @@ export class PortfolioChartService {
         return {
             labels: labels,
             datasets: [
-                this.getChartJsDataset(arr1, "USD", "rgba(40, 167, 69, 0.8)", "y-axis-1"), //, "#28a745"
-                this.getChartJsDataset(arr2, "BTC", "rgba(253, 126, 20, 0.8)", "y-axis-2") //, "#fd7e14"
+                this.getChartJsDataset(arr1, currency1, this.getCurrencyColour(currency1), "y-axis-1"),
+                this.getChartJsDataset(arr2, currency2, this.getCurrencyColour(currency2), "y-axis-2")
             ]
         };
     }
@@ -243,6 +239,21 @@ export class PortfolioChartService {
             }
         }
         return arr;
+    }
+
+    getCurrencyColour(currency) {
+
+        switch (currency) {
+            case "BTC":
+                return "rgba(253, 126, 20, 0.8)";
+            case "ETH":
+                return "rgba(74, 144, 226, 0.8)";
+            case "NEO":
+                return "rgba(139, 195, 74, 0.8)";
+            default:
+                return "rgba(40, 167, 69, 0.8)";
+        }
+
     }
 }
 

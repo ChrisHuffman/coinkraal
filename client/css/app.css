@@ -72,6 +72,10 @@
     border-top: none;
 }
 
+.dropdown-item {
+    cursor: pointer;
+}
+
 /* ----------------------------------------------------------------------------------------------------------- */
 
 /* Theme styling override, wasnt able to tweak this in Bootstrap Magic --------------------------------------- */

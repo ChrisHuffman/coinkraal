@@ -15,6 +15,7 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 TODO
 ---
 
+- Sale dates must be after transaction date
 - loader untill at least currencies are loaded
 - Common form functions - sell
 - why do we need to root api?

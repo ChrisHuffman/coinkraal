@@ -97,11 +97,18 @@ export class PortfolioChartService {
             dataPoint.setPrice(fromCurrency, d.close);
             dataPoint.setStartingAmount(fromCurrency, previousAmount)
 
+            //Find transactions for this day
             var matches = self.getTransactions(transactions, date, fromCurrency);
-
             matches.forEach((t) => {
                 dataPoint.addTransaction(t);
             })
+
+            //Find sales for this day
+            matches = self.getSales(transactions, date, fromCurrency);
+            matches.forEach((s) => {
+                dataPoint.addSale(fromCurrency, s);
+            })
+
 
             previousAmount = dataPoint.amounts[fromCurrency];
         });
@@ -167,6 +174,24 @@ export class PortfolioChartService {
         return transactions.filter(t => {
             return (t.date.indexOf(date) == 0 && t.currency == currency);
         });
+    }
+
+    getSales(transactions, date, currency) {
+
+        var sales = [];
+
+        transactions.forEach(transaction => {
+
+            if(transaction.currency != currency)
+                return;
+
+            transaction.sales.forEach(sale => {
+                if(sale.date.indexOf(date) == 0)
+                    sales.push(sale);
+            })
+        })
+
+        return sales;
     }
 
     getChartJsData(dataPoints1, dataPoints2) {

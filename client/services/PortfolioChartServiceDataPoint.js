@@ -24,6 +24,10 @@ export class PortfolioChartServiceDataPoint {
         this.amounts[transaction.currency] += transaction.amount;
     }
 
+    addSale = function(currency, sale) {
+        this.amounts[currency] -= sale.amount;
+    }
+
     getTotal = function() {
 
         var total = 0;

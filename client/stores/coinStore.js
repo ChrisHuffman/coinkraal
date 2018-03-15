@@ -7,7 +7,7 @@ export class CoinStore {
   }
 
   @action getCoins(start, limit) {
-    return agentExt.External.getCoinTopList(0, 100)
+    return agentExt.External.getCoinTopList(start, limit)
   }
 
 }

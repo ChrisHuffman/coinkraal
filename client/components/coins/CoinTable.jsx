@@ -14,94 +14,65 @@ class CoinTable extends React.Component {
 
         super(props);
 
-        this.state = {
-            coins: [],
-            isLoading: false,
-            start: 0,
-            limit: 100
-        }
-
-        this.loadCoins = this.loadCoins.bind(this);
         this.coinSummary = this.coinSummary.bind(this);
-    }
-
-    componentDidMount() {
-        this.loadCoins();
-    }
-
-    loadCoins() {
-
-        this.setState({
-            isLoading: true
-        });
-
-        this.props.coinStore.getCoins(this.state.start, this.state.limit)
-            .then(coins => {
-                this.setState({
-                    coins: coins,
-                    isLoading: false
-                });
-            });
+        this.sort = this.sort.bind(this);
     }
 
     coinSummary(coin, event) {
-        this.stopPropagation(event);
         this.props.coinsPageState.toggleCoinSummaryModal(coin);
     }
 
-    stopPropagation(event) {
-        event.stopPropagation();
-        event.nativeEvent.stopImmediatePropagation();
+    sort(column) {
+        this.props.coinsPageState.sort(column);
     }
 
     render() {
         var self = this;
-        var coins = this.state.coins;
+        var isLoading = this.props.coinsPageState.isLoading;
+        var coins = this.props.coinsPageState.coins;
         return (
             <div>
+
+                {!isLoading &&
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th className="clearTopBorder clickable narrow" onClick={this.sort.bind(null, "rank")}>#</th>
+                                <th className="clearTopBorder clickable narrow" onClick={this.sort.bind(null, "name")}>Coin</th>
+                                <th className="clearTopBorder clickable" onClick={this.sort.bind(null, "name")}></th>
+                                <th className="clearTopBorder text-right clickable" onClick={this.sort.bind(null, "market_cap_usd")}>Market Cap</th>
+                                <th className="clearTopBorder text-right clickable" onClick={this.sort.bind(null, "price_usd")}>Price</th>
+                                <th className="clearTopBorder text-right clickable" onClick={this.sort.bind(null, "24h_volume_usd")}>Volume</th>
+                                <th className="clearTopBorder text-right clickable" onClick={this.sort.bind(null, "percent_change_24h")}>Change (24Hr)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                coins.map(function (coin) {
+                                    return <tr key={coin.id} onClick={self.coinSummary.bind(event, coin)} className='clickable'>
+                                        <td>{coin.rank}</td>
+                                        <td><CoinLogo coin={coin.symbol} /></td>
+                                        <td>{coin.name}</td>
+                                        <td className="text-right">{self.props.commonStore.formatUSD(coin.market_cap_usd)}</td>
+                                        <td className="text-right">{self.props.commonStore.formatUSD(coin.price_usd)}</td>
+                                        <td className="text-right">{self.props.commonStore.formatUSD(coin["24h_volume_usd"])}</td>
+                                        <td className="text-right">
+                                            <Percentage value={coin.percent_change_24h} />
+                                        </td>
+                                    </tr>
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                }
 
                 <CoinSummary coin={this.props.coinsPageState.selectedCoin} />
 
                 <div className="row justify-content-center mt-20">
                     <div className="col-auto">
-                        <Loader visible={this.state.isLoading} />
+                        <Loader visible={isLoading} />
                     </div>
                 </div>
-
-                {!this.state.isLoading &&
-                    <div className="row mt-10">
-                        <div className="col-md">
-                            <Table responsive size="sm">
-                                <thead>
-                                    <tr>
-                                        <th className="clearTopBorder">#</th>
-                                        <th className="clearTopBorder">Coin</th>
-                                        <th className="clearTopBorder"></th>
-                                        <th className="clearTopBorder text-right">Market Cap</th>
-                                        <th className="clearTopBorder text-right">Price</th>
-                                        <th className="clearTopBorder text-right">Change (24Hr)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        coins.map(function (coin) {
-                                            return <tr key={coin.id} onClick={self.coinSummary.bind(event, coin)} className='clickable'>
-                                                <td>{coin.rank}</td>
-                                                <td><CoinLogo coin={coin.symbol} /></td>
-                                                <td>{coin.name}</td>
-                                                <td className="text-right">{self.props.commonStore.formatUSD(coin.market_cap_usd)}</td>
-                                                <td className="text-right">{self.props.commonStore.formatUSD(coin.price_usd)}</td>
-                                                <td className="text-right">
-                                                    <Percentage value={coin.percent_change_24h}/>
-                                                </td>
-                                            </tr>
-                                        })
-                                    }
-                                </tbody>
-                            </Table>
-                        </div>
-                    </div>
-                }
 
             </div>
         );

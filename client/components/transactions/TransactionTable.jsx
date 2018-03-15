@@ -144,7 +144,7 @@ class TransactionTable extends React.Component {
                 </div>
 
                 {!this.props.transactionStore.isLoading &&
-                    <div className="row mt-10">
+                    <div className="row">
                         <div className="col-md">
                             <Table responsive>
                                 <thead>

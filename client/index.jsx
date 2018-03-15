@@ -43,7 +43,7 @@ import TransactionsPageState from './components/transactions/TransactionsPageSta
 import CoinsPageState from './components/coins/CoinsPageState'
 var portfolioPageState = new PortfolioPageState(transactionStore, portfolioChartService);
 var transactionsPageState = new TransactionsPageState();
-var coinsPageState = new CoinsPageState(coinChartService);
+var coinsPageState = new CoinsPageState(coinStore, coinChartService);
 
 const stores = {
   authStore,

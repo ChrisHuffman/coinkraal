@@ -10,11 +10,11 @@ class CoinRepository {
             Coin.find({})
                 .select('_id name symbol cmc_rank twitterUrl redditUrl')            
                 .sort({ cmc_rank: 'asc' })  
-                .exec(function (error, transaction) {
+                .exec(function (error, coins) {
                     if (error)
                         reject(error);
                     else
-                        resolve(transaction);
+                        resolve(coins);
                 });
         })
     }
@@ -29,7 +29,7 @@ class CoinRepository {
                     if (error)
                         reject(error);
                     else
-                        resolve(coin.logoBase62_32x32);
+                        resolve(coin ? coin.logoBase62_32x32 : "");
                 });
         })
     }

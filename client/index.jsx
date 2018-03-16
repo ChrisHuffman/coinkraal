@@ -24,11 +24,13 @@ import CommonStore from './stores/commonStore';
 import CurrencyStore from './stores/currencyStore';
 import CoinStore from './stores/coinStore';
 import SocialStore from './stores/socialStore';
+import ExchangeStore from './stores/exchangeStore';
 var transactionStore = new TransactionStore();
 var commonStore = new CommonStore();
 var currencyStore = new CurrencyStore();
 var coinStore = new CoinStore();
 var socialStore = new SocialStore();
+var exchangeStore = new ExchangeStore();
 
 //Services
 import PortfolioChartService from './services/PortfolioChartService';
@@ -45,6 +47,15 @@ var portfolioPageState = new PortfolioPageState(transactionStore, portfolioChart
 var transactionsPageState = new TransactionsPageState();
 var coinsPageState = new CoinsPageState(coinStore, coinChartService);
 
+
+//Global
+import Global from './global';
+var global = new Global(authStore, currencyStore, transactionStore, exchangeStore);
+
+
+//Start Load of App Data
+global.loadApplicationData();
+
 const stores = {
   authStore,
 
@@ -56,7 +67,9 @@ const stores = {
 
   portfolioPageState,
   transactionsPageState,
-  coinsPageState
+  coinsPageState,
+
+  global
 };
 
 promiseFinally.shim();

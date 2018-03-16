@@ -88,9 +88,9 @@ class TransactionTable extends React.Component {
                 <td>{transaction.purchaseCurrency} @ {transaction.purchaseUnitPrice}</td>
                 <td>{this.props.commonStore.formatDate(transaction.date)}</td>
                 <td className='min-padding'>
-                    <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editTransaction.bind(event, transaction)}>Edit</Button>
-                    <Button outline color="secondary" size="xs" className="mr-10" onClick={this.removeTransaction.bind(event, transaction)}>Remove</Button>
-                    <Button outline color="secondary" size="xs" onClick={this.addSale.bind(event, transaction)}>Sell</Button>
+                    <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editTransaction.bind(this, transaction)}>Edit</Button>
+                    <Button outline color="secondary" size="xs" className="mr-10" onClick={this.removeTransaction.bind(this, transaction)}>Remove</Button>
+                    <Button outline color="secondary" size="xs" onClick={this.addSale.bind(this, transaction)}>Sell</Button>
                 </td>
             </tr>
         ];

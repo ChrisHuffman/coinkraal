@@ -2,7 +2,7 @@ import { observable, action, computed } from 'mobx';
 import agent from '../agent';
 
 export class TransactionStore {
-  
+
   @observable transactions = observable([{}]); //Slight hack, set a empty obj so that an empty list of transactions with still trigger obs events
   @observable isLoading = false;
 
@@ -41,7 +41,7 @@ export class TransactionStore {
         this.loadTransactions();
       }));
   }
- 
+
   addSale(transactionId, sale) {
     return agent.Sales.add(transactionId, sale)
       .then(action(() => {

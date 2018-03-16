@@ -17,11 +17,11 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    if (props.authStore.token) {
-      this.props.currencyStore.loadCoins();
-      this.props.currencyStore.loadPurchaseCurrencies();
-      this.props.transactionStore.loadTransactions();
-    }
+    // if (props.authStore.token) {
+    //   this.props.currencyStore.loadCoins();
+    //   this.props.currencyStore.loadPurchaseCurrencies();
+    //   this.props.transactionStore.loadTransactions();
+    // }
   }
 
   render() {

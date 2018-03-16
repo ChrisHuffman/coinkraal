@@ -5,14 +5,7 @@ import moment from 'moment';
 
 class CommonStore {
 
-  @observable appName = 'CoinKraal';
-  @observable appLoaded = false;
-
   constructor() {
-  }
-
-  @action setAppLoaded() {
-    this.appLoaded = true;
   }
 
   @action notify(message, type) {

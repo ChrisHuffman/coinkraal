@@ -21,9 +21,9 @@ export default class Login extends React.Component {
 
         this.props.authStore.googleLogin(response.tokenId)
             .then(() => {
-                this.props.currencyStore.loadCoins();
-                this.props.currencyStore.loadPurchaseCurrencies();
-                this.props.transactionStore.loadTransactions();
+                // this.props.currencyStore.loadCoins();
+                // this.props.currencyStore.loadPurchaseCurrencies();
+                // this.props.transactionStore.loadTransactions();
                 this.props.history.push("/");
             });
     }

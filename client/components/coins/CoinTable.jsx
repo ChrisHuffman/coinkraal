@@ -18,7 +18,7 @@ class CoinTable extends React.Component {
         this.sort = this.sort.bind(this);
     }
 
-    coinSummary(coin, event) {
+    coinSummary(coin) {
         this.props.coinsPageState.toggleCoinSummaryModal(coin);
     }
 
@@ -49,7 +49,7 @@ class CoinTable extends React.Component {
                         <tbody>
                             {
                                 coins.map(function (coin) {
-                                    return <tr key={coin.id} onClick={self.coinSummary.bind(event, coin)} className='clickable'>
+                                    return <tr key={coin.id} onClick={self.coinSummary.bind(null, coin)} className='clickable'>
                                         <td>{coin.rank}</td>
                                         <td><CoinLogo coin={coin.symbol} /></td>
                                         <td>{coin.name}</td>

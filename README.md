@@ -27,12 +27,24 @@ TODO
     - @observer
 - have sell and buy dots on the chart
 
-
 - nodejs warnings
     npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 
 
-
-"deploy": "gcloud app deploy"
+Ideas
+---
+- setting show random Carlos Matos quotes
+- TCs no Carlos
+- Ranking
+    1. Bitcoin 2009
+    2. Moon
+    3. Lambo
+    4. Good HODL
+    5. 
+    6. B-Cash
+    7. Heavy Bags
+    8. Ian Shillina - All Star
+    9. Total Sh*tcoin
+    10. Biitconeeeeeeect! v2.0
 
 
 Db Design

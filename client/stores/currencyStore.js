@@ -14,25 +14,40 @@ export class CurrencyStore {
   }
 
   @action loadPurchaseCurrencies() {
-    this.purchaseCurrencies = [
-      { symbol: 'BTC', fullName: 'Bitcoin (BTC)' },
-      { symbol: 'ETH', fullName: 'Ethereum (ETH)' },
-      { symbol: 'USD', fullName: 'US Dollar (USD)' },
-      { symbol: 'EUR', fullName: 'Euro (EUR)' },
-      { symbol: 'GBP', fullName: 'Pound (GBP)' }
-    ];
+
+    var self = this;
+    return new Promise(function (resolve, reject) {
+
+      self.purchaseCurrencies = [
+        { symbol: 'BTC', fullName: 'Bitcoin (BTC)' },
+        { symbol: 'ETH', fullName: 'Ethereum (ETH)' },
+        { symbol: 'USD', fullName: 'US Dollar (USD)' },
+        { symbol: 'EUR', fullName: 'Euro (EUR)' },
+        { symbol: 'GBP', fullName: 'Pound (GBP)' }
+      ];
+
+      resolve();
+
+    });
   }
 
   @action loadCoins() {
-    this.isLoading = true;
-    return agent.Coins.getCoins()
+
+    var self = this;
+    self.isLoading = true;
+
+    return new Promise(function (resolve, reject) {
+
+      return agent.Coins.getCoins()
       .then(action((coins) => {
-        this.coins = coins.map(c => {
+        self.coins = coins.map(c => {
           c.fullName = `${c.name} (${c.symbol})`;
           return c;
         });
-      }))
-      .finally(action(() => { this.isLoading = false; }));
+        self.isLoading = false; 
+        resolve();
+      }));
+    });
   }
 
   @action getHistoricalPrice(fromCurrency, toCurrency, timestamp) {
@@ -64,7 +79,7 @@ export class CurrencyStore {
   }
 
   getCoin(symbol) {
-    return this.coins.find(function(c) {
+    return this.coins.find(function (c) {
       return c.symbol == symbol;
     });
   }

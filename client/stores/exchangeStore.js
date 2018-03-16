@@ -7,14 +7,16 @@ export class ExchangeStore {
   }
 
   loadData() {
+
+    return new Promise(function (resolve, reject) {
+      resolve();
+    });
       
   }
 
   @computed getCoins(amount, source, target) {
     return amout;
   }
-
-
 
 }
 

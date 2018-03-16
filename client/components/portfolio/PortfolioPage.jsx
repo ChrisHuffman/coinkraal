@@ -2,6 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Layout from '../Layout'
 import PortfolioChart from './portfolio-chart/PortfolioChart'
+import Loader from '../common/Loader'
 
 @inject('portfolioPageState')
 @observer
@@ -22,17 +23,26 @@ class PortfolioPage extends React.Component {
         return (
 
             <Layout>
-                <div className="row mt-20">
-                    <div className="col-md-7">
-                        <PortfolioChart 
-                            data={this.props.portfolioPageState.portfolioChartData} 
-                            onFiltersChanged={this.onFiltersChanged} 
-                            filters={{
-                                selectedFiat: this.props.portfolioPageState.portfolioChartSelectedFiat,
-                                selectedCoin: this.props.portfolioPageState.portfolioChartSelectedCoin
-                            }}/>
+
+                {!this.props.portfolioPageState.isLoadingPorfolioChartData &&
+                    <div className="row mt-20">
+                        <div className="col-md-7">
+                            <PortfolioChart
+                                data={this.props.portfolioPageState.portfolioChartData}
+                                onFiltersChanged={this.onFiltersChanged}
+                                filters={{
+                                    selectedFiat: this.props.portfolioPageState.portfolioChartSelectedFiat,
+                                    selectedCoin: this.props.portfolioPageState.portfolioChartSelectedCoin
+                                }} />
+                        </div>
+                        <div className="col-md-5">
+                        </div>
                     </div>
-                    <div className="col-md-5">
+                }
+
+                <div className="row justify-content-center mt-20">
+                    <div className="col-auto">
+                        <Loader visible={this.props.portfolioPageState.isLoadingPorfolioChartData} />
                     </div>
                 </div>
             </Layout>

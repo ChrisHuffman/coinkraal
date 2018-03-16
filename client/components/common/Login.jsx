@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react';
 import GoogleLogin from 'react-google-login';
 
 
-@inject('authStore', 'transactionStore', 'currencyStore')
+@inject('authStore')
 @withRouter
 @observer
 export default class Login extends React.Component {
@@ -21,9 +21,6 @@ export default class Login extends React.Component {
 
         this.props.authStore.googleLogin(response.tokenId)
             .then(() => {
-                // this.props.currencyStore.loadCoins();
-                // this.props.currencyStore.loadPurchaseCurrencies();
-                // this.props.transactionStore.loadTransactions();
                 this.props.history.push("/");
             });
     }

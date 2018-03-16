@@ -8,6 +8,8 @@ export class PortfolioPageState {
     @observable portfolioChartData = { };
     portfolioChartSelectedFiat = "USD";
     portfolioChartSelectedCoin = "BTC";
+
+    @observable isLoadingPorfolioChartData = true;
     
     constructor(transactionStore, portfolioChartService) {
 
@@ -20,9 +22,13 @@ export class PortfolioPageState {
     }
 
     @action portfolioChartLoadData() {
+
+        this.isLoadingPorfolioChartData = true;
+
         this.portfolioChartService.getData(this.transactionStore.transactions, this.portfolioChartSelectedFiat, this.portfolioChartSelectedCoin)
             .then(action(data => {
                 this.portfolioChartData = data;
+                this.isLoadingPorfolioChartData = false;
             }));
     }
 

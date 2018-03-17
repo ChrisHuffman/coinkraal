@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import { Line, } from 'react-chartjs-2';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class PortfolioChart extends React.Component {
@@ -11,6 +11,7 @@ class PortfolioChart extends React.Component {
         this.state = {
             data: this.formatData(props.chart.data),
             options: this.formatOptions(props.chart.options),
+            plugins: this.formatPlugins(props.chart.plugins),
             isLoading: true,
 
             //selectedFiat: props.filters.selectedFiat,
@@ -29,6 +30,8 @@ class PortfolioChart extends React.Component {
         this.onFiltersChanged = this.onFiltersChanged.bind(this);
 
         this.getTimeRangeText = this.getTimeRangeText.bind(this);
+
+        
     }
 
     //Remove observables (some reason chart js doesnt like them)
@@ -64,14 +67,22 @@ class PortfolioChart extends React.Component {
         return options;
     }
 
+    //Remove observables (some reason chart js doesnt like them)
+    formatPlugins(plugins) {
+        return plugins.map(p => p);
+    }
+
     componentWillReceiveProps(nextProps) {
 
-        if (!nextProps.data)
+        if (!nextProps.chart)
             return;
+
+        console.log(nextProps.chart);
 
         this.setState({
             data: this.formatData(nextProps.chart.data),
-            options: this.formatData(nextProps.chart.options)
+            options: this.formatData(nextProps.chart.options),
+            plugins: this.formatData(nextProps.chart.plugins)
         });
     }
 
@@ -148,7 +159,8 @@ class PortfolioChart extends React.Component {
 
                         <Line
                             data={this.state.data}
-                            options={this.state.options} />
+                            options={this.state.options}
+                            plugins={this.state.plugins} />
                     </div>
 
                 </div>

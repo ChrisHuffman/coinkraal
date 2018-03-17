@@ -233,7 +233,8 @@ export class PortfolioChartService {
                 labels: this.getChartJsLabels(arr1, arr2),
                 datasets: dataSets
             },
-            options: this.getChartJsOptions(arr1, arr2, currency1, currency2, dataFrequency)
+            options: this.getChartJsOptions(arr1, arr2, currency1, currency2, dataFrequency),
+            plugins: this.getPlugins()
         };
     }
 
@@ -285,6 +286,9 @@ export class PortfolioChartService {
         var self = this;
 
         var options = {
+            customLine: {
+                color: 'white'
+            },
             responsive: true,
             hoverMode: 'index',
             stacked: false,
@@ -349,6 +353,40 @@ export class PortfolioChartService {
         return options;
     }
 
+    getPlugins() {
+
+        var verticalLinePlugin = {
+            afterDatasetsDraw: function (chart) {
+
+                if (chart.tooltip._active && chart.tooltip._active.length) {
+
+                    var activePoint = chart.tooltip._active[0];
+                    var ctx = chart.ctx;
+                    var y_axis = chart.scales['y-axis-1'] || chart.scales['y-axis-2'];
+
+                    if(!y_axis)
+                        return;
+
+                    var x = activePoint.tooltipPosition().x;
+                    var topY = y_axis.top;
+                    var bottomY = y_axis.bottom;
+
+                    // draw line
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(x, topY);
+                    ctx.lineTo(x, bottomY);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = '#585858';
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+        };
+
+        return [ verticalLinePlugin ]
+    }
+
     objectToArray(obj) {
         var arr = [];
         for (var k in obj) {
@@ -392,10 +430,22 @@ export class PortfolioChartService {
     }
 
     formatCurrency(amount) {
+
+        var minimumFractionDigits = 2;
+        var maximumFractionDigits = 2;
+
+        if (amount < 0.01)
+            maximumFractionDigits = 6
+
+        if (amount > 1000000) {
+            maximumFractionDigits = 0;
+            minimumFractionDigits = 0;
+        }
+
         return parseFloat(amount).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 4
-          });
+            minimumFractionDigits: minimumFractionDigits,
+            maximumFractionDigits: maximumFractionDigits
+        });
     }
 }
 

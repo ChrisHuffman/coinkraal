@@ -10,6 +10,12 @@ export class Global {
     @observable isLoaded = false;
     loadCount = 3;
 
+    @observable selectedFiat = "USD";
+    @observable selectedCoin = "BTC";
+
+    fiatOptions = ['USD', 'ZAR', 'GBP', 'AUD'];
+    coinOptions = ['BTC', 'ETH', 'NEO'];
+
     constructor(authStore, currencyStore, transactionStore, exchangeStore) {
         this.authStore = authStore;
         this.currencyStore = currencyStore;
@@ -23,7 +29,7 @@ export class Global {
 
         this.currencyStore.loadPurchaseCurrencies().then(this.checkLoadComplete);
         this.currencyStore.loadCoins().then(this.checkLoadComplete);
-        this.exchangeStore.loadData().then(this.checkLoadComplete);
+        this.exchangeStore.load(this.fiatOptions.slice(0), this.coinOptions.slice(0)).then(this.checkLoadComplete);
 
         //Can only load transaction if the user is authenticated
         reaction(() => this.authStore.token, (token) => {
@@ -41,6 +47,14 @@ export class Global {
 
         if(this.loadCount == 0)
             this.isLoaded = true;
+    }
+
+    @action setSelectedFiat(currency) {
+        this.selectedFiat = currency;
+    }
+
+    @action setSelectedCoin(coin) {
+        this.selectedCoin = coin;
     }
 }
 

@@ -32,6 +32,12 @@ var coinStore = new CoinStore();
 var socialStore = new SocialStore();
 var exchangeStore = new ExchangeStore();
 
+
+//Global
+import Global from './global';
+var global = new Global(authStore, currencyStore, transactionStore, exchangeStore);
+
+
 //Services
 import PortfolioChartService from './services/PortfolioChartService';
 import CoinChartService from './services/CoinChartService';
@@ -43,14 +49,9 @@ var coinChartService = new CoinChartService();
 import PortfolioPageState from './components/portfolio/PortfolioPageState';
 import TransactionsPageState from './components/transactions/TransactionsPageState'
 import CoinsPageState from './components/coins/CoinsPageState'
-var portfolioPageState = new PortfolioPageState(transactionStore, portfolioChartService);
+var portfolioPageState = new PortfolioPageState(global, transactionStore, portfolioChartService);
 var transactionsPageState = new TransactionsPageState();
 var coinsPageState = new CoinsPageState(coinStore, coinChartService);
-
-
-//Global
-import Global from './global';
-var global = new Global(authStore, currencyStore, transactionStore, exchangeStore);
 
 
 //Start Load of App Data
@@ -64,6 +65,7 @@ const stores = {
   currencyStore,
   coinStore,
   socialStore,
+  exchangeStore,
 
   portfolioPageState,
   transactionsPageState,

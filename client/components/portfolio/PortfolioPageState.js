@@ -1,4 +1,4 @@
-import { observable, observe, action } from 'mobx';
+import { observable, observe, action, reaction } from 'mobx';
 
 export class PortfolioPageState {
 
@@ -12,12 +12,21 @@ export class PortfolioPageState {
 
     @observable isLoadingPorfolioChartData = true;
     
-    constructor(transactionStore, portfolioChartService) {
+    constructor(global, transactionStore, portfolioChartService) {
 
+        this.global = global;
         this.transactionStore = transactionStore;
         this.portfolioChartService = portfolioChartService;
         
-        observe(transactionStore.transactions, () => {
+        observe(this.transactionStore.transactions, () => {
+            this.portfolioChartLoadData();
+        });
+
+        reaction(() => this.global.selectedFiat, () => {
+            this.portfolioChartLoadData();
+        });
+
+        reaction(() => this.global.selectedCoin, () => {
             this.portfolioChartLoadData();
         });
     }
@@ -26,7 +35,7 @@ export class PortfolioPageState {
 
         this.isLoadingPorfolioChartData = true;
 
-        this.portfolioChartService.getData(this.transactionStore.transactions, this.portfolioChartSelectedFiat, this.portfolioChartSelectedCoin, this.portfolioChartSelectedTimeRange)
+        this.portfolioChartService.getData(this.transactionStore.transactions, this.global.selectedFiat, this.global.selectedCoin, this.portfolioChartSelectedTimeRange)
             .then(action(data => {
                 this.portfolioChartData = data;
                 this.isLoadingPorfolioChartData = false;

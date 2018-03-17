@@ -250,6 +250,10 @@ export class PortfolioChartService {
 
     getChartJsLabels(dataPoints1, dataPoints2) {
         var arr = dataPoints1 ? dataPoints1 : dataPoints2;
+
+        if (!arr)
+            return [];
+
         return arr.map(dp => {
             return dp.date;
         });
@@ -278,6 +282,8 @@ export class PortfolioChartService {
 
     getChartJsOptions(arr1, arr2, currency1, currency2, dataFrequency) {
 
+        var self = this;
+
         var options = {
             responsive: true,
             hoverMode: 'index',
@@ -304,16 +310,15 @@ export class PortfolioChartService {
             }
         };
 
-        if(arr1) {
+        if (arr1) {
             options.scales.yAxes.push({
                 type: 'linear',
                 display: true,
                 position: 'left',
                 id: 'y-axis-1',
                 ticks: {
-                    //Might want to number format this
                     callback: function (value, index, values) {
-                        return value;
+                        return self.formatCurrency(value);
                     }
                 },
                 scaleLabel: {
@@ -323,12 +328,17 @@ export class PortfolioChartService {
             });
         };
 
-        if(arr2) {
+        if (arr2) {
             options.scales.yAxes.push({
                 type: 'linear',
                 display: true,
                 position: 'right',
                 id: 'y-axis-2',
+                ticks: {
+                    callback: function (value, index, values) {
+                        return self.formatCurrency(value);
+                    }
+                },
                 scaleLabel: {
                     display: true,
                     labelString: currency2
@@ -379,6 +389,13 @@ export class PortfolioChartService {
                 return "rgba(40, 167, 69, 0.8)";
         }
 
+    }
+
+    formatCurrency(amount) {
+        return parseFloat(amount).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 4
+          });
     }
 }
 

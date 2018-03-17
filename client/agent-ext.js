@@ -29,6 +29,7 @@ const requests = {
 const External = {
   get: (url) => requests.get(`${url}`),
   getCoinDataList: () => requests.get(`${API_ROOT1}/data/all/coinlist`).then(body => body.Data),
+  getPrice: (fromCurrency, toCurrencies) => requests.get(`${API_ROOT1}/data/price?fsym=${fromCurrency}&tsyms=${toCurrencies.join(',')}`),
   getHistoricalPrice: (fromCurrency, toCurrency, timestamp) => requests.get(`${API_ROOT1}/data/pricehistorical?fsym=${fromCurrency}&tsyms=${toCurrency}&ts=${timestamp}`).then(body => body[fromCurrency][toCurrency]),
   getDailyHistoricalPrice: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/histoday?fsym=${fromCurrency}&tsym=${toCurrency}&limit=${limit}`).then(body => body.Data),
   getHourlyHistoricalPrice: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/histohour?fsym=${fromCurrency}&tsym=${toCurrency}&limit=${limit}`).then(body => body.Data),

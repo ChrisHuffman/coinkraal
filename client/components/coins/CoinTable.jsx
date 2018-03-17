@@ -4,9 +4,10 @@ import { Table } from 'reactstrap';
 import Loader from '../common/Loader'
 import Percentage from '../common/Percentage'
 import CoinLogo from '../common/CoinLogo'
+import Exchange from '../common/Exchange'
 import CoinSummary from './CoinSummary'
 
-@inject('coinStore', 'commonStore', 'coinsPageState')
+@inject('global', 'coinStore', 'commonStore', 'coinsPageState')
 @observer
 class CoinTable extends React.Component {
 
@@ -37,13 +38,14 @@ class CoinTable extends React.Component {
                     <Table responsive>
                         <thead>
                             <tr>
-                                <th className="clearTopBorder clickable narrow" onClick={this.sort.bind(null, "rank")}>#</th>
-                                <th className="clearTopBorder clickable narrow" onClick={this.sort.bind(null, "name")}>Coin</th>
-                                <th className="clearTopBorder clickable" onClick={this.sort.bind(null, "name")}></th>
-                                <th className="clearTopBorder text-right clickable" onClick={this.sort.bind(null, "market_cap_usd")}>Market Cap</th>
-                                <th className="clearTopBorder text-right clickable" onClick={this.sort.bind(null, "price_usd")}>Price</th>
-                                <th className="clearTopBorder text-right clickable" onClick={this.sort.bind(null, "24h_volume_usd")}>Volume</th>
-                                <th className="clearTopBorder text-right clickable" onClick={this.sort.bind(null, "percent_change_24h")}>Change (24Hr)</th>
+                                <th className="clearTopBorder clickable narrow" onClick={self.sort.bind(null, "rank")}>#</th>
+                                <th className="clearTopBorder clickable narrow" onClick={self.sort.bind(null, "name")}>Coin</th>
+                                <th className="clearTopBorder clickable" onClick={self.sort.bind(null, "name")}></th>
+                                <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "market_cap_usd")}>Market Cap ({self.props.global.selectedFiat})</th>
+                                <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "price_usd")}>Price ({self.props.global.selectedFiat})</th>
+                                <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "price_btc")}>Price ({self.props.global.selectedCoin})</th>
+                                <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "24h_volume_usd")}>Volume ({self.props.global.selectedFiat})</th>
+                                <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "percent_change_24h")}>Change (24Hr)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,9 +55,26 @@ class CoinTable extends React.Component {
                                         <td>{coin.rank}</td>
                                         <td><CoinLogo coin={coin.symbol} /></td>
                                         <td>{coin.name}</td>
-                                        <td className="text-right">{self.props.commonStore.formatUSD(coin.market_cap_usd)}</td>
-                                        <td className="text-right">{self.props.commonStore.formatUSD(coin.price_usd)}</td>
-                                        <td className="text-right">{self.props.commonStore.formatUSD(coin["24h_volume_usd"])}</td>
+                                        <td className="text-right">
+                                            {
+                                                <Exchange amount={coin.market_cap_usd} from="USD" to={self.props.global.selectedFiat} />
+                                            }
+                                        </td>
+                                        <td className="text-right">
+                                            {
+                                                <Exchange amount={coin.price_usd} from="USD" to={self.props.global.selectedFiat} />
+                                            }
+                                        </td>
+                                        <td className="text-right">
+                                            {
+                                                <Exchange amount={coin.price_btc} from="BTC" to={self.props.global.selectedCoin} />
+                                            }
+                                        </td>
+                                        <td className="text-right">
+                                            {
+                                                <Exchange amount={coin["24h_volume_usd"]} from="USD" to={self.props.global.selectedFiat} />
+                                            }
+                                        </td>
                                         <td className="text-right">
                                             <Percentage value={coin.percent_change_24h} />
                                         </td>

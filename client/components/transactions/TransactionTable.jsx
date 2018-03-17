@@ -149,8 +149,8 @@ class TransactionTable extends React.Component {
                             <Table responsive>
                                 <thead>
                                     <tr>
-                                        <th className="clearTopBorder"></th>
-                                        <th className="clearTopBorder">Coin</th>
+                                        <th className="clearTopBorder narrow"></th>
+                                        <th className="clearTopBorder narrow">Coin</th>
                                         <th className="clearTopBorder"></th>
                                         <th className="clearTopBorder">Amount</th>
                                         <th className="clearTopBorder">Purchased with</th>

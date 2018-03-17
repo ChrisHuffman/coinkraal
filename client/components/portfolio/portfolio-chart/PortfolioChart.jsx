@@ -13,21 +13,15 @@ class PortfolioChart extends React.Component {
             options: this.formatOptions(props.chart.options),
             isLoading: true,
 
-            selectedFiat: props.filters.selectedFiat,
+            //selectedFiat: props.filters.selectedFiat,
             fiatDropDownOpen: false,
 
-            selectedCoin: props.filters.selectedCoin,
+            //selectedCoin: props.filters.selectedCoin,
             coinDropDownOpen: false,
 
             selectedTimeRange: props.filters.selectedTimeRange,
             timeRangeDropDownOpen: false,
         }
-
-        this.toggleFiatDropDown = this.toggleFiatDropDown.bind(this);
-        this.selectFiat = this.selectFiat.bind(this);
-
-        this.toggleCoinDropDown = this.toggleCoinDropDown.bind(this);
-        this.selectCoin = this.selectCoin.bind(this);
 
         this.toggleTimeRangeDropDown = this.toggleTimeRangeDropDown.bind(this);
         this.selectTimeRange = this.selectTimeRange.bind(this);
@@ -81,30 +75,6 @@ class PortfolioChart extends React.Component {
         });
     }
 
-    toggleFiatDropDown() {
-        this.setState({
-            fiatDropDownOpen: !this.state.fiatDropDownOpen
-        });
-    }
-
-    selectFiat(fiat) {
-        this.setState({
-            selectedFiat: fiat
-        }, this.onFiltersChanged);
-    }
-
-    toggleCoinDropDown() {
-        this.setState({
-            coinDropDownOpen: !this.state.coinDropDownOpen
-        });
-    }
-
-    selectCoin(coin) {
-        this.setState({
-            selectedCoin: coin
-        }, this.onFiltersChanged);
-    }
-
     toggleTimeRangeDropDown() {
         this.setState({
             timeRangeDropDownOpen: !this.state.timeRangeDropDownOpen
@@ -123,8 +93,8 @@ class PortfolioChart extends React.Component {
             return;
 
         this.props.onFiltersChanged({
-            selectedFiat: this.state.selectedFiat,
-            selectedCoin: this.state.selectedCoin,
+            // selectedFiat: this.state.selectedFiat,
+            //   selectedCoin: this.state.selectedCoin,
             selectedTimeRange: this.state.selectedTimeRange
         });
     }
@@ -165,39 +135,6 @@ class PortfolioChart extends React.Component {
                                 <DropdownItem onClick={this.selectTimeRange.bind(null, 90)}>Last 3 Months</DropdownItem>
                                 <DropdownItem onClick={this.selectTimeRange.bind(null, 180)}>Last 6 Months</DropdownItem>
                                 <DropdownItem onClick={this.selectTimeRange.bind(null, 365)}>Last Year</DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
-
-                    </div>
-
-                    <div className="col-auto">
-
-                        <ButtonDropdown isOpen={this.state.fiatDropDownOpen} toggle={this.toggleFiatDropDown}>
-                            <DropdownToggle caret>
-                                {this.state.selectedFiat ? this.state.selectedFiat : "<Hide>"}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={this.selectFiat.bind(null, '')}>&#x3C;Hide&#x3E;</DropdownItem>
-                                <DropdownItem onClick={this.selectFiat.bind(null, 'USD')}>USD</DropdownItem>
-                                <DropdownItem onClick={this.selectFiat.bind(null, 'ZAR')}>ZAR</DropdownItem>
-                                <DropdownItem onClick={this.selectFiat.bind(null, 'GBP')}>GPB</DropdownItem>
-                                <DropdownItem onClick={this.selectFiat.bind(null, 'AUD')}>AUD</DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
-
-                    </div>
-
-                    <div className="col-auto">
-
-                        <ButtonDropdown isOpen={this.state.coinDropDownOpen} toggle={this.toggleCoinDropDown}>
-                            <DropdownToggle caret>
-                                {this.state.selectedCoin ? this.state.selectedCoin : "<Hide>"}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={this.selectCoin.bind(null, '')}>&#x3C;Hide&#x3E;</DropdownItem>
-                                <DropdownItem onClick={this.selectCoin.bind(null, 'BTC')}>BTC</DropdownItem>
-                                <DropdownItem onClick={this.selectCoin.bind(null, 'ETH')}>ETH</DropdownItem>
-                                <DropdownItem onClick={this.selectCoin.bind(null, 'NEO')}>NEO</DropdownItem>
                             </DropdownMenu>
                         </ButtonDropdown>
 

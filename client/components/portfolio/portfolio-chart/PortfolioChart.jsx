@@ -9,7 +9,8 @@ class PortfolioChart extends React.Component {
         super(props);
 
         this.state = {
-            data: this.formatData(props.data),
+            data: this.formatData(props.chart.data),
+            options: this.formatOptions(props.chart.options),
             isLoading: true,
 
             selectedFiat: props.filters.selectedFiat,
@@ -17,6 +18,9 @@ class PortfolioChart extends React.Component {
 
             selectedCoin: props.filters.selectedCoin,
             coinDropDownOpen: false,
+
+            selectedTimeRange: props.filters.selectedTimeRange,
+            timeRangeDropDownOpen: false,
         }
 
         this.toggleFiatDropDown = this.toggleFiatDropDown.bind(this);
@@ -25,11 +29,15 @@ class PortfolioChart extends React.Component {
         this.toggleCoinDropDown = this.toggleCoinDropDown.bind(this);
         this.selectCoin = this.selectCoin.bind(this);
 
+        this.toggleTimeRangeDropDown = this.toggleTimeRangeDropDown.bind(this);
+        this.selectTimeRange = this.selectTimeRange.bind(this);
+
         this.onFiltersChanged = this.onFiltersChanged.bind(this);
 
-        this.getOptions = this.getOptions.bind(this);
+        this.getTimeRangeText = this.getTimeRangeText.bind(this);
     }
 
+    //Remove observables (some reason chart js doesnt like them)
     formatData(data) {
 
         if (!data.labels)
@@ -51,7 +59,15 @@ class PortfolioChart extends React.Component {
                 };
             })
         }
+    }
 
+    //Remove observables (some reason chart js doesnt like them)
+    formatOptions(options) {
+
+        options.scales.xAxes = options.scales.xAxes.map(x => x);
+        options.scales.yAxes = options.scales.yAxes.map(y => y);
+
+        return options;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -60,7 +76,8 @@ class PortfolioChart extends React.Component {
             return;
 
         this.setState({
-            data: this.formatData(nextProps.data)
+            data: this.formatData(nextProps.chart.data),
+            options: this.formatData(nextProps.chart.options)
         });
     }
 
@@ -88,6 +105,18 @@ class PortfolioChart extends React.Component {
         }, this.onFiltersChanged);
     }
 
+    toggleTimeRangeDropDown() {
+        this.setState({
+            timeRangeDropDownOpen: !this.state.timeRangeDropDownOpen
+        });
+    }
+
+    selectTimeRange(timeRange) {
+        this.setState({
+            selectedTimeRange: timeRange
+        }, this.onFiltersChanged);
+    }
+
     onFiltersChanged() {
 
         if (!this.props.onFiltersChanged)
@@ -95,63 +124,25 @@ class PortfolioChart extends React.Component {
 
         this.props.onFiltersChanged({
             selectedFiat: this.state.selectedFiat,
-            selectedCoin: this.state.selectedCoin
+            selectedCoin: this.state.selectedCoin,
+            selectedTimeRange: this.state.selectedTimeRange
         });
     }
 
-    getOptions() {
+    getTimeRangeText() {
 
-        return {
-            responsive: true,
-            hoverMode: 'index',
-            stacked: false,
-            legend: {
-                labels: {
-                    usePointStyle: true
-                }
-            },
-            tooltips: {
-                position: 'nearest',
-                mode: 'index',
-                intersect: false,
-                cornerRadius: 2
-            },
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    time: {
-                        unit: 'month'
-                    }
-                }],
-                yAxes: [{
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    id: 'y-axis-1',
-                    ticks: {
-                        //Might want to number format this
-                        callback: function (value, index, values) {
-                            return value;
-                        }
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: this.state.selectedFiat
-                    }
-                }, {
-                    type: 'linear', 
-                    display: true,
-                    position: 'right',
-                    id: 'y-axis-2',
-                    scaleLabel: {
-                        display: true,
-                        labelString: this.state.selectedCoin
-                    }
-                }],
-            }
-        };
-
-
+        switch (this.state.selectedTimeRange) {
+            case 7:
+                return 'Last 7 Days';
+            case 30:
+                return 'Last Month';
+            case 90:
+                return 'Last 3 Months';
+            case 180:
+                return 'Last 6 Months';
+            case 365:
+                return 'Last Year';
+        }
     }
 
     render() {
@@ -164,12 +155,29 @@ class PortfolioChart extends React.Component {
 
                     <div className="col-auto">
 
-                        <ButtonDropdown isOpen={this.state.fiatDropDownOpen} toggle={this.toggleFiatDropDown}>
+                        <ButtonDropdown isOpen={this.state.timeRangeDropDownOpen} toggle={this.toggleTimeRangeDropDown}>
                             <DropdownToggle caret>
-                                {this.state.selectedFiat ? this.state.selectedFiat : "<None>"}
+                                {this.getTimeRangeText()}
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem onClick={this.selectFiat.bind(null, '')}>&#x3C;None&#x3E;</DropdownItem>
+                                <DropdownItem onClick={this.selectTimeRange.bind(null, 7)}>Last 7 Days</DropdownItem>
+                                <DropdownItem onClick={this.selectTimeRange.bind(null, 30)}>Last Month</DropdownItem>
+                                <DropdownItem onClick={this.selectTimeRange.bind(null, 90)}>Last 3 Months</DropdownItem>
+                                <DropdownItem onClick={this.selectTimeRange.bind(null, 180)}>Last 6 Months</DropdownItem>
+                                <DropdownItem onClick={this.selectTimeRange.bind(null, 365)}>Last Year</DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
+
+                    </div>
+
+                    <div className="col-auto">
+
+                        <ButtonDropdown isOpen={this.state.fiatDropDownOpen} toggle={this.toggleFiatDropDown}>
+                            <DropdownToggle caret>
+                                {this.state.selectedFiat ? this.state.selectedFiat : "<Hide>"}
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={this.selectFiat.bind(null, '')}>&#x3C;Hide&#x3E;</DropdownItem>
                                 <DropdownItem onClick={this.selectFiat.bind(null, 'USD')}>USD</DropdownItem>
                                 <DropdownItem onClick={this.selectFiat.bind(null, 'ZAR')}>ZAR</DropdownItem>
                                 <DropdownItem onClick={this.selectFiat.bind(null, 'GBP')}>GPB</DropdownItem>
@@ -183,10 +191,10 @@ class PortfolioChart extends React.Component {
 
                         <ButtonDropdown isOpen={this.state.coinDropDownOpen} toggle={this.toggleCoinDropDown}>
                             <DropdownToggle caret>
-                                {this.state.selectedCoin ? this.state.selectedCoin : "<None>"}
+                                {this.state.selectedCoin ? this.state.selectedCoin : "<Hide>"}
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem onClick={this.selectCoin.bind(null, '')}>&#x3C;None&#x3E;</DropdownItem>
+                                <DropdownItem onClick={this.selectCoin.bind(null, '')}>&#x3C;Hide&#x3E;</DropdownItem>
                                 <DropdownItem onClick={this.selectCoin.bind(null, 'BTC')}>BTC</DropdownItem>
                                 <DropdownItem onClick={this.selectCoin.bind(null, 'ETH')}>ETH</DropdownItem>
                                 <DropdownItem onClick={this.selectCoin.bind(null, 'NEO')}>NEO</DropdownItem>
@@ -203,7 +211,7 @@ class PortfolioChart extends React.Component {
 
                         <Line
                             data={this.state.data}
-                            options={this.getOptions()} />
+                            options={this.state.options} />
                     </div>
 
                 </div>

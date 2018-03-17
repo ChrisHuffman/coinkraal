@@ -8,6 +8,7 @@ export class PortfolioPageState {
     @observable portfolioChartData = { };
     portfolioChartSelectedFiat = "USD";
     portfolioChartSelectedCoin = "BTC";
+    portfolioChartSelectedTimeRange = 30;
 
     @observable isLoadingPorfolioChartData = true;
     
@@ -25,7 +26,7 @@ export class PortfolioPageState {
 
         this.isLoadingPorfolioChartData = true;
 
-        this.portfolioChartService.getData(this.transactionStore.transactions, this.portfolioChartSelectedFiat, this.portfolioChartSelectedCoin)
+        this.portfolioChartService.getData(this.transactionStore.transactions, this.portfolioChartSelectedFiat, this.portfolioChartSelectedCoin, this.portfolioChartSelectedTimeRange)
             .then(action(data => {
                 this.portfolioChartData = data;
                 this.isLoadingPorfolioChartData = false;
@@ -35,6 +36,7 @@ export class PortfolioPageState {
     portfolioChartSetFilters(filters) {
         this.portfolioChartSelectedFiat = filters.selectedFiat;
         this.portfolioChartSelectedCoin = filters.selectedCoin;
+        this.portfolioChartSelectedTimeRange = filters.selectedTimeRange;
         this.portfolioChartLoadData();
     }
 }

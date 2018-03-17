@@ -4,7 +4,7 @@ import PortfolioChartServiceDataPoint from './PortfolioChartServiceDataPoint';
 
 export class PortfolioChartService {
 
-    getData(transactions, currency1, currency2) {
+    getData(transactions, currency1, currency2, timeRange) {
 
         var self = this;
 
@@ -18,20 +18,30 @@ export class PortfolioChartService {
                 return;
             }
 
-            var limit = self.getLimit(transactions);
+            var dataFrequencyLimit = 90;
+            var dataFrequency = timeRange <= dataFrequencyLimit ? 'hours' : 'days';
+            var limit = self.getLimit(transactions, dataFrequency);
+
+            //We might have asked for 'Last Year' but if we only have transactions going 
+            //back a few days then override the dataFrequency and set to hours 
+            if (limit < dataFrequencyLimit && dataFrequency == 'days') {
+                dataFrequency = 'hours';
+                limit = self.getLimit(transactions, dataFrequency);
+            }
+
             var inCurrencies = self.getUniqueInCurrencies(transactions);
 
             //console.log('Starting to load chart data..');
 
-            self.loadDataPoints(self.getUniqueInCurrencies(transactions), currency1, transactions, limit)
+            self.loadDataPoints(self.getUniqueInCurrencies(transactions), currency1, transactions, limit, dataFrequency)
                 .then((dataPoints1) => {
 
-                    self.loadDataPoints(self.getUniqueInCurrencies(transactions), currency2, transactions, limit)
+                    self.loadDataPoints(self.getUniqueInCurrencies(transactions), currency2, transactions, limit, dataFrequency)
                         .then((dataPoints2) => {
 
-                            var data = self.getChartJsData(currency1, dataPoints1, currency2, dataPoints2);
+                            var chart = self.getChartJsInfo(currency1, dataPoints1, currency2, dataPoints2, timeRange, dataFrequency);
 
-                            resolve(data);
+                            resolve(chart);
 
                             //console.log('Load chart data end')
                         })
@@ -39,18 +49,23 @@ export class PortfolioChartService {
         });
     }
 
-    loadDataPoints(inCurrencies, toCurrency, transactions, limit) {
+    loadDataPoints(inCurrencies, toCurrency, transactions, limit, dataFrequency) {
 
         var self = this;
-        var dataPoints = self.getInitialseDataPoints(limit);
 
         return new Promise(function (resolve, reject) {
 
-            self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, resolve);
+            if (!toCurrency) {
+                resolve(null);
+                return;
+            }
+
+            var dataPoints = self.getInitialseDataPoints(limit, dataFrequency);
+            self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, dataFrequency, resolve);
         });
     }
 
-    loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, resolve) {
+    loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, dataFrequency, resolve) {
 
         var self = this;
 
@@ -66,16 +81,22 @@ export class PortfolioChartService {
         if (fromCurrency == toCurrency) {
             var dailyData = self.getSelfReferenceDailyData(dataPoints);
             self.loadDataPointsForDailyData(dataPoints, transactions, fromCurrency, dailyData);
-            self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, resolve);
+            self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, dataFrequency, resolve);
         }
         else {
-
-            agentExt.External.getDailyHistoricalPrice(fromCurrency, toCurrency, limit)
+            var api = this.getHistoricalPriceApi(dataFrequency);
+            api(fromCurrency, toCurrency, limit)
                 .then(dailyData => {
                     self.loadDataPointsForDailyData(dataPoints, transactions, fromCurrency, dailyData);
-                    self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, resolve);
+                    self.loadDataPointsForCurrency(inCurrencies, toCurrency, dataPoints, transactions, limit, dataFrequency, resolve);
                 })
         }
+    }
+
+    getHistoricalPriceApi(dataFrequency) {
+        if (dataFrequency == 'days')
+            return agentExt.External.getDailyHistoricalPrice;
+        return agentExt.External.getHourlyHistoricalPrice;
     }
 
     loadDataPointsForDailyData(dataPoints, transactions, fromCurrency, dailyData) {
@@ -83,16 +104,18 @@ export class PortfolioChartService {
         var self = this;
 
         var coinCount = 0;
-        var previousAmount = 0;
 
         dailyData.forEach(d => {
 
-            var date = moment.unix(d.time).utc().format('YYYY-MM-DD');
+            var date = moment.unix(d.time);
 
             var dataPoint = dataPoints[d.time];
 
+            if (!dataPoint)
+                return;
+
             dataPoint.setPrice(fromCurrency, d.close);
-            dataPoint.setStartingAmount(fromCurrency, previousAmount)
+            dataPoint.setStartingAmount(fromCurrency, 0)
 
             //Find transactions for this day
             var matches = self.getTransactions(transactions, date, fromCurrency);
@@ -105,8 +128,6 @@ export class PortfolioChartService {
             matches.forEach((s) => {
                 dataPoint.addSale(fromCurrency, s);
             })
-
-            previousAmount = dataPoint.amounts[fromCurrency];
         });
 
     }
@@ -126,23 +147,21 @@ export class PortfolioChartService {
         return dailyData;
     }
 
-    getInitialseDataPoints(limit) {
+    getInitialseDataPoints(limit, dataFrequency) {
 
         var dataPoints = {};
         var start = moment().utc().startOf('day');
 
         for (var i = limit; i >= 0; i--) {
-            var date = start.clone().subtract(i, 'days');
+            var date = start.clone().subtract(i, dataFrequency);
             dataPoints[date.unix()] = new PortfolioChartServiceDataPoint(date);
         }
 
         return dataPoints;
     }
 
-    //How many days to go back
-    getLimit(transactions) {
-
-        //return 1000; 
+    //How many days/hours to go back
+    getLimit(transactions, dataFrequency) {
 
         //get the first transaction
         var transaction = transactions[0];
@@ -151,7 +170,11 @@ export class PortfolioChartService {
         var now = moment().startOf('day');
 
         var duration = moment.duration(now.diff(firstDate));
-        return Math.ceil(duration.asDays());
+
+        if (dataFrequency == 'days')
+            return Math.ceil(duration.asDays());
+
+        return Math.ceil(duration.asHours());
     }
 
     getUniqueInCurrencies(transactions) {
@@ -168,7 +191,8 @@ export class PortfolioChartService {
     getTransactions(transactions, date, currency) {
 
         return transactions.filter(t => {
-            return (t.date.indexOf(date) == 0 && t.currency == currency);
+            //return (t.date.indexOf(date) == 0 && t.currency == currency);
+            return (moment(t.date).isBefore(date) && t.currency == currency);
         });
     }
 
@@ -182,7 +206,8 @@ export class PortfolioChartService {
                 return;
 
             transaction.sales.forEach(sale => {
-                if (sale.date.indexOf(date) == 0)
+                //if (sale.date.indexOf(date) == 0)
+                if (moment(sale.date).isBefore(date))
                     sales.push(sale);
             })
         })
@@ -190,22 +215,44 @@ export class PortfolioChartService {
         return sales;
     }
 
-    getChartJsData(currency1, dataPoints1, currency2, dataPoints2) {
+    getChartJsInfo(currency1, dataPoints1, currency2, dataPoints2, timeRange, dataFrequency) {
 
-        var arr1 = this.objectToArray(dataPoints1);
-        var arr2 = this.objectToArray(dataPoints2);
+        var arr1 = this.formatDataPointsForChartJs(dataPoints1, timeRange);
+        var arr2 = this.formatDataPointsForChartJs(dataPoints2, timeRange);
 
-        var labels = arr1.map(dp => {
-            return dp.date;
-        });
+        var dataSets = [];
+
+        if (arr1)
+            dataSets.push(this.getChartJsDataset(arr1, currency1, this.getCurrencyColour(currency1), "y-axis-1"));
+
+        if (arr2)
+            dataSets.push(this.getChartJsDataset(arr2, currency2, this.getCurrencyColour(currency2), "y-axis-2"));
 
         return {
-            labels: labels,
-            datasets: [
-                this.getChartJsDataset(arr1, currency1, this.getCurrencyColour(currency1), "y-axis-1"),
-                this.getChartJsDataset(arr2, currency2, this.getCurrencyColour(currency2), "y-axis-2")
-            ]
+            data: {
+                labels: this.getChartJsLabels(arr1, arr2),
+                datasets: dataSets
+            },
+            options: this.getChartJsOptions(arr1, arr2, currency1, currency2, dataFrequency)
         };
+    }
+
+    formatDataPointsForChartJs(dataPoints, timeRange) {
+
+        if (!dataPoints)
+            return null;
+
+        var arr = this.objectToArray(dataPoints);
+        arr = this.filterOnTimeRange(arr, timeRange);
+        arr = this.filterOutEmptyDataPoints(arr);
+        return arr;
+    }
+
+    getChartJsLabels(dataPoints1, dataPoints2) {
+        var arr = dataPoints1 ? dataPoints1 : dataPoints2;
+        return arr.map(dp => {
+            return dp.date;
+        });
     }
 
     getChartJsDataset(dataPoints, label, borderColor, yAxisId) {
@@ -226,9 +273,70 @@ export class PortfolioChartService {
             yAxisID: yAxisId,
             lineTension: 0.1,
             pointStyle: 'rectRot'
-            //cubicInterpolationMode: 'monotone'
-            //borderColor: 'rgba(0, 123, 255, 0.8)'
         };
+    }
+
+    getChartJsOptions(arr1, arr2, currency1, currency2, dataFrequency) {
+
+        var options = {
+            responsive: true,
+            hoverMode: 'index',
+            stacked: false,
+            legend: {
+                labels: {
+                    usePointStyle: true
+                }
+            },
+            tooltips: {
+                position: 'nearest',
+                mode: 'index',
+                intersect: false,
+                cornerRadius: 2
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: dataFrequency == 'days' ? 'month' : 'day'
+                    }
+                }],
+                yAxes: [],
+            }
+        };
+
+        if(arr1) {
+            options.scales.yAxes.push({
+                type: 'linear',
+                display: true,
+                position: 'left',
+                id: 'y-axis-1',
+                ticks: {
+                    //Might want to number format this
+                    callback: function (value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: currency1
+                }
+            });
+        };
+
+        if(arr2) {
+            options.scales.yAxes.push({
+                type: 'linear',
+                display: true,
+                position: 'right',
+                id: 'y-axis-2',
+                scaleLabel: {
+                    display: true,
+                    labelString: currency2
+                }
+            });
+        };
+
+        return options;
     }
 
     objectToArray(obj) {
@@ -239,6 +347,23 @@ export class PortfolioChartService {
             }
         }
         return arr;
+    }
+
+    filterOnTimeRange(dataPoints, timeRange) {
+        var from = moment().startOf('day').subtract(timeRange, 'days');
+        return dataPoints.filter(dataPoint => {
+            return dataPoint.date.isAfter(from);
+        });
+    }
+
+    filterOutEmptyDataPoints(dataPoints) {
+
+        while (dataPoints.length > 0) {
+            if (dataPoints[0].getTotal() == 0)
+                dataPoints.shift();
+            else
+                return dataPoints;
+        }
     }
 
     getCurrencyColour(currency) {

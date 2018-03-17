@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import Currency from './Currency'
 
 @inject('exchangeStore')
 @observer
@@ -7,44 +8,20 @@ class Exchange extends React.Component {
 
     constructor(props) {
         super(props);
-
-        var amount = props.exchangeStore.exchange(props.amount, props.from, props.to);
         this.state = {
-            amount: this.formatCurrency(amount)
+            amount: props.exchangeStore.exchange(props.amount, props.from, props.to)
         }
-    }
-
-    formatCurrency(amount) {
-
-        var minimumFractionDigits = 2;
-        var maximumFractionDigits = 2;
-
-        if(amount < 0.01)
-            maximumFractionDigits = 6
-
-        if(amount > 1000000) {
-            maximumFractionDigits = 0;
-            minimumFractionDigits = 0;
-        }
-
-        return parseFloat(amount).toLocaleString(undefined, {
-            minimumFractionDigits: minimumFractionDigits,
-            maximumFractionDigits: maximumFractionDigits
-          });
     }
 
     componentWillReceiveProps(nextProps) {
-        var amount = nextProps.exchangeStore.exchange(nextProps.amount, nextProps.from, nextProps.to);
         this.setState({
-            amount: this.formatCurrency(amount)
+            amount: nextProps.exchangeStore.exchange(nextProps.amount, nextProps.from, nextProps.to)
         });
     }
 
     render() {
         return (
-            <div>
-                { this.state.amount }
-            </div>
+            <Currency amount={this.state.amount} />
         )
     }
 }

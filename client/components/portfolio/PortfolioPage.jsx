@@ -1,7 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Layout from '../Layout'
-import PortfolioChart from './portfolio-chart/PortfolioChart'
+import PortfolioChart from './PortfolioChart'
+import PortfolioSummary from './PortfolioSummary'
 import Loader from '../common/Loader'
 
 @inject('portfolioPageState')
@@ -37,6 +38,8 @@ class PortfolioPage extends React.Component {
                                 }} />
                         </div>
                         <div className="col-md-5">
+                            <PortfolioSummary />
+                            <hr />
                         </div>
                     </div>
                 }

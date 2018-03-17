@@ -92,9 +92,9 @@ export default class Layout extends React.Component {
                     </DropdownToggle>
                     <DropdownMenu>
                       {
-                        
+
                         this.props.global.coinOptions.map(coin => {
-                          
+
                           return <DropdownItem key={coin} onClick={this.selectCoin.bind(null, coin)}>{coin}</DropdownItem>
                         })
                       }
@@ -108,6 +108,11 @@ export default class Layout extends React.Component {
               <Nav tabs>
                 <NavItem>
                   <NavLink activeClassName='active' tag={RRNavLink} exact to='/'>
+                    Coins
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink activeClassName='active' tag={RRNavLink} exact to='/portfolio'>
                     Portfolio
                   </NavLink>
                 </NavItem>
@@ -115,11 +120,6 @@ export default class Layout extends React.Component {
                   <NavLink activeClassName='active' tag={RRNavLink} exact to='/transactions'>
                     Transactions
                   </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink activeClassName='active' tag={RRNavLink} exact to='/coins'>
-                    Coins
-                </NavLink>
                 </NavItem>
               </Nav>
 

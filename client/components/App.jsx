@@ -25,8 +25,8 @@ export default class App extends React.Component {
         <Switch>
           <Route path="/login" component={Login} />
           <SecureRoute path="/transactions" component={TransactionsPage} />
-          <SecureRoute path="/coins" component={CoinsPage} />
-          <SecureRoute path="/" component={PortfolioPage} />
+          <SecureRoute path="/portfolio" component={PortfolioPage} />
+          <SecureRoute path="/" component={CoinsPage} />
         </Switch>
       </div>
     );

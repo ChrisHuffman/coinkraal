@@ -1,4 +1,4 @@
-import { observable, observe, action, reaction } from 'mobx';
+import { observable, observe, action, reaction, computed } from 'mobx';
 
 export class PortfolioPageState {
 
@@ -6,6 +6,7 @@ export class PortfolioPageState {
     portfolioChartService = null;
 
     @observable portfolioChartData = { };
+    @observable portfolioRawData = { };
     portfolioChartSelectedFiat = "USD";
     portfolioChartSelectedCoin = "BTC";
     portfolioChartSelectedTimeRange = 30;
@@ -37,7 +38,8 @@ export class PortfolioPageState {
 
         this.portfolioChartService.getData(this.transactionStore.transactions, this.global.selectedFiat, this.global.selectedCoin, this.portfolioChartSelectedTimeRange)
             .then(action(data => {
-                this.portfolioChartData = data;
+                this.portfolioChartData = data.chartjs;
+                this.portfolioRawData = data.rawData;
                 this.isLoadingPorfolioChartData = false;
             }));
     }
@@ -47,6 +49,20 @@ export class PortfolioPageState {
         this.portfolioChartSelectedCoin = filters.selectedCoin;
         this.portfolioChartSelectedTimeRange = filters.selectedTimeRange;
         this.portfolioChartLoadData();
+    }
+
+    @computed get latestFiatValue() {
+        if(!this.portfolioRawData.fiat || this.portfolioRawData.fiat.length == 0)
+            return 0;
+
+        return this.portfolioRawData.fiat[this.portfolioRawData.fiat.length - 1].getTotal();
+    }
+
+    @computed get latestCoinValue() {
+        if(!this.portfolioRawData.coin || this.portfolioRawData.coin.length == 0)
+            return 0;
+
+        return this.portfolioRawData.coin[this.portfolioRawData.coin.length - 1].getTotal();
     }
 }
 

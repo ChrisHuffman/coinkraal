@@ -229,12 +229,18 @@ export class PortfolioChartService {
             dataSets.push(this.getChartJsDataset(arr2, currency2, this.getCurrencyColour(currency2), "y-axis-2"));
 
         return {
-            data: {
-                labels: this.getChartJsLabels(arr1, arr2),
-                datasets: dataSets
+            chartjs: {
+                data: {
+                    labels: this.getChartJsLabels(arr1, arr2),
+                    datasets: dataSets
+                },
+                options: this.getChartJsOptions(arr1, arr2, currency1, currency2, dataFrequency),
+                plugins: this.getPlugins()
             },
-            options: this.getChartJsOptions(arr1, arr2, currency1, currency2, dataFrequency),
-            plugins: this.getPlugins()
+            rawData: {
+                fiat: arr1,
+                coin: arr2
+            }
         };
     }
 
@@ -364,7 +370,7 @@ export class PortfolioChartService {
                     var ctx = chart.ctx;
                     var y_axis = chart.scales['y-axis-1'] || chart.scales['y-axis-2'];
 
-                    if(!y_axis)
+                    if (!y_axis)
                         return;
 
                     var x = activePoint.tooltipPosition().x;
@@ -384,7 +390,7 @@ export class PortfolioChartService {
             }
         };
 
-        return [ verticalLinePlugin ]
+        return [verticalLinePlugin]
     }
 
     objectToArray(obj) {

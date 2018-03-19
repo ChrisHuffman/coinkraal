@@ -1,7 +1,9 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import CoinLogo from '../common/CoinLogo'
-import LineChart from '../common/LineChart'
+import CoinLogo from '../../common/CoinLogo'
+import LineChart from '../../common/LineChart'
+import TwitterFeed from './TwitterFeed'
+import RedditFeed from './RedditFeed'
 import { Button, TabContent, TabPane, Nav, NavItem, NavLink, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classnames from 'classnames';
 
@@ -17,9 +19,7 @@ class CoinSummary extends React.Component {
             coin: null,
             activeTab: '1',
             twitterUrl: '',
-            redditContent: {
-                __html: ""
-            }
+            redditUrl: ''
         }
 
         this.toggleModal = this.toggleModal.bind(this);
@@ -34,36 +34,14 @@ class CoinSummary extends React.Component {
         if (!nextProps.coin)
             return;
 
-        this.setState({
-            coin: nextProps.coin
-        });
-
         this.props.coinsPageState.loadCoinChartData();
-
-        var curr = nextProps.currencyStore.getCoin(nextProps.coin.symbol);
+        var coinDetails = nextProps.currencyStore.getCoin(nextProps.coin.symbol);
 
         this.setState({
-            twitterUrl: curr.twitterUrl
+            coin: nextProps.coin,
+            twitterUrl: coinDetails.twitterUrl,
+            redditUrl: coinDetails.redditUrl
         });
-
-        if (curr.redditUrl) {
-            //Load reddit content
-            this.props.socialStore.getRedditContent(curr.redditUrl)
-                .then(content => {
-                    this.setState({
-                        redditContent: {
-                            __html: content
-                        }
-                    });
-                });
-        }
-        else {
-            this.setState({
-                redditContent: {
-                    __html: 'No reddit feed.'
-                }
-            });
-        }
     }
 
     setTab(tab) {
@@ -80,12 +58,8 @@ class CoinSummary extends React.Component {
         if (this.state.activeTab !== tab) {
             this.setState({
                 activeTab: tab
-            }, this.loadTwitterContent);
+            });
         }
-    }
-
-    loadTwitterContent() {
-        twttr.widgets.load();
     }
 
     onFiltersChanged(filters) {
@@ -142,23 +116,11 @@ class CoinSummary extends React.Component {
                             </TabPane>
                             <TabPane tabId="2">
                                 <div className="mb-10" />
-                                <div dangerouslySetInnerHTML={this.state.redditContent} />
+                                <RedditFeed redditUrl={this.state.redditUrl} />
                             </TabPane>
                             <TabPane tabId="3">
                                 <div className="mb-10" />
-
-                                {!this.state.twitterUrl &&
-                                    <span>No twitter feed.</span>
-                                }
-
-                                {this.state.twitterUrl &&
-                                <div className="row justify-content-lg-center">
-                                    <div className="col col-lg-9">
-                                        <a className="twitter-timeline text-muted" data-dnt="true" data-theme="dark" data-link-color="#007bff" href={this.state.twitterUrl}>loading...</a>
-                                    </div>
-                                </div>
-                                }
-
+                                <TwitterFeed twitterUrl={this.state.twitterUrl} />
                             </TabPane>
                         </TabContent>
                     </ModalBody>

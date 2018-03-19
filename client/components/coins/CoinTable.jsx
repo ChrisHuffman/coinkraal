@@ -5,7 +5,7 @@ import Loader from '../common/Loader'
 import Percentage from '../common/Percentage'
 import CoinLogo from '../common/CoinLogo'
 import Exchange from '../common/Exchange'
-import CoinSummary from './CoinSummary'
+import CoinSummary from './CoinSummary/CoinSummary'
 
 @inject('global', 'coinStore', 'commonStore', 'coinsPageState')
 @observer

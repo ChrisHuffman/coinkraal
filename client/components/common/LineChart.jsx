@@ -21,8 +21,6 @@ class LineChart extends React.Component {
             timeRangeDropDownOpen: false,
         }
 
-        console.log("this.state.data: ", this.state.data)
-
         this.toggleTimeRangeDropDown = this.toggleTimeRangeDropDown.bind(this);
         this.selectTimeRange = this.selectTimeRange.bind(this);
         this.onFiltersChanged = this.onFiltersChanged.bind(this);

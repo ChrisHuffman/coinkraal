@@ -7,8 +7,6 @@ export class PortfolioPageState {
 
     @observable portfolioChartData = { };
     @observable portfolioRawData = { };
-    portfolioChartSelectedFiat = "USD";
-    portfolioChartSelectedCoin = "BTC";
     portfolioChartSelectedTimeRange = 30;
 
     @observable isLoadingPorfolioChartData = true;
@@ -45,8 +43,6 @@ export class PortfolioPageState {
     }
 
     portfolioChartSetFilters(filters) {
-        this.portfolioChartSelectedFiat = filters.selectedFiat;
-        this.portfolioChartSelectedCoin = filters.selectedCoin;
         this.portfolioChartSelectedTimeRange = filters.selectedTimeRange;
         this.portfolioChartLoadData();
     }

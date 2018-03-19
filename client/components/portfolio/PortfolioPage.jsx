@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Layout from '../Layout'
-import PortfolioChart from './PortfolioChart'
+import LineChart from '../common/LineChart'
 import PortfolioSummary from './PortfolioSummary'
 import Loader from '../common/Loader'
 
@@ -28,12 +28,10 @@ class PortfolioPage extends React.Component {
                 {!this.props.portfolioPageState.isLoadingPorfolioChartData &&
                     <div className="row mt-20">
                         <div className="col-md-7">
-                            <PortfolioChart
+                            <LineChart
                                 chart={this.props.portfolioPageState.portfolioChartData}
                                 onFiltersChanged={this.onFiltersChanged}
                                 filters={{
-                                    selectedFiat: this.props.portfolioPageState.portfolioChartSelectedFiat,
-                                    selectedCoin: this.props.portfolioPageState.portfolioChartSelectedCoin,
                                     selectedTimeRange: this.props.portfolioPageState.portfolioChartSelectedTimeRange
                                 }} />
                         </div>

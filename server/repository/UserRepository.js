@@ -5,7 +5,7 @@ class UserRepository {
 
     getUserByGoogleId(googleId) {
 
-        console.log('querying for google user... Id:' + googleId);
+        //console.log('querying for google user... Id:' + googleId);
         
         return new Promise(function (resolve, reject) {
           

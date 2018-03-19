@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import CoinLogo from '../common/CoinLogo'
-import CoinChart from './CoinChart'
+import LineChart from '../common/LineChart'
 import { Button, TabContent, TabPane, Nav, NavItem, NavLink, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classnames from 'classnames';
 
@@ -25,6 +25,8 @@ class CoinSummary extends React.Component {
         this.toggleModal = this.toggleModal.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
         this.setTab = this.setTab.bind(this);
+
+        this.onFiltersChanged = this.onFiltersChanged.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -36,7 +38,7 @@ class CoinSummary extends React.Component {
             coin: nextProps.coin
         });
 
-        this.props.coinsPageState.loadCoinChartData(nextProps.coin.symbol);
+        this.props.coinsPageState.loadCoinChartData();
 
         var curr = nextProps.currencyStore.getCoin(nextProps.coin.symbol);
 
@@ -86,6 +88,10 @@ class CoinSummary extends React.Component {
         twttr.widgets.load();
     }
 
+    onFiltersChanged(filters) {
+        this.props.coinsPageState.coinChartSetFilters(filters);
+    }
+
     render() {
 
         return (
@@ -125,7 +131,14 @@ class CoinSummary extends React.Component {
                         </Nav>
                         <TabContent activeTab={this.state.activeTab}>
                             <TabPane tabId="1">
-                                <CoinChart data={this.props.coinsPageState.coinChartData} />
+                                {!this.props.coinsPageState.isLoadingCoinChartData &&
+                                    <LineChart 
+                                        chart={this.props.coinsPageState.coinChartData}
+                                        onFiltersChanged={this.onFiltersChanged}
+                                        filters={{
+                                            selectedTimeRange: this.props.coinsPageState.coinChartSelectedTimeRange
+                                        }} />
+                                }
                             </TabPane>
                             <TabPane tabId="2">
                                 <div className="mb-10" />

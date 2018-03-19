@@ -4,7 +4,7 @@
 gcloud
 ---
 
-gcloud app deploy -v alpha-04 --promote --stop-previous-version
+gcloud app deploy -v alpha-06 --promote --stop-previous-version
 
 Links:
 https://console.cloud.google.com/cloudshell/editor?project=coinkraal
@@ -32,6 +32,7 @@ TODO
 
 Ideas
 ---
+- Donate to Bitconnect get rick rolled
 - setting show random Carlos Matos quotes
 - TCs no Carlos
 - Ranking

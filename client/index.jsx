@@ -51,7 +51,7 @@ import TransactionsPageState from './components/transactions/TransactionsPageSta
 import CoinsPageState from './components/coins/CoinsPageState'
 var portfolioPageState = new PortfolioPageState(global, transactionStore, portfolioChartService);
 var transactionsPageState = new TransactionsPageState();
-var coinsPageState = new CoinsPageState(coinStore, coinChartService);
+var coinsPageState = new CoinsPageState(global, coinStore, coinChartService);
 
 
 //Start Load of App Data

@@ -2,7 +2,7 @@ import React from 'react';
 import { Line, } from 'react-chartjs-2';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-class PortfolioChart extends React.Component {
+class LineChart extends React.Component {
 
     constructor(props) {
 
@@ -14,30 +14,25 @@ class PortfolioChart extends React.Component {
             plugins: this.formatPlugins(props.chart.plugins),
             isLoading: true,
 
-            //selectedFiat: props.filters.selectedFiat,
             fiatDropDownOpen: false,
-
-            //selectedCoin: props.filters.selectedCoin,
             coinDropDownOpen: false,
 
             selectedTimeRange: props.filters.selectedTimeRange,
             timeRangeDropDownOpen: false,
         }
 
+        console.log("this.state.data: ", this.state.data)
+
         this.toggleTimeRangeDropDown = this.toggleTimeRangeDropDown.bind(this);
         this.selectTimeRange = this.selectTimeRange.bind(this);
-
         this.onFiltersChanged = this.onFiltersChanged.bind(this);
-
         this.getTimeRangeText = this.getTimeRangeText.bind(this);
-
-        
     }
 
     //Remove observables (some reason chart js doesnt like them)
     formatData(data) {
 
-        if (!data.labels)
+        if (!data || !data.labels)
             return {};
 
         return {
@@ -61,6 +56,9 @@ class PortfolioChart extends React.Component {
     //Remove observables (some reason chart js doesnt like them)
     formatOptions(options) {
 
+        if (!options)
+            return {};
+
         options.scales.xAxes = options.scales.xAxes.map(x => x);
         options.scales.yAxes = options.scales.yAxes.map(y => y);
 
@@ -69,15 +67,20 @@ class PortfolioChart extends React.Component {
 
     //Remove observables (some reason chart js doesnt like them)
     formatPlugins(plugins) {
+
+        if (!plugins)
+            return [];
+
         return plugins.map(p => p);
     }
 
     componentWillReceiveProps(nextProps) {
 
+        //Dont need this for now...
+        return;
+
         if (!nextProps.chart)
             return;
-
-        console.log(nextProps.chart);
 
         this.setState({
             data: this.formatData(nextProps.chart.data),
@@ -104,8 +107,6 @@ class PortfolioChart extends React.Component {
             return;
 
         this.props.onFiltersChanged({
-            // selectedFiat: this.state.selectedFiat,
-            //   selectedCoin: this.state.selectedCoin,
             selectedTimeRange: this.state.selectedTimeRange
         });
     }
@@ -156,7 +157,6 @@ class PortfolioChart extends React.Component {
                 <div className="row">
 
                     <div className="col">
-
                         <Line
                             data={this.state.data}
                             options={this.state.options}
@@ -169,4 +169,4 @@ class PortfolioChart extends React.Component {
         );
     }
 }
-export default PortfolioChart;
+export default LineChart;

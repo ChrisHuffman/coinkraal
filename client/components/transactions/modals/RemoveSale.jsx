@@ -29,7 +29,6 @@ class RemoveSale extends React.Component {
                self.toggleModal();
             })
             .catch((error) => {
-                console.log(error);
                 self.props.commonStore.notify('Error removing sale', 'error');
             })
             .then(() => {

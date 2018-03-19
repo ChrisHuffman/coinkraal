@@ -8,7 +8,9 @@ export class CoinsPageState {
     @observable coinSummaryModal = false;
 
     coinChartService = null;
-    @observable coinChartData = {};
+    @observable coinChartData = { };
+    coinChartSelectedTimeRange = 30;
+    @observable isLoadingCoinChartData = true;
 
     @observable isLoading = true;
     @observable allCoins = [];
@@ -17,17 +19,15 @@ export class CoinsPageState {
     @observable sortColumn = "rank";
     @observable sortDirection = "asc";
 
-    constructor(coinStore, coinChartService) {
+    constructor(global, coinStore, coinChartService) {
+        this.global = global;
         this.coinStore = coinStore;
         this.coinChartService = coinChartService;
 
         this.loadCoins();
     }
 
-    @action toggleCoinSummaryModal(coin) {
-        this.selectedCoin = coin;
-        this.coinSummaryModal = !this.coinSummaryModal;
-    }
+   
 
     @action loadCoins() {
 
@@ -57,7 +57,6 @@ export class CoinsPageState {
     }
 
     @computed get coins() {
-        //console.log('comp coins: ' + this.allCoins.length);
         var start = this.pageIndex * this.pageSize;
         var page = this.allCoins.slice(start, start + this.pageSize);
 
@@ -91,19 +90,32 @@ export class CoinsPageState {
         return this.allCoins.length - (this.pageIndex * this.pageSize) <= this.pageSize;
     }
 
-    @action loadCoinChartData(coin) {
-        this.coinChartService.getData(coin)
+    @action toggleCoinSummaryModal(coin) {
+        this.selectedCoin = coin;
+        this.coinSummaryModal = !this.coinSummaryModal;
+    }
+
+    @action loadCoinChartData() {
+
+        this.isLoadingCoinChartData = true;
+
+        this.coinChartService.getData(this.selectedCoin.symbol, this.global.selectedFiat, this.global.selectedCoin, this.coinChartSelectedTimeRange)
             .then(action(data => {
                 this.coinChartData = data;
+                this.isLoadingCoinChartData = false;
             }));
+    }
+
+    coinChartSetFilters(filters) {
+        this.coinChartSelectedTimeRange = filters.selectedTimeRange;
+        this.loadCoinChartData();
     }
 
     compareValues(key, direction) {
         return function (a, b) {
-            if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-                // property doesn't exist on either object
+
+            if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key))
                 return 0;
-            }
 
             const varA = (typeof a[key] === 'string') ?
                 a[key].toUpperCase() : a[key];

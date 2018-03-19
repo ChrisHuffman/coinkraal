@@ -4,46 +4,44 @@ import CoinChartServiceDataPoint from './CoinChartServiceDataPoint';
 
 export class CoinChartService {
 
-    getData(coin) {
+    getData(coin, currency1, currency2, timeRange) {
 
         var self = this;
 
         return new Promise(function (resolve, reject) {
 
-            var limit = 180;
+            var dataFrequencyLimit = 90;
+            var dataFrequency = timeRange <= dataFrequencyLimit ? 'hours' : 'days';
 
-            //console.log('Starting to load chart data..');
+            var limit = timeRange;
 
-            self.loadDataPoints(coin, "USD", limit)
-                .then((dataPointsUSD) => {
+            if(dataFrequency == 'hours')
+                limit = limit * 24;
 
-                    self.loadDataPoints(coin, "BTC", limit)
-                        .then((dataPointsBTC) => {
+            self.loadDataPoints(coin, currency1, limit, dataFrequency)
+                .then((dataPoints1) => {
 
-                            var data = self.getChartJsData(dataPointsUSD, dataPointsBTC);
+                    self.loadDataPoints(coin, currency2, limit, dataFrequency)
+                        .then((dataPoints2) => {
 
+                            var data = self.getChartJsData(currency1, dataPoints1, currency2, dataPoints2, timeRange, dataFrequency);
                             resolve(data);
-
-                            //console.log('Load chart data end')
                         })
                 });
         });
     }
 
-
-
-    loadDataPoints(fromCurrency, toCurrency, limit) {
+    loadDataPoints(fromCurrency, toCurrency, limit, dataFrequency) {
 
         var self = this;
-        var dataPoints = self.getInitialseDataPoints(limit);
+        var dataPoints = [];
 
         return new Promise(function (resolve, reject) {
-
-            self.loadDataPointsForCurrency(fromCurrency, toCurrency, dataPoints, limit, resolve);
+            self.loadDataPointsForCurrency(fromCurrency, toCurrency, dataPoints, limit, dataFrequency, resolve);
         });
     }
 
-    loadDataPointsForCurrency(fromCurrency, toCurrency, dataPoints, limit, resolve) {
+    loadDataPointsForCurrency(fromCurrency, toCurrency, dataPoints, limit, dataFrequency, resolve) {
 
         var self = this;
 
@@ -53,11 +51,19 @@ export class CoinChartService {
         }
         else {
 
-            agentExt.External.getDailyHistoricalPrice(fromCurrency, toCurrency, limit)
+            var api = this.getHistoricalPriceApi(dataFrequency);
+
+            api(fromCurrency, toCurrency, limit)
                 .then(dailyData => {
                     self.loadDataPointsForDailyData(dataPoints, fromCurrency, dailyData, resolve);
                 })
         }
+    }
+
+    getHistoricalPriceApi(dataFrequency) {
+        if (dataFrequency == 'days')
+            return agentExt.External.getDailyHistoricalPrice;
+        return agentExt.External.getHourlyHistoricalPrice;
     }
 
     loadDataPointsForDailyData(dataPoints, fromCurrency, dailyData, resolve) {
@@ -66,44 +72,41 @@ export class CoinChartService {
 
         dailyData.forEach(d => {
 
-            var date = moment.unix(d.time).utc().format('YYYY-MM-DD');
-            var dataPoint = dataPoints[d.time];
-
+            var date = moment.unix(d.time);
+            
+            var dataPoint = new CoinChartServiceDataPoint(date)
             dataPoint.value = d.close;
+
+            dataPoints.push(dataPoint);
         });
 
         resolve(dataPoints);
     }
 
-    getInitialseDataPoints(limit) {
-
-        var dataPoints = {};
-        var start = moment().utc().startOf('day');
-
-        for (var i = limit; i >= 0; i--) {
-            var date = start.clone().subtract(i, 'days');
-            dataPoints[date.unix()] = new CoinChartServiceDataPoint(date);
-        }
-
-        return dataPoints;
-    }
-
-    getChartJsData(dataPoints1, dataPoints2) {
-
-        var arr1 = this.objectToArray(dataPoints1);
-        var arr2 = this.objectToArray(dataPoints2);
-
-        var labels = arr1.map(dp => {
-            return dp.date;
-        });
+    getChartJsData(currency1, dataPoints1, currency2, dataPoints2, timeRange, dataFrequency) {
 
         return {
-            labels: labels,
-            datasets: [
-                this.getChartJsDataset(arr1, "USD", "rgba(40, 167, 69, 0.8)", "y-axis-1"), //, "#28a745"
-                this.getChartJsDataset(arr2, "BTC", "rgba(253, 126, 20, 0.8)", "y-axis-2") //, "#fd7e14"
-            ]
+            data: {
+                labels: this.getChartJsLabels(dataPoints1, dataPoints2),
+                datasets: [
+                    this.getChartJsDataset(dataPoints1, currency1, "rgba(40, 167, 69, 0.8)", "y-axis-1"), //, "#28a745"
+                    this.getChartJsDataset(dataPoints2, currency2, "rgba(253, 126, 20, 0.8)", "y-axis-2") //, "#fd7e14"
+                ]
+            },
+            options: this.getChartJsOptions(dataPoints1, dataPoints2, currency1, currency2, dataFrequency),
+            plugins: this.getPlugins()
         };
+    }
+
+    getChartJsLabels(dataPoints1, dataPoints2) {
+        var arr = dataPoints1 ? dataPoints1 : dataPoints2;
+
+        if (!arr)
+            return [];
+
+        return arr.map(dp => {
+            return dp.date;
+        });
     }
 
     getChartJsDataset(dataPoints, label, borderColor, yAxisId) {
@@ -124,8 +127,6 @@ export class CoinChartService {
             yAxisID: yAxisId,
             lineTension: 0.1,
             pointStyle: 'rectRot'
-            //cubicInterpolationMode: 'monotone'
-            //borderColor: 'rgba(0, 123, 255, 0.8)'
         };
     }
 
@@ -137,6 +138,131 @@ export class CoinChartService {
             }
         }
         return arr;
+    }
+
+    getChartJsOptions(arr1, arr2, currency1, currency2, dataFrequency) {
+
+        var self = this;
+
+        var options = {
+            customLine: {
+                color: 'white'
+            },
+            responsive: true,
+            hoverMode: 'index',
+            stacked: false,
+            legend: {
+                labels: {
+                    usePointStyle: true
+                }
+            },
+            tooltips: {
+                position: 'nearest',
+                mode: 'index',
+                intersect: false,
+                cornerRadius: 2
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: dataFrequency == 'days' ? 'month' : 'day'
+                    }
+                }],
+                yAxes: [],
+            }
+        };
+
+        if (arr1) {
+            options.scales.yAxes.push({
+                type: 'linear',
+                display: true,
+                position: 'left',
+                id: 'y-axis-1',
+                ticks: {
+                    callback: function (value, index, values) {
+                        return self.formatCurrency(value);
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: currency1
+                }
+            });
+        };
+
+        if (arr2) {
+            options.scales.yAxes.push({
+                type: 'linear',
+                display: true,
+                position: 'right',
+                id: 'y-axis-2',
+                ticks: {
+                    callback: function (value, index, values) {
+                        return self.formatCurrency(value);
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: currency2
+                }
+            });
+        };
+
+        return options;
+    }
+
+    getPlugins() {
+
+        var verticalLinePlugin = {
+            afterDatasetsDraw: function (chart) {
+
+                if (chart.tooltip._active && chart.tooltip._active.length) {
+
+                    var activePoint = chart.tooltip._active[0];
+                    var ctx = chart.ctx;
+                    var y_axis = chart.scales['y-axis-1'] || chart.scales['y-axis-2'];
+
+                    if (!y_axis)
+                        return;
+
+                    var x = activePoint.tooltipPosition().x;
+                    var topY = y_axis.top;
+                    var bottomY = y_axis.bottom;
+
+                    // draw line
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(x, topY);
+                    ctx.lineTo(x, bottomY);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = '#585858';
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+        };
+
+        return [verticalLinePlugin]
+    }
+
+    formatCurrency(amount) {
+
+        var minimumFractionDigits = 2;
+        var maximumFractionDigits = 2;
+
+        if (amount < 0.01)
+            maximumFractionDigits = 6
+
+        if (amount > 1000000) {
+            maximumFractionDigits = 0;
+            minimumFractionDigits = 0;
+        }
+
+        return parseFloat(amount).toLocaleString(undefined, {
+            minimumFractionDigits: minimumFractionDigits,
+            maximumFractionDigits: maximumFractionDigits
+        });
     }
 }
 

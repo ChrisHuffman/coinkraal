@@ -9,7 +9,11 @@ router.get('/api/social/reddit', function (req, res) {
     superagent.get(req.query.url + '.embed')
         .query({ limit: '9' })
         .end((err, resp) => {
-            if (err) { return console.log(err); }
+            if (err) { 
+                res.status(500).send('');
+                return; 
+            }
+            
             res.setHeader('content-type', 'text/plain');
 
             var html = resp.text;

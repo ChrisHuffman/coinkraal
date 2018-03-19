@@ -47,6 +47,11 @@ Ideas
     9. Total Sh*tcoin
     10. Biitconeeeeeeect! v2.0
 
+Windows
+---
+C:\Windows\System32>taskkill /F /IM node.exe
+SUCCESS: The process "node.exe" with PID 11008 has been terminated.
+
 
 Db Design
 ---

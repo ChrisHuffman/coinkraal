@@ -135,7 +135,7 @@ class LineChart extends React.Component {
 
                     <div className="col-auto">
 
-                        <ButtonDropdown isOpen={this.state.timeRangeDropDownOpen} toggle={this.toggleTimeRangeDropDown}>
+                        <ButtonDropdown color="dark" isOpen={this.state.timeRangeDropDownOpen} toggle={this.toggleTimeRangeDropDown}>
                             <DropdownToggle caret>
                                 {this.getTimeRangeText()}
                             </DropdownToggle>

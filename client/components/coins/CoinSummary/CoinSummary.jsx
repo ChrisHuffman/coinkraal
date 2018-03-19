@@ -4,6 +4,8 @@ import CoinLogo from '../../common/CoinLogo'
 import LineChart from '../../common/LineChart'
 import TwitterFeed from './TwitterFeed'
 import RedditFeed from './RedditFeed'
+import CoinValues from './CoinValues'
+import CoinCaps from './CoinCaps'
 import { Button, TabContent, TabPane, Nav, NavItem, NavLink, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classnames from 'classnames';
 
@@ -17,6 +19,7 @@ class CoinSummary extends React.Component {
 
         this.state = {
             coin: null,
+            coinDetails: null,
             activeTab: '1',
             twitterUrl: '',
             redditUrl: ''
@@ -39,6 +42,7 @@ class CoinSummary extends React.Component {
 
         this.setState({
             coin: nextProps.coin,
+            coinDetails: coinDetails,
             twitterUrl: coinDetails.twitterUrl,
             redditUrl: coinDetails.redditUrl
         });
@@ -105,6 +109,11 @@ class CoinSummary extends React.Component {
                         </Nav>
                         <TabContent activeTab={this.state.activeTab}>
                             <TabPane tabId="1">
+                                
+                                <div className="mb-10" />
+                                <CoinValues coin={this.state.coin} />
+                                
+                                <div className="mb-10" />
                                 {!this.props.coinsPageState.isLoadingCoinChartData &&
                                     <LineChart 
                                         chart={this.props.coinsPageState.coinChartData}
@@ -113,6 +122,10 @@ class CoinSummary extends React.Component {
                                             selectedTimeRange: this.props.coinsPageState.coinChartSelectedTimeRange
                                         }} />
                                 }
+
+                                <div className="mb-20" />
+                                <CoinCaps coin={this.state.coin} />
+
                             </TabPane>
                             <TabPane tabId="2">
                                 <div className="mb-10" />

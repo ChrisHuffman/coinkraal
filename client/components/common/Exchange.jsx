@@ -8,6 +8,7 @@ class Exchange extends React.Component {
 
     constructor(props) {
         super(props);
+        
         this.state = {
             amount: props.exchangeStore.exchange(props.amount, props.from, props.to)
         }

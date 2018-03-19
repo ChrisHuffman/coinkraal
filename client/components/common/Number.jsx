@@ -2,7 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import CommonService from '../../services/CommonService'
 
-class Currency extends React.Component {
+class Number extends React.Component {
 
     constructor(props) {
         super(props);
@@ -25,4 +25,4 @@ class Currency extends React.Component {
         )
     }
 }
-export default Currency;
+export default Number;

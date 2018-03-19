@@ -148,10 +148,10 @@ export class CommonService {
         if(amount < 0.01)
             maximumFractionDigits = 4
 
-        if(amount < 0.0001)
+        if(amount < 0.001)
             maximumFractionDigits = 6
 
-        if(amount < 0.000001)
+        if(amount < 0.00001)
             maximumFractionDigits = 8
 
         if(amount >= 1000) {

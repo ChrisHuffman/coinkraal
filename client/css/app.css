@@ -1,5 +1,9 @@
 
 
+.mt-05 {
+    margin-top: 5px;
+}
+
 .mt-10 {
     margin-top: 10px;
 }
@@ -48,6 +52,10 @@ table .narrow {
     width: 1%;
 }
 
+.small-text {
+    font-size: 85%;
+    font-weight: lighter;
+}
 
 
 /* Bootstrap Extenstions -------------------------------------------------------------------------------------*/
@@ -78,6 +86,11 @@ table .narrow {
 
 .dropdown-item {
     cursor: pointer;
+}
+
+small.xs {
+    font-size: 60%;
+    font-weight: lighter;
 }
 
 /* ----------------------------------------------------------------------------------------------------------- */

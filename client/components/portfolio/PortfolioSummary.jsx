@@ -15,12 +15,12 @@ class PortfolioSummary extends React.Component {
         return (
             <div>
                 <div className="row justify-content-around">
-                    <div className="col-sm-6 text-center">
+                    <div className="col-6 text-center">
                         <h1>
                             {this.props.global.selectedFiat}
                         </h1>
                     </div>
-                    <div className="col-sm-6 text-center">
+                    <div className="col-6 text-center">
                         <h1>
                         {this.props.global.selectedCoin}
                         </h1>
@@ -28,12 +28,12 @@ class PortfolioSummary extends React.Component {
                 </div>
 
                 <div className="row justify-content-around">
-                    <div className="col-sm-6 text-center">
+                    <div className="col-6 text-center">
                         <h3>
                             <Currency amount={this.props.portfolioPageState.latestFiatValue} />
                         </h3>
                     </div>
-                    <div className="col-sm-6 text-center">
+                    <div className="col-6 text-center">
                         <h3>
                             <Currency amount={this.props.portfolioPageState.latestCoinValue} />
                         </h3>

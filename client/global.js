@@ -4,6 +4,7 @@ export class Global {
 
     authStore = null;
     currencyStore = null;
+    coinStore = null;
     transactionStore = null;
     exchangeStore = null;
 
@@ -16,9 +17,10 @@ export class Global {
     fiatOptions = ['USD', 'ZAR', 'GBP', 'AUD'];
     coinOptions = ['BTC', 'ETH', 'NEO'];
 
-    constructor(authStore, currencyStore, transactionStore, exchangeStore) {
+    constructor(authStore, currencyStore, coinStore, transactionStore, exchangeStore) {
         this.authStore = authStore;
         this.currencyStore = currencyStore;
+        this.coinStore = coinStore;
         this.transactionStore = transactionStore;
         this.exchangeStore = exchangeStore;
 
@@ -28,7 +30,7 @@ export class Global {
     loadApplicationData() {
 
         this.currencyStore.loadPurchaseCurrencies().then(this.checkLoadComplete);
-        this.currencyStore.loadCoins().then(this.checkLoadComplete);
+        this.coinStore.loadCoins().then(this.checkLoadComplete);
         this.exchangeStore.load(this.fiatOptions.slice(0), this.coinOptions.slice(0)).then(this.checkLoadComplete);
 
         //Can only load transaction if the user is authenticated

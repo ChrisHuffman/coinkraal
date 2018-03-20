@@ -9,9 +9,7 @@ import TransactionsPage from './transactions/TransactionsPage'
 import Login from './common/Login'
 import SecureRoute from './common/SecureRoute'
 
-@inject('authStore', 'commonStore', 'transactionStore', 'currencyStore')
 @withRouter
-@observer
 export default class App extends React.Component {
 
   constructor(props) {

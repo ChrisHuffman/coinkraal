@@ -26,13 +26,13 @@ class CoinValues extends React.Component {
                     <div className="row">
                         <div className="col-6 text-left">
                             <h3>
-                                <Exchange amount={this.state.coin.price_usd} from="USD" to={this.props.global.selectedFiat} />
+                                <Exchange amount={this.state.coin.priceUsd} from="USD" to={this.props.global.selectedFiat} />
                                 <small className='xs'> {this.props.global.selectedFiat}</small>
                             </h3>
                         </div>
                         <div className="col-6 text-right">
                             <h3>
-                                <Percentage value={this.state.coin.percent_change_24h} />
+                                <Percentage value={this.state.coin.percentChange24h} />
                             </h3>
                         </div>
                     </div>
@@ -40,7 +40,7 @@ class CoinValues extends React.Component {
                     <div className="row">
                         <div className="col-6 text-left">
                             <h6 className="text-muted">
-                                <Exchange amount={this.state.coin.price_btc} from="BTC" to={this.props.global.selectedCoin} />
+                                <Exchange amount={this.state.coin.priceBtc} from="BTC" to={this.props.global.selectedCoin} />
                                 <small className='xs'> {this.props.global.selectedCoin}</small>
                             </h6>
                         </div>

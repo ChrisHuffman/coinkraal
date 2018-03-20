@@ -15,7 +15,7 @@ import {
     DropdownItem
 } from 'reactstrap';
 
-@inject('authStore', 'currencyStore', 'coinsPageState')
+@inject('authStore', 'coinStore', 'coinsPageState')
 class Header extends React.Component {
 
     constructor(props) {
@@ -63,7 +63,7 @@ class Header extends React.Component {
                         <VirtualizedSelect 
                             placeholder="Find Coin..."
                             className="header-select" 
-                            options={this.props.currencyStore.coins}
+                            options={this.props.coinStore.coins}
                             searchable={true}
                             simpleValue={true}
                             clearable={true}

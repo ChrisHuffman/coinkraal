@@ -4,7 +4,7 @@ export class CoinsPageState {
 
     coinStore = null;
 
-    @observable selectedCoin = null;
+    @observable selectedCoinSymbol = null;
     @observable coinSummaryModal = false;
 
     coinChartService = null;
@@ -12,8 +12,7 @@ export class CoinsPageState {
     coinChartSelectedTimeRange = 30;
     @observable isLoadingCoinChartData = true;
 
-    @observable isLoading = true;
-    @observable allCoins = [];
+    @observable isLoading = false;
     @observable pageIndex = 0;
     pageSize = 100;
     @observable sortColumn = "rank";
@@ -23,40 +22,11 @@ export class CoinsPageState {
         this.global = global;
         this.coinStore = coinStore;
         this.coinChartService = coinChartService;
-
-        this.loadCoins();
-    }
-
-    @action loadCoins() {
-
-        this.isLoading = true;
-
-        this.coinStore.getCoins(0, 2000)
-            .then(action((coins) => {
-
-                var formatted = coins.map(coin => {
-                    coin.rank = parseInt(coin.rank);
-                    coin.price_usd = parseFloat(coin.price_usd);
-                    coin.price_btc = parseFloat(coin.price_btc);
-                    coin["24h_volume_usd"] = parseFloat(coin["24h_volume_usd"]);
-                    coin.available_supply = parseFloat(coin.available_supply);
-                    coin.total_supply = parseFloat(coin.total_supply);
-                    coin.percent_change_1h = parseFloat(coin.percent_change_1h);
-                    coin.percent_change_24h = parseFloat(coin.percent_change_24h);
-                    coin.percent_change_7d = parseFloat(coin.percent_change_7d);
-
-                    return coin;
-                })
-
-                this.allCoins = formatted;
-                this.isLoading = false;
-            }));
-
     }
 
     @computed get coins() {
         var start = this.pageIndex * this.pageSize;
-        var page = this.allCoins.slice(start, start + this.pageSize);
+        var page = this.coinStore.coins.slice(start, start + this.pageSize);
 
         page.sort(this.compareValues(this.sortColumn, this.sortDirection));
         
@@ -85,17 +55,11 @@ export class CoinsPageState {
     }
 
     @computed get isLastPage() {
-        return this.allCoins.length - (this.pageIndex * this.pageSize) <= this.pageSize;
+        return this.coinStore.coins.length - (this.pageIndex * this.pageSize) <= this.pageSize;
     }
 
-    getCoin(symbol) {
-        return this.allCoins.find(function (c) {
-            return c.symbol == symbol;
-        });
-    }
-
-    @action toggleCoinSummaryModal(coin) {
-        this.selectedCoin = coin;
+    @action toggleCoinSummaryModal(coinSymbol) {
+        this.selectedCoinSymbol = coinSymbol;
         this.coinSummaryModal = !this.coinSummaryModal;
     }
 
@@ -103,7 +67,7 @@ export class CoinsPageState {
 
         this.isLoadingCoinChartData = true;
 
-        this.coinChartService.getData(this.selectedCoin, this.global.selectedFiat, this.global.selectedCoin, this.coinChartSelectedTimeRange)
+        this.coinChartService.getData(this.selectedCoinSymbol, this.global.selectedFiat, this.global.selectedCoin, this.coinChartSelectedTimeRange)
             .then(action(data => {
                 this.coinChartData = data;
                 this.isLoadingCoinChartData = false;

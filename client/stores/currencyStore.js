@@ -5,8 +5,6 @@ import moment from 'moment';
 
 export class CurrencyStore {
 
-  @observable isLoading = false;
-  coins = [];
   purchaseCurrencies = [];
 
   constructor() {
@@ -28,59 +26,6 @@ export class CurrencyStore {
 
       resolve();
 
-    });
-  }
-
-  @action loadCoins() {
-
-    var self = this;
-    self.isLoading = true;
-
-    return new Promise(function (resolve, reject) {
-
-      return agent.Coins.getCoins()
-      .then(action((coins) => {
-        self.coins = coins.map(c => {
-          c.fullName = `${c.name} (${c.symbol})`;
-          return c;
-        });
-        self.isLoading = false; 
-        resolve();
-      }));
-    });
-  }
-
-  @action getHistoricalPrice(fromCurrency, toCurrency, timestamp) {
-    return agentExt.External.getHistoricalPrice(fromCurrency, toCurrency, timestamp);
-  }
-
-  getUnitPrice(fromCurrency, toCurrency, date) {
-
-    var self = this;
-
-    return new Promise(function (resolve, reject) {
-
-      if (!fromCurrency || !toCurrency || !date) {
-        resolve('');
-        return;
-      }
-
-      var now = moment();
-      var dateParsed = moment(date);
-
-      var isToday = now.diff(dateParsed, 'days') == 0;
-      var unix = isToday ? now.unix() : dateParsed.unix();
-
-      self.getHistoricalPrice(fromCurrency, toCurrency, unix)
-        .then(price => {
-          resolve(price);
-        });
-    });
-  }
-
-  getCoin(symbol) {
-    return this.coins.find(function (c) {
-      return c.symbol == symbol;
     });
   }
 

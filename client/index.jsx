@@ -35,7 +35,7 @@ var exchangeStore = new ExchangeStore();
 
 //Global
 import Global from './global';
-var global = new Global(authStore, currencyStore, transactionStore, exchangeStore);
+var global = new Global(authStore, currencyStore, coinStore, transactionStore, exchangeStore);
 
 
 //Services

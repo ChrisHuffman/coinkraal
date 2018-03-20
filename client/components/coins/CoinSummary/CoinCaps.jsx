@@ -28,12 +28,12 @@ class CoinCaps extends React.Component {
                             <div className="row">
                                 <div className="col-12">
                                     <span className="font-weight-bold">Market Cap</span>:&nbsp;
-                                    <Exchange amount={this.state.coin.market_cap_usd} from="USD" to={this.props.global.selectedFiat} />
+                                    <Exchange amount={this.state.coin.marketCapUsd} from="USD" to={this.props.global.selectedFiat} />
                                     <small className='xs'> {this.props.global.selectedFiat}</small>
                                 </div>
                                 <div className="col-12 mt-05">
                                     <span className="font-weight-bold">Volume (24h)</span>:&nbsp;
-                                    <Exchange amount={this.state.coin["24h_volume_usd"]} from="USD" to={this.props.global.selectedFiat} />
+                                    <Exchange amount={this.state.coin.volumeUsd24h} from="USD" to={this.props.global.selectedFiat} />
                                     <small className='xs'> {this.props.global.selectedFiat}</small>
                                 </div>
                             </div>
@@ -42,11 +42,11 @@ class CoinCaps extends React.Component {
                              <div className="row">
                                 <div className="col-12">
                                     <span className="font-weight-bold">Circulating Supply</span>:&nbsp;
-                                    <Number amount={this.state.coin.available_supply} />
+                                    <Number amount={this.state.coin.availableSupply} />
                                 </div>
                                 <div className="col-12 mt-05">
                                     <span className="font-weight-bold">Max Supply</span>:&nbsp;
-                                    <Number amount={this.state.coin.max_supply ? this.state.coin.max_supply : this.state.coin.total_supply} />
+                                    <Number amount={this.state.coin.maxSupply ? this.state.coin.maxSupply : this.state.coin.totalSupply} />
                                 </div>
                             </div>
                         </div>

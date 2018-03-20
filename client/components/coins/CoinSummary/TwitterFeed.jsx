@@ -15,16 +15,12 @@ class TwitterFeed extends React.Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if (!nextProps.twitterUrl)
+        if (!nextProps.twitterUrl || nextProps.twitterUrl == this.props.twitterUrl)
             return;
 
         this.setState({
             twitterUrl: nextProps.twitterUrl
-        });
-    }
-
-    componentDidMount() {
-        twttr.widgets.load();
+        }, twttr.widgets.load);
     }
 
     render() {

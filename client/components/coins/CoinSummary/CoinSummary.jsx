@@ -31,21 +31,37 @@ class CoinSummary extends React.Component {
         this.onFiltersChanged = this.onFiltersChanged.bind(this);
     }
 
+    componentWillMount() {
+
+       
+    }
+
+    getUrl(name, links) {
+        var link = links.find((l) => {
+            return l.name == name;
+        })
+        return link ? link.url : '';
+    }
+
     componentWillReceiveProps(nextProps) {
 
-        if (!nextProps.coinSymbol)
+        if (!nextProps.coinSymbol || nextProps.coinSymbol == this.props.coinSymbol)
             return;
 
         this.props.coinsPageState.loadCoinChartData();
 
         var coin =  this.props.coinStore.getCoin(nextProps.coinSymbol);
 
-        console.log(nextProps);
+        this.props.coinStore.getCoinLinks(nextProps.coinSymbol)
+            .then((links) => {
+                this.setState({
+                    twitterUrl: this.getUrl('twitter', links),
+                    redditUrl: this.getUrl('reddit', links)
+                });
+            })
         
         this.setState({
             coin: coin,
-            twitterUrl: '', //TODO
-            redditUrl: '' //TODO
         });
     }
 

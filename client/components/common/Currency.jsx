@@ -12,6 +12,10 @@ class Currency extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
+        if(nextProps.amount == this.props.amount)
+            return;
+
         this.setState({
             amount: CommonService.formatCurrency(nextProps.amount)
         });

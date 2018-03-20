@@ -4,9 +4,16 @@ class CoinLogo extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            coin: null
+        }
     }
 
     componentWillReceiveProps(nextProps) {
+
+        if(!nextProps.coin || nextProps.coin == this.props.coin)
+            return;
 
         this.setState({
             coin: nextProps.coin

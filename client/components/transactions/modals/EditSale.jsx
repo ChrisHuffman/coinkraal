@@ -11,7 +11,7 @@ import {
 } from 'reactstrap';
 
 
-@inject('transactionsPageState', 'transactionStore', 'currencyStore', 'commonStore')
+@inject('transactionsPageState', 'transactionStore', 'currencyStore', 'coinStore', 'commonStore')
 @observer
 class EditSale extends React.Component {
 
@@ -62,7 +62,7 @@ class EditSale extends React.Component {
 
     loadUnitPrice() {
 
-        this.props.currencyStore
+        this.props.coinStore
             .getUnitPrice(this.state.transaction ? this.state.transaction.currency : null, this.state.saleCurrency, this.state.date)
 
             .then(price => {

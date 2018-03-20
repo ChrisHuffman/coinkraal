@@ -6,8 +6,9 @@ import Notifications from 'react-notify-toast';
 import { Nav, NavItem, NavLink, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Header from './common/Header'
 import Loader from './common/Loader'
+import CoinSummary from './coins/CoinSummary/CoinSummary'
 
-@inject('global')
+@inject('global', 'coinsPageState')
 @observer
 export default class Layout extends React.Component {
 
@@ -127,6 +128,8 @@ export default class Layout extends React.Component {
 
             </div>
 
+          <CoinSummary coinSymbol={this.props.coinsPageState.selectedCoinSymbol} />
+
           </div>
         }
 
@@ -140,6 +143,8 @@ export default class Layout extends React.Component {
             </div>
           </div>
         }
+
+        
 
       </div>
     );

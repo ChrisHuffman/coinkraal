@@ -10,6 +10,7 @@ class RedditFeed extends React.Component {
         super(props);
 
         this.state = {
+            redditUrl: "",
             redditContent: {
                 __html: ""
             }
@@ -20,7 +21,7 @@ class RedditFeed extends React.Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if (!nextProps.redditUrl)
+        if (nextProps.redditUrl == this.props.redditUrl)
             return;
 
         this.loadRedditFeed(nextProps.redditUrl);
@@ -29,6 +30,7 @@ class RedditFeed extends React.Component {
     loadRedditFeed(redditUrl) {
 
         this.setState({
+            redditUrl: "",
             redditContent: {
                 __html: 'loading...'
             }

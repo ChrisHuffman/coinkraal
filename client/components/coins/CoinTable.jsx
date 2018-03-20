@@ -5,7 +5,7 @@ import Loader from '../common/Loader'
 import Percentage from '../common/Percentage'
 import CoinLogo from '../common/CoinLogo'
 import Exchange from '../common/Exchange'
-import CoinSummary from './CoinSummary/CoinSummary'
+
 
 @inject('global', 'coinStore', 'commonStore', 'coinsPageState')
 @observer
@@ -42,7 +42,7 @@ class CoinTable extends React.Component {
                             <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "priceUsd")}>Price ({self.props.global.selectedFiat})</th>
                             <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "priceBtc")}>Price ({self.props.global.selectedCoin})</th>
                             <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "volumeUsd24h")}>Volume ({self.props.global.selectedFiat})</th>
-                            <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "percentChange24h")}>Change (24Hr)</th>
+                            <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "percentChange24h")}>Change 24h ({self.props.global.selectedFiat})</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,8 +80,6 @@ class CoinTable extends React.Component {
                         }
                     </tbody>
                 </Table>
-
-                <CoinSummary coinSymbol={this.props.coinsPageState.selectedCoinSymbol} />
 
             </div>
         );

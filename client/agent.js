@@ -76,8 +76,8 @@ const Sales = {
 };
 
 const Coins = {
-  getCoins: () => requests.get(`/api/coins`),
-  getCoinLogo: (coinId) => requests.get(`/api/coins/${coinId}/logo`)
+  getCoinLinks: (symbol) => requests.get(`/api/coins/${symbol}/links`),
+  getCoinLogo: (symbol) => requests.get(`/api/coins/${symbol}/logo`)
 };
 
 const Social = {

@@ -44,7 +44,7 @@ class AddTransaction extends React.Component {
 
     loadUnitPrice() {
 
-        this.props.currencyStore
+        this.props.coinStore
             .getUnitPrice(this.state.currency, this.state.purchaseCurrency, this.state.date)
 
             .then(price => {

@@ -3,18 +3,18 @@ var Coin = require('../models/Coin');
 
 class CoinRepository {
 
-    getCoins() {
+    getCoinLinks(symbol) {
 
         return new Promise(function (resolve, reject) {
 
-            Coin.find({})
-                .select('_id name symbol cmc_rank twitterUrl redditUrl')            
-                .sort({ cmc_rank: 'asc' })  
-                .exec(function (error, coins) {
+            Coin.findOne({ symbol: symbol.toUpperCase() })
+                .select('links') 
+                .exec(function (error, coin) {
                     if (error)
                         reject(error);
-                    else
-                        resolve(coins);
+                    else {
+                        resolve(coin.links);
+                    }
                 });
         })
     }

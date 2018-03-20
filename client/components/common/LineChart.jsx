@@ -77,14 +77,14 @@ class LineChart extends React.Component {
         //Dont need this for now...
         return;
 
-        if (!nextProps.chart)
-            return;
+        // if (!nextProps.chart)
+        //     return;
 
-        this.setState({
-            data: this.formatData(nextProps.chart.data),
-            options: this.formatData(nextProps.chart.options),
-            plugins: this.formatData(nextProps.chart.plugins)
-        });
+        // this.setState({
+        //     data: this.formatData(nextProps.chart.data),
+        //     options: this.formatData(nextProps.chart.options),
+        //     plugins: this.formatData(nextProps.chart.plugins)
+        // });
     }
 
     toggleTimeRangeDropDown() {

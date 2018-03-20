@@ -39,7 +39,7 @@ class CoinValues extends React.Component {
 
                     <div className="row">
                         <div className="col-6 text-left">
-                            <h6 className="text-muted">
+                            <h6>
                                 <Exchange amount={this.state.coin.priceBtc} from="BTC" to={this.props.global.selectedCoin} />
                                 <small className='xs'> {this.props.global.selectedCoin}</small>
                             </h6>

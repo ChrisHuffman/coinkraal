@@ -1,48 +1,26 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var Cacheman = require('cacheman');
+//var Cacheman = require('cacheman');
 
-var Coin = require('../models/Coin')
 var CoinRepository = require('../repository/CoinRepository');
 
 var router = express.Router();
 var coinRepository = new CoinRepository();
 
 //FileSystem Cache, time to live - 1 day.
-var cache = new Cacheman('coins', { ttl: 86400, engine: 'cacheman-file' });
+//var cache = new Cacheman('coins', { ttl: 86400, engine: 'cacheman-file' });
 
-router.get('/api/coins', function (req, res) {
+router.get('/api/coins/:symbol/links', function (req, res) {
 
-
-    cache.get('/api/coins', function (err, value) {
-
-        if (err) {
+    coinRepository.getCoinLinks(req.params.symbol).then(
+        function(links) {
+            res.json(links);
+        },
+        function(err) {
             res.status(500).send('');
-            return;
-        };
-
-        if (!value) {
-            coinRepository.getCoins().then(
-
-                function (coins) {
-                    cache.set('/api/coins', coins, function (err, value) {
-                        if (err) {
-                            res.status(500).send('');
-                            return;
-                        };
-                        res.json(value);
-                    });
-                },
-                function (err) {
-                    res.status(500).send('');
-                }
-
-            );
         }
-        else {
-            res.json(value);
-        }
-    });
+    );
+
 });
 
 router.get('/api/coins/:symbol/logo', function (req, res) {

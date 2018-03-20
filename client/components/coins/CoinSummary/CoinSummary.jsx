@@ -9,7 +9,7 @@ import CoinCaps from './CoinCaps'
 import { Button, TabContent, TabPane, Nav, NavItem, NavLink, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classnames from 'classnames';
 
-@inject('socialStore', 'currencyStore', 'coinsPageState')
+@inject('socialStore', 'currencyStore', 'coinStore', 'coinsPageState')
 @observer
 class CoinSummary extends React.Component {
 
@@ -38,10 +38,11 @@ class CoinSummary extends React.Component {
             return;
 
         this.props.coinsPageState.loadCoinChartData();
-        var coinDetails = nextProps.currencyStore.getCoin(nextProps.coin.symbol);
+        var coinDetails =  this.props.currencyStore.getCoin(nextProps.coin);
+        var coin = nextProps.coinsPageState.getCoin(nextProps.coin);
 
         this.setState({
-            coin: nextProps.coin,
+            coin: coin,
             coinDetails: coinDetails,
             twitterUrl: coinDetails.twitterUrl,
             redditUrl: coinDetails.redditUrl

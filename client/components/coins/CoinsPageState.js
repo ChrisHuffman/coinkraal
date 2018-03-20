@@ -27,8 +27,6 @@ export class CoinsPageState {
         this.loadCoins();
     }
 
-   
-
     @action loadCoins() {
 
         this.isLoading = true;
@@ -90,6 +88,12 @@ export class CoinsPageState {
         return this.allCoins.length - (this.pageIndex * this.pageSize) <= this.pageSize;
     }
 
+    getCoin(symbol) {
+        return this.allCoins.find(function (c) {
+            return c.symbol == symbol;
+        });
+    }
+
     @action toggleCoinSummaryModal(coin) {
         this.selectedCoin = coin;
         this.coinSummaryModal = !this.coinSummaryModal;
@@ -99,7 +103,7 @@ export class CoinsPageState {
 
         this.isLoadingCoinChartData = true;
 
-        this.coinChartService.getData(this.selectedCoin.symbol, this.global.selectedFiat, this.global.selectedCoin, this.coinChartSelectedTimeRange)
+        this.coinChartService.getData(this.selectedCoin, this.global.selectedFiat, this.global.selectedCoin, this.coinChartSelectedTimeRange)
             .then(action(data => {
                 this.coinChartData = data;
                 this.isLoadingCoinChartData = false;

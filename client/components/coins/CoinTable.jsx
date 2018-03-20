@@ -20,7 +20,7 @@ class CoinTable extends React.Component {
     }
 
     coinSummary(coin) {
-        this.props.coinsPageState.toggleCoinSummaryModal(coin);
+        this.props.coinsPageState.toggleCoinSummaryModal(coin.symbol);
     }
 
     sort(column) {

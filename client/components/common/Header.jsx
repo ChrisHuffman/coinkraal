@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import VirtualizedSelect from 'react-virtualized-select';
 import {
     Collapse,
     Navbar,
@@ -14,7 +15,7 @@ import {
     DropdownItem
 } from 'reactstrap';
 
-@inject('authStore')
+@inject('authStore', 'currencyStore', 'coinsPageState')
 class Header extends React.Component {
 
     constructor(props) {
@@ -26,6 +27,7 @@ class Header extends React.Component {
 
         this.toggle = this.toggle.bind(this);
         this.logout = this.logout.bind(this);
+        this.handleCoinChange = this.handleCoinChange.bind(this);
     }
 
     logout() {
@@ -38,6 +40,10 @@ class Header extends React.Component {
         });
     }
 
+    handleCoinChange(newValue) {
+        this.props.coinsPageState.toggleCoinSummaryModal(newValue);
+    }
+
     render() {
         return (
             <Navbar color="faded" light expand="md">
@@ -46,11 +52,27 @@ class Header extends React.Component {
                 </NavbarBrand>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
-                    <Nav className="ml-auto" navbar>
+                    <Nav className="mr-auto" navbar>
                         <NavItem>
                             <NavLink href="#" onClick={this.logout}>Sign out</NavLink>
                         </NavItem>
                     </Nav>
+
+                    <form className="form-inline my-2 my-lg-0">
+                        
+                        <VirtualizedSelect 
+                            placeholder="Find Coin..."
+                            className="header-select" 
+                            options={this.props.currencyStore.coins}
+                            searchable={true}
+                            simpleValue={true}
+                            clearable={true}
+                            onChange={this.handleCoinChange}
+                            labelKey="fullName"
+                            valueKey="symbol"
+                        />
+
+                    </form>
                 </Collapse>
             </Navbar>
         )

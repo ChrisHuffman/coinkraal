@@ -9,11 +9,13 @@ import AddTransaction from './modals/AddTransaction'
 import AddSale from './modals/AddSale'
 import EditSale from './modals/EditSale'
 import RemoveSale from './modals/RemoveSale'
+import TransactionPrice from './TransactionPrice'
+import CurrentPrice from './CurrentPrice'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
 import ChevronDown from 'react-feather/dist/icons/chevron-down';
 import Layout from '../Layout'
 
-@inject('transactionsPageState', 'transactionStore', 'commonStore')
+@inject('global', 'transactionsPageState', 'transactionStore', 'commonStore', 'priceStore')
 @observer
 class TransactionTable extends React.Component {
 
@@ -74,20 +76,49 @@ class TransactionTable extends React.Component {
 
     renderTransaction(transaction) {
 
-        const clickCallback = () => this.handleRowClick(transaction._id);
-        const rows = [
-            <tr onClick={clickCallback} key={'transaction-' + transaction._id} className='clickable'>
-                <td className='min-padding'>
+        var clickCallback = () => this.handleRowClick(transaction._id);
+
+        var expander = <span />
+
+        if (transaction.sales.length > 0) {
+            expander =
+                <div>
                     {this.state.expandedRows.includes(transaction._id) ? <ChevronDown size={22} /> : <ChevronRight size={22} />}
+                </div>
+        }
+
+        var rows = [
+            <tr onClick={clickCallback} key={'transaction-' + transaction._id} className='clickable'>
+                <td className='align-middle'>
+                    {expander}
                 </td>
-                <td>
+                <td className="align-middle">
                     <CoinLogo coin={transaction.currency} />
                 </td>
-                <td>{transaction.currency}</td>
-                <td>{transaction.amount}</td>
-                <td>{transaction.purchaseCurrency} @ {transaction.purchaseUnitPrice}</td>
-                <td>{this.props.commonStore.formatDate(transaction.date)}</td>
-                <td className='min-padding'>
+                <td className="align-middle">{transaction.currency}</td>
+                <td className="align-middle">{transaction.amount}</td>
+                <td>
+                    <div>
+                        <TransactionPrice symbol={this.props.global.selectedFiat} transaction={transaction} />
+                        <small>&nbsp;{this.props.global.selectedFiat}</small>
+                    </div>
+                    <div>
+                        <TransactionPrice symbol={this.props.global.selectedCoin} transaction={transaction} />
+                        <small>&nbsp;{this.props.global.selectedCoin}</small>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <CurrentPrice symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
+                        <small>&nbsp;{this.props.global.selectedFiat}</small>
+                    </div>
+                    <div>
+                        <CurrentPrice symbol={this.props.global.selectedCoin} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
+                        <small>&nbsp;{this.props.global.selectedCoin}</small>
+                    </div>
+                </td>
+                <td className="align-middle">{this.props.commonStore.formatDate(transaction.date)}</td>
+                <td className='align-middle'>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editTransaction.bind(this, transaction)}>Edit</Button>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.removeTransaction.bind(this, transaction)}>Remove</Button>
                     <Button outline color="secondary" size="xs" onClick={this.addSale.bind(this, transaction)}>Sell</Button>
@@ -106,6 +137,7 @@ class TransactionTable extends React.Component {
                         <td></td>
                         <td>{sale.amount}</td>
                         <td>{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
+                        <td>{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
                         <td>{this.props.commonStore.formatDate(sale.date)}</td>
                         <td className='min-padding'>
                             <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editSale.bind(event, transaction, sale)}>Edit</Button>
@@ -120,15 +152,39 @@ class TransactionTable extends React.Component {
     }
 
     render() {
-        let allTransactionRows = [];
+        var allTransactionRows = [];
 
         this.props.transactionStore.transactions.forEach(transaction => {
-            const perTransactionRows = this.renderTransaction(transaction);
+            var perTransactionRows = this.renderTransaction(transaction);
             allTransactionRows = allTransactionRows.concat(perTransactionRows);
         });
 
         return (
             <div>
+
+                {!this.props.transactionStore.isLoading &&
+                    <div className="row">
+                        <div className="col-md">
+                            <Table responsive>
+                                <thead>
+                                    <tr>
+                                        <th className="clearTopBorder narrow"></th>
+                                        <th className="clearTopBorder narrow">Coin</th>
+                                        <th className="clearTopBorder"></th>
+                                        <th className="clearTopBorder">Amount</th>
+                                        <th className="clearTopBorder">Purchase Price</th>
+                                        <th className="clearTopBorder">Current Price</th>
+                                        <th className="clearTopBorder">Date</th>
+                                        <th className="clearTopBorder">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {allTransactionRows}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </div>
+                }
 
                 <EditTransaction transaction={this.props.transactionsPageState.selectedTransaction} />
                 <RemoveTransaction />
@@ -143,28 +199,6 @@ class TransactionTable extends React.Component {
                     </div>
                 </div>
 
-                {!this.props.transactionStore.isLoading &&
-                    <div className="row">
-                        <div className="col-md">
-                            <Table responsive>
-                                <thead>
-                                    <tr>
-                                        <th className="clearTopBorder narrow"></th>
-                                        <th className="clearTopBorder narrow">Coin</th>
-                                        <th className="clearTopBorder"></th>
-                                        <th className="clearTopBorder">Amount</th>
-                                        <th className="clearTopBorder">Purchased with</th>
-                                        <th className="clearTopBorder">Date</th>
-                                        <th className="clearTopBorder">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {allTransactionRows}
-                                </tbody>
-                            </Table>
-                        </div>
-                    </div>
-                }
             </div>
         );
     }

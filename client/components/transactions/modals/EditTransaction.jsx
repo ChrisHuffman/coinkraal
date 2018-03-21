@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 
 
-@inject('transactionsPageState', 'transactionStore', 'currencyStore', 'coinStore', 'commonStore')
+@inject('transactionsPageState', 'transactionStore', 'global', 'coinStore', 'commonStore')
 @observer
 class EditTransaction extends React.Component {
 
@@ -220,7 +220,7 @@ class EditTransaction extends React.Component {
                             <FormGroup>
                                 <Label for="purchaseCurrency">Purchased with</Label>
                                 <VirtualizedSelect ref="purchaseCurrency"
-                                    options={this.props.currencyStore.purchaseCurrencies}
+                                    options={this.props.global.supportedCurrencies}
                                     searchable={true}
                                     simpleValue={true}
                                     clearable={false}

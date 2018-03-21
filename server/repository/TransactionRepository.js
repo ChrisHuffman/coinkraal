@@ -185,11 +185,14 @@ class TransactionRepository {
             return {};
 
         //Most probably want to add this to the config...
-        var tSyms = "USD,ZAR,GBP,AUD,BTC,ETH,NEO";
+        var tSyms = ["USD","ZAR","EUR","GBP","AUD","BTC","ETH","NEO"];
 
+        //Max 30 chars - take out same symbol
+        tSyms.splice(tSyms.indexOf(fromSymbol), 1);
+        
         var query = {
             fsym: fromSymbol,
-            tsyms: tSyms,
+            tsyms: tSyms.join(),
             ts: moment(date).unix(),
             calculationType: 'MidHighLow'
         }

@@ -70,12 +70,6 @@ table .narrow {
     border-radius: 0.1rem;
 }
 
-.table td.min-padding {
-    /* padding: 0.6rem; */
-    padding: 0rem;
-    vertical-align: middle;
-}
-
 .nav-tabs {
     cursor: pointer;
 }

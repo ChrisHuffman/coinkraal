@@ -9,13 +9,13 @@ export class Global {
     exchangeStore = null;
 
     @observable isLoaded = false;
-    loadCount = 3;
+    loadCount = 2;
 
     @observable selectedFiat = "USD";
     @observable selectedCoin = "BTC";
 
-    fiatOptions = ['USD', 'ZAR', 'GBP', 'AUD'];
-    coinOptions = ['BTC', 'ETH', 'NEO'];
+    fiatOptions = [];
+    coinOptions = [];
 
     constructor(authStore, currencyStore, coinStore, transactionStore, exchangeStore) {
         this.authStore = authStore;
@@ -24,12 +24,28 @@ export class Global {
         this.transactionStore = transactionStore;
         this.exchangeStore = exchangeStore;
 
+        this.loadFiatOptions();
+        this.loadCoinOptions();
+
         this.checkLoadComplete = this.checkLoadComplete.bind(this);
+    }
+
+    loadFiatOptions() {
+        this.fiatOptions.push({ symbol: 'USD', name: 'US Dollar', fullName: 'US Dollar (USD)'});
+        this.fiatOptions.push({ symbol: 'ZAR', name: 'SA Rand', fullName: 'SA Rand (ZAR)'});
+        this.fiatOptions.push({ symbol: 'EUR', name: 'Euro', fullName: 'Euro (EUR)'});
+        this.fiatOptions.push({ symbol: 'GBP', name: 'Great British Pound', fullName: 'Great British Pound (GBP)'});
+        this.fiatOptions.push({ symbol: 'AUD', name: 'Auzzie Dollar', fullName: 'Auzzie Dollar (USD)'});
+    }
+
+    loadCoinOptions() {
+        this.coinOptions.push({ symbol: 'BTC', name: 'Bitcoin', fullName: 'Bitcoin (BTC)'});
+        this.coinOptions.push({ symbol: 'ETH', name: 'Ethereum', fullName: 'Ethereum (ETH)'});
+        this.coinOptions.push({ symbol: 'NEO', name: 'NEO', fullName: 'NEO (NEO)'});
     }
 
     loadApplicationData() {
 
-        this.currencyStore.loadPurchaseCurrencies().then(this.checkLoadComplete);
         this.coinStore.loadCoins().then(this.checkLoadComplete);
         this.exchangeStore.load(this.fiatOptions.slice(0), this.coinOptions.slice(0)).then(this.checkLoadComplete);
 
@@ -57,6 +73,10 @@ export class Global {
 
     @action setSelectedCoin(coin) {
         this.selectedCoin = coin;
+    }
+
+    @computed get supportedCurrencies() {
+        return this.coinOptions.concat(this.fiatOptions);
     }
 }
 

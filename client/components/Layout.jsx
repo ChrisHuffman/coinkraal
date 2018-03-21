@@ -78,7 +78,7 @@ export default class Layout extends React.Component {
                     <DropdownMenu>
                       {
                         this.props.global.fiatOptions.map(fiat => {
-                          return <DropdownItem key={fiat} onClick={this.selectFiat.bind(null, fiat)}>{fiat}</DropdownItem>
+                          return <DropdownItem key={fiat.symbol} onClick={this.selectFiat.bind(null, fiat.symbol)}>{fiat.symbol}</DropdownItem>
                         })
                       }
                     </DropdownMenu>
@@ -93,10 +93,8 @@ export default class Layout extends React.Component {
                     </DropdownToggle>
                     <DropdownMenu>
                       {
-
                         this.props.global.coinOptions.map(coin => {
-
-                          return <DropdownItem key={coin} onClick={this.selectCoin.bind(null, coin)}>{coin}</DropdownItem>
+                          return <DropdownItem key={coin.symbol} onClick={this.selectCoin.bind(null, coin.symbol)}>{coin.symbol}</DropdownItem>
                         })
                       }
                     </DropdownMenu>

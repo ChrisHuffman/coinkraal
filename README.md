@@ -14,7 +14,7 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
-- Sort our Coin/Coin Details models
+- IOTA Price not loading?
 - Sale dates must be after transaction date
 - loader untill at least currencies are loaded
 - Common form functions - sell

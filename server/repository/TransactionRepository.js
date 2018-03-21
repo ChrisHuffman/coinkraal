@@ -1,4 +1,7 @@
 
+const superagent = require('superagent');
+var moment = require('moment');
+
 var Transaction = require('../models/Transaction');
 
 class TransactionRepository {
@@ -34,14 +37,22 @@ class TransactionRepository {
 
     addTransaction(transaction) {
 
+        var self = this;
+
         return new Promise(function (resolve, reject) {
 
-            transaction.save(function (err) {
-                if (err)
-                    reject(err);
-                else
-                    resolve();
-            });
+            self.getExchangeRates(transaction.currency, transaction.date)
+                .then((exchangeRates) => {
+
+                    transaction.exchangeRates = exchangeRates;
+
+                    transaction.save(function (err) {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve();
+                    });
+                });
         });
     }
 
@@ -62,13 +73,18 @@ class TransactionRepository {
                     toUpdate.purchaseCurrency = transaction.purchaseCurrency;
                     toUpdate.purchaseUnitPrice = transaction.purchaseUnitPrice;
 
-                    toUpdate.save(function (err) {
-                        if (err)
-                            reject(err);
-                        else
-                            resolve();
-                    });
+                    self.getExchangeRates(transaction.currency, transaction.date)
+                        .then((exchangeRates) => {
 
+                            toUpdate.exchangeRates = exchangeRates;
+
+                            toUpdate.save(function (err) {
+                                if (err)
+                                    reject(err);
+                                else
+                                    resolve();
+                            });
+                        });
                 });
         });
     }
@@ -95,15 +111,20 @@ class TransactionRepository {
             self.getTransaction(transactionId)
                 .then(transaction => {
 
-                    transaction.sales.push(sale);
+                    self.getExchangeRates(sale.saleCurrency, sale.date)
+                        .then((exchangeRates) => {
 
-                    transaction.save(function (err) {
-                        if (err)
-                            reject(err);
-                        else
-                            resolve();
-                    });
+                            sale.exchangeRates = exchangeRates;
 
+                            transaction.sales.push(sale);
+
+                            transaction.save(function (err) {
+                                if (err)
+                                    reject(err);
+                                else
+                                    resolve();
+                            });
+                        });
                 })
         });
     }
@@ -124,12 +145,19 @@ class TransactionRepository {
                     toUpdate.saleUnitPrice = sale.saleUnitPrice;
                     toUpdate.notes = sale.notes;
 
-                    transaction.save(function (err) {
-                        if (err)
-                            reject(err);
-                        else
-                            resolve();
-                    });
+                    self.getExchangeRates(sale.saleCurrency, sale.date)
+                        .then((exchangeRates) => {
+
+                            toUpdate.exchangeRates = exchangeRates;
+
+                            transaction.save(function (err) {
+                                if (err)
+                                    reject(err);
+                                else
+                                    resolve();
+                            });
+
+                        });
 
                 })
         });
@@ -151,6 +179,50 @@ class TransactionRepository {
         });
     }
 
+    getExchangeRates(fromSymbol, date) {
+
+        if (!fromSymbol || !date)
+            return {};
+
+        //Most probably want to add this to the config...
+        var tSyms = "USD,ZAR,GBP,AUD,BTC,ETH,NEO";
+
+        var query = {
+            fsym: fromSymbol,
+            tsyms: tSyms,
+            ts: moment(date).unix(),
+            calculationType: 'MidHighLow'
+        }
+
+        return new Promise(function (resolve, reject) {
+
+            superagent.get('https://min-api.cryptocompare.com/data/pricehistorical')
+                .query(query)
+                .end((err, resp) => {
+                    if (err) {
+                        res.status(500).send('');
+                        return;
+                    };
+
+                    var exchangeRates = {
+                        fromSymbol: fromSymbol,
+                        rates: []
+                    }
+
+                    var rates = resp.body[fromSymbol];
+                    for (var symbol in rates) {
+                        if (rates.hasOwnProperty(symbol)) {
+                            exchangeRates.rates.push({
+                                symbol: symbol,
+                                rate: rates[symbol]
+                            })
+                        }
+                    }
+
+                    resolve(exchangeRates);
+                });
+        });
+    }
 }
 
 module.exports = TransactionRepository;

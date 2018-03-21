@@ -2,6 +2,19 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
+var rateScheme = new Schema({
+  symbol: { type: String, required: true },
+  rate: { type: Number,required: true }
+});
+
+var exchangeRatesScheme = new Schema({
+  fromSymbol: {
+    type: String,
+    required: true
+  },
+  rates: [rateScheme]
+});
+
 var saleScheme = new Schema({
   date: {
     type: Date,
@@ -19,7 +32,9 @@ var saleScheme = new Schema({
     type: Number,
     required: [true, 'Unit Price required']
   },
-  notes: String
+  notes: String,
+
+  exchangeRates: exchangeRatesScheme
 });
 
 var transactionSchema = new Schema({
@@ -64,6 +79,8 @@ var transactionSchema = new Schema({
     type: Number,
     required: [true, 'Unit Price required']
   },
+
+  exchangeRates: exchangeRatesScheme,
 
   sales: [saleScheme]
 });

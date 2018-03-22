@@ -41,7 +41,7 @@ class TransactionRepository {
 
         return new Promise(function (resolve, reject) {
 
-            self.getExchangeRates(transaction.currency, transaction.date)
+            self.getExchangeRates(transaction.currency, transaction.date, transaction.purchaseCurrency, transaction.purchaseUnitPrice)
                 .then((exchangeRates) => {
 
                     transaction.exchangeRates = exchangeRates;
@@ -73,7 +73,7 @@ class TransactionRepository {
                     toUpdate.purchaseCurrency = transaction.purchaseCurrency;
                     toUpdate.purchaseUnitPrice = transaction.purchaseUnitPrice;
 
-                    self.getExchangeRates(transaction.currency, transaction.date)
+                    self.getExchangeRates(transaction.currency, transaction.date, transaction.purchaseCurrency, transaction.purchaseUnitPrice)
                         .then((exchangeRates) => {
 
                             toUpdate.exchangeRates = exchangeRates;
@@ -111,7 +111,7 @@ class TransactionRepository {
             self.getTransaction(transactionId)
                 .then(transaction => {
 
-                    self.getExchangeRates(sale.saleCurrency, sale.date)
+                    self.getExchangeRates(sale.saleCurrency, sale.date, sale.saleCurrency, sale.saleUnitPrice)
                         .then((exchangeRates) => {
 
                             sale.exchangeRates = exchangeRates;
@@ -145,7 +145,7 @@ class TransactionRepository {
                     toUpdate.saleUnitPrice = sale.saleUnitPrice;
                     toUpdate.notes = sale.notes;
 
-                    self.getExchangeRates(sale.saleCurrency, sale.date)
+                    self.getExchangeRates(sale.saleCurrency, sale.date, sale.saleCurrency, sale.saleUnitPrice)
                         .then((exchangeRates) => {
 
                             toUpdate.exchangeRates = exchangeRates;
@@ -179,28 +179,22 @@ class TransactionRepository {
         });
     }
 
-    getExchangeRates(fromSymbol, date) {
+    getExchangeRates(fromSymbol, date, toSymbol, toPrice) {
+
+        var self = this;
 
         if (!fromSymbol || !date)
             return {};
 
         //Most probably want to add this to the config...
-        var tSyms = ["USD","ZAR","EUR","GBP","AUD","BTC","ETH","NEO"];
+        var tSyms = ["USD", "ZAR", "EUR", "GBP", "AUD", "BTC", "ETH", "NEO"];
 
         //Max 30 chars - take out same symbol
         tSyms.splice(tSyms.indexOf(fromSymbol), 1);
-        
-        var query = {
-            fsym: fromSymbol,
-            tsyms: tSyms.join(),
-            ts: moment(date).unix(),
-            calculationType: 'MidHighLow'
-        }
 
         return new Promise(function (resolve, reject) {
 
-            superagent.get('https://min-api.cryptocompare.com/data/pricehistorical')
-                .query(query)
+            self.getPricehistoricalApi(fromSymbol, tSyms, date)
                 .end((err, resp) => {
                     if (err) {
                         res.status(500).send('');
@@ -213,7 +207,9 @@ class TransactionRepository {
                     }
 
                     var rates = resp.body[fromSymbol];
+
                     for (var symbol in rates) {
+
                         if (rates.hasOwnProperty(symbol)) {
                             exchangeRates.rates.push({
                                 symbol: symbol,
@@ -225,6 +221,66 @@ class TransactionRepository {
                     resolve(exchangeRates);
                 });
         });
+    }
+
+    checkExchangeRates(toSymbol, toRate, exchangeRatesIn, exchangeRatesOut, resolve) {
+
+        var self = this;
+
+        if (exchangeRatesIn.length == 0) {
+            resolve(exchangeRatesOut);
+            return;
+        }
+
+        var rate = exchangeRatesIn.pop();
+
+        if (rate.rate != 0) {
+            exchangeRatesOut.push(rate);
+            self.checkExchangeRates(toSymbol, toRate, exchangeRatesIn, exchangeRatesOut, resolve);
+        }
+        else {
+
+            //First BTC exchange
+            self.exchange('BTC', [toSymbol], date)
+                .then(btcExchangeRate => {
+
+                    var ex1 = btcExchangeRate / toRate;
+
+                    //Now convert to exchange we actually need
+                    self.exchange('BTC', rate.symbol, date)
+                        .then(finalExchangeRate => {
+
+                            rate.rate = ex1 / finalExchangeRate;
+
+                            exchangeRatesOut.push(rate);
+                            self.checkExchangeRates(toSymbol, toRate, exchangeRatesIn, exchangeRatesOut, resolve);
+
+                        });
+                })
+        }
+    }
+
+    exchange(fromSym, toSym, date) {
+
+        return new Promise(function (resolve, reject) {
+
+            this.getPricehistoricalApi(fromSym, [toSym], date)
+                .end((err, resp) => {
+                    resolve(resp.body[fromSym][toSym]);
+                });
+        });
+    }
+
+    getPricehistoricalApi(fromSymbol, tSyms, date) {
+
+        var query = {
+            fsym: fromSymbol,
+            tsyms: tSyms.join(),
+            ts: moment(date).unix(),
+            calculationType: 'MidHighLow'
+        }
+
+        return superagent.get('https://min-api.cryptocompare.com/data/pricehistorical').query(query);
     }
 }
 

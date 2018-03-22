@@ -14,6 +14,8 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
+- Cant have zero rates on server on save transactions (manually calc if zero)
+- Clear add transaction modals after save
 - Volumn on summary chart
 - IOTA Price not loading?
 - Sale dates must be after transaction date

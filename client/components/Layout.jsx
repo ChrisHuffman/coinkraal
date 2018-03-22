@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import ReactDOM from 'react-dom';
 import { NavLink as RRNavLink, Link } from 'react-router-dom';
 import Notifications from 'react-notify-toast';
-import { Nav, NavItem, NavLink, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Nav, NavItem, NavLink } from 'reactstrap';
 import Header from './common/Header'
 import Loader from './common/Loader'
 import CoinSummary from './coins/CoinSummary/CoinSummary'
@@ -14,43 +14,6 @@ export default class Layout extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      selectedFiat: props.global.selectedFiat,
-      selectedCoin: props.global.selectedCoin,
-    }
-
-    this.toggleFiatDropDown = this.toggleFiatDropDown.bind(this);
-    this.selectFiat = this.selectFiat.bind(this);
-
-    this.toggleCoinDropDown = this.toggleCoinDropDown.bind(this);
-    this.selectCoin = this.selectCoin.bind(this);
-  }
-
-  toggleFiatDropDown() {
-    this.setState({
-      fiatDropDownOpen: !this.state.fiatDropDownOpen
-    });
-  }
-
-  selectFiat(fiat) {
-    this.setState({
-      selectedFiat: fiat
-    });
-    this.props.global.setSelectedFiat(fiat);
-  }
-
-  toggleCoinDropDown() {
-    this.setState({
-      coinDropDownOpen: !this.state.coinDropDownOpen
-    });
-  }
-
-  selectCoin(coin) {
-    this.setState({
-      selectedCoin: coin
-    });
-    this.props.global.setSelectedCoin(coin);
   }
 
   render() {
@@ -66,43 +29,7 @@ export default class Layout extends React.Component {
 
             <Header />
 
-            <div className="container-fluid">
-
-              <div className="row justify-content-end">
-                <div className="col-auto">
-
-                  <ButtonDropdown isOpen={this.state.fiatDropDownOpen} toggle={this.toggleFiatDropDown}>
-                    <DropdownToggle caret>
-                      {this.state.selectedFiat}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      {
-                        this.props.global.fiatOptions.map(fiat => {
-                          return <DropdownItem key={fiat.symbol} onClick={this.selectFiat.bind(null, fiat.symbol)}>{fiat.symbol}</DropdownItem>
-                        })
-                      }
-                    </DropdownMenu>
-                  </ButtonDropdown>
-
-                </div>
-                <div className="col-auto">
-
-                  <ButtonDropdown isOpen={this.state.coinDropDownOpen} toggle={this.toggleCoinDropDown}>
-                    <DropdownToggle caret>
-                      {this.state.selectedCoin}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      {
-                        this.props.global.coinOptions.map(coin => {
-                          return <DropdownItem key={coin.symbol} onClick={this.selectCoin.bind(null, coin.symbol)}>{coin.symbol}</DropdownItem>
-                        })
-                      }
-                    </DropdownMenu>
-                  </ButtonDropdown>
-
-                </div>
-              </div>
-
+            <div className="container-fluid mt-3">
 
               <Nav tabs>
                 <NavItem>

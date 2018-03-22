@@ -19,7 +19,7 @@ export class CommonService {
             pointRadius: 0,
             borderColor: borderColor,
             yAxisID: yAxisId,
-            lineTension: 0.1,
+            lineTension: 0.3,
             pointStyle: 'rectRot'
         };
     }
@@ -67,7 +67,7 @@ export class CommonService {
             }
         };
 
-        if (arr1.length > 0) {
+        if (arr1 && arr1.length > 0) {
             options.scales.yAxes.push({
                 type: 'linear',
                 display: true,
@@ -85,7 +85,7 @@ export class CommonService {
             });
         };
 
-        if (arr2.length > 0) {
+        if (arr2 && arr2.length > 0) {
             options.scales.yAxes.push({
                 type: 'linear',
                 display: true,

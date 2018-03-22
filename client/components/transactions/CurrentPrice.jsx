@@ -2,17 +2,13 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Exchange from '../common/Exchange';
 
-@inject('exchangeStore')
+@inject('commonStore')
 @observer
 class CurrentPrice extends React.Component {
 
     constructor(props) {
-
         super(props);
-
         this.getState = this.getState.bind(this);
-        this.getValue = this.getValue.bind(this);
-
         this.state = this.getState(props);
     }
 
@@ -22,28 +18,13 @@ class CurrentPrice extends React.Component {
 
     getState(props) {
 
+        var currentPrice = props.commonStore.getCurrentPrice(props.symbol, props.transaction, props.priceIndex);
+
         return {
-            from: props.symbol == "USD" ? "USD" : "BTC",
+            from: currentPrice.from,
             to: props.symbol,
-            amount: this.getValue(props.symbol, props.transaction, props.priceIndex)
+            amount: currentPrice.amount
         }
-    }
-
-    getValue(symbol, transaction, priceIndex) {
-
-        if(!priceIndex['USD'] || !priceIndex['BTC'])
-            return '';
-
-        if(symbol == 'USD')
-            return this.format(priceIndex['USD'][transaction.currency])
-
-        return this.format(priceIndex['BTC'][transaction.currency])
-    }
-
-    format(value) {
-        if(value == null)
-            return '';
-        return 1 / value;
     }
 
     render() {

@@ -10,12 +10,13 @@ import AddSale from './modals/AddSale'
 import EditSale from './modals/EditSale'
 import RemoveSale from './modals/RemoveSale'
 import TransactionPrice from './TransactionPrice'
+import TransactionProfit from './TransactionProfit'
 import CurrentPrice from './CurrentPrice'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
 import ChevronDown from 'react-feather/dist/icons/chevron-down';
 import Layout from '../Layout'
 
-@inject('global', 'transactionsPageState', 'transactionStore', 'commonStore', 'priceStore')
+@inject('global', 'transactionsPageState', 'transactionStore', 'commonStore', 'priceStore', 'coinsPageState')
 @observer
 class TransactionTable extends React.Component {
 
@@ -31,6 +32,7 @@ class TransactionTable extends React.Component {
         this.addSale = this.addSale.bind(this);
         this.editSale = this.editSale.bind(this);
         this.removeSale = this.removeSale.bind(this);
+        this.coinSummary = this.coinSummary.bind(this);
     }
 
     editTransaction(transaction, event) {
@@ -63,6 +65,11 @@ class TransactionTable extends React.Component {
         event.nativeEvent.stopImmediatePropagation();
     }
 
+    coinSummary(transaction, event) {
+        this.stopPropagation(event);
+        this.props.coinsPageState.toggleCoinSummaryModal(transaction.currency);
+    }
+
     handleRowClick(rowId) {
         const currentExpandedRows = this.state.expandedRows;
         const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
@@ -80,7 +87,7 @@ class TransactionTable extends React.Component {
 
         var expander = <span />
 
-        if (transaction.sales.length > 0) {
+        if (transaction.sales && transaction.sales.length > 0) {
             expander =
                 <div>
                     {this.state.expandedRows.includes(transaction._id) ? <ChevronDown size={22} /> : <ChevronRight size={22} />}
@@ -96,7 +103,14 @@ class TransactionTable extends React.Component {
                     <CoinLogo coin={transaction.currency} />
                 </td>
                 <td className="align-middle">{transaction.currency}</td>
-                <td className="align-middle">{transaction.amount}</td>
+                <td className="align-middle">
+                    <div>
+                        {transaction.amount} <small className="text-secondary">INITIAL</small>
+                    </div>
+                    <div>
+                        {this.props.transactionStore.getTransactionAmountBalance(transaction)} <small className="text-secondary">BALANCE</small>
+                    </div>
+                </td>
                 <td>
                     <div>
                         <TransactionPrice symbol={this.props.global.selectedFiat} transaction={transaction} />
@@ -117,11 +131,23 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
+                <td className="align-middle">
+                    <div>
+                        <TransactionProfit symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
+                        <small>&nbsp;{this.props.global.selectedFiat}</small>
+                    </div>
+                    <div>
+                        <TransactionProfit symbol={this.props.global.selectedCoin} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
+                        <small>&nbsp;{this.props.global.selectedCoin}</small>
+                    </div>
+                </td>
+               
                 <td className="align-middle">{this.props.commonStore.formatDate(transaction.date)}</td>
                 <td className='align-middle'>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editTransaction.bind(this, transaction)}>Edit</Button>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.removeTransaction.bind(this, transaction)}>Remove</Button>
-                    <Button outline color="secondary" size="xs" onClick={this.addSale.bind(this, transaction)}>Sell</Button>
+                    <Button outline color="secondary" size="xs" className="mr-10" onClick={this.addSale.bind(this, transaction)}>Sell</Button>
+                    <Button outline color="secondary" size="xs" onClick={this.coinSummary.bind(this, transaction)}>Coin Info</Button>
                 </td>
             </tr>
         ];
@@ -135,11 +161,12 @@ class TransactionTable extends React.Component {
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>{sale.amount}</td>
-                        <td>{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
-                        <td>{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
-                        <td>{this.props.commonStore.formatDate(sale.date)}</td>
-                        <td className='min-padding'>
+                        <td></td>
+                        <td className="align-middle">{sale.amount}</td>
+                        <td className="align-middle">{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
+                        <td className="align-middle">{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
+                        <td className="align-middle">{this.props.commonStore.formatDate(sale.date)}</td>
+                        <td className='align-middle'>
                             <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editSale.bind(event, transaction, sale)}>Edit</Button>
                             <Button outline color="secondary" size="xs" onClick={this.removeSale.bind(event, transaction, sale)}>Remove</Button>
                         </td>
@@ -174,6 +201,7 @@ class TransactionTable extends React.Component {
                                         <th className="clearTopBorder">Amount</th>
                                         <th className="clearTopBorder">Purchase Price</th>
                                         <th className="clearTopBorder">Current Price</th>
+                                        <th className="clearTopBorder">Profit</th>
                                         <th className="clearTopBorder">Date</th>
                                         <th className="clearTopBorder">Actions</th>
                                     </tr>

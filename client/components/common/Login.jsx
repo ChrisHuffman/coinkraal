@@ -30,10 +30,15 @@ export default class Login extends React.Component {
         return (
             <div>
 
-                <h3 className="display-4 text-center mt-30">CoinKraal</h3>
+                <div className="row justify-content-center mt-5">
+                    <div className="col-8 col-sm-5 col-md-3 col-lg-2">
+                        <img src="logo_full.png" width="100%" />
+                    </div>
+                </div>
 
-                <div className="row justify-content-center mt-40">
-                    <div className="col-auto">
+                <div className="row justify-content-center mt-5">
+
+                 <div className="col-auto">
                         <GoogleLogin
                             clientId={this.googleClientId}
                             buttonText="Sign in with Google"
@@ -42,6 +47,7 @@ export default class Login extends React.Component {
                             onFailure={this.responseGoogle}
                         />
                     </div>
+
                 </div>
 
             </div>

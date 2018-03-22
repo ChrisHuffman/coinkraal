@@ -37,6 +37,51 @@ class CommonStore {
       return '';
     return 'is-invalid';
   }
+
+  getTransactionPrice(symbol, transaction) {
+
+    if (transaction.purchaseCurrency == symbol)
+      return transaction.purchaseUnitPrice;
+
+    var rate = transaction.exchangeRates.rates.find((r) => {
+      return r.symbol == symbol;
+    })
+
+    if (!rate)
+      return '?';
+
+    return rate.rate;
+  }
+
+  getCurrentPrice(symbol, transaction, priceIndex) {
+
+    if (!priceIndex || !priceIndex['USD'] || !priceIndex['BTC'])
+      return '';
+
+    if (symbol == 'USD')
+      return {
+        from: 'USD',
+        amount: this.invertExchange(priceIndex['USD'][transaction.currency])
+      }
+
+    return {
+      from: 'BTC',
+      amount: this.invertExchange(priceIndex['BTC'][transaction.currency])
+    };
+
+  }
+
+  invertExchange(value) {
+    if (value == null)
+      return '';
+    return 1 / value;
+  }
+
+  getPercentageChange(oldNumber, newNumber) {
+    var decreaseValue = oldNumber - newNumber;
+    return (decreaseValue / oldNumber) * 100;
+  }
+
 }
 
 

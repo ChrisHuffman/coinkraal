@@ -63,6 +63,17 @@ export class TransactionStore {
         this.loadTransactions();
       }));
   }
+
+  getTransactionAmountBalance(transaction) {
+    
+      if(!transaction.sales || transaction.sales.length == 0)
+        return transaction.amount;
+
+      var salesAmount = transaction.sales
+        .reduce((s1, s2) => s1.amount + s2.amount, { amount: 0 });
+
+      return transaction.amount - salesAmount;
+  }
 }
 
 export default TransactionStore;

@@ -4,8 +4,20 @@ class Percentage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.getState = this.getState.bind(this);
+        this.state = this.getState(props);
+    }
 
-        var value = parseFloat(props.value);
+    componentWillReceiveProps(nextProps) {
+        this.setState(this.getState(nextProps));
+    }
+
+    getState(props) {
+
+        var value = '?';
+
+        if(!isNaN(props.value))
+            value = parseFloat(props.value).toFixed(2);
 
         var colorClass = '';
         if(value < 0)
@@ -13,15 +25,16 @@ class Percentage extends React.Component {
         if(value > 0)
             colorClass = 'text-success'
 
-        this.state = {
-            colorClass: colorClass
+        return {
+            value: value,
+            colorClass: colorClass,
         }
     }
 
     render() {
         return (
             <span className={this.state.colorClass}>
-                { this.props.value }%
+                { this.state.value }%
             </span>
         )
     }

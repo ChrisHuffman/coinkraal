@@ -156,7 +156,7 @@ class CoinSummary extends React.Component {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button outline color="light" onClick={this.toggleModal}>Close</Button>
+                        <Button outline color="secondary" onClick={this.toggleModal}>Close</Button>
                     </ModalFooter>
                 </Modal>
             </div>

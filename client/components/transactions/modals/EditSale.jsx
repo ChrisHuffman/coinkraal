@@ -266,7 +266,7 @@ class EditSale extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>Cancel</Button>
-                        <Button outline color="light" onClick={this.updateSale} disabled={!this.state.enabled}>Update Sale</Button>
+                        <Button outline color="primary" onClick={this.updateSale} disabled={!this.state.enabled}>Update Sale</Button>
                     </ModalFooter>
                 </Modal>
             </div>

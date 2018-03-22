@@ -268,7 +268,7 @@ class EditTransaction extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>Cancel</Button>
-                        <Button outline color="light" onClick={this.updateTransaction} disabled={!this.state.enabled}>Update Transaction</Button>
+                        <Button outline color="primary" onClick={this.updateTransaction} disabled={!this.state.enabled}>Update Transaction</Button>
                     </ModalFooter>
                 </Modal>
             </div>

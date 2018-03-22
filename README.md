@@ -14,10 +14,9 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
+- Volumn on summary chart
 - IOTA Price not loading?
 - Sale dates must be after transaction date
-- loader untill at least currencies are loaded
-- Common form functions - sell
 - why do we need to root api?
 - why do we keep getting a 401?
 - component cleanup 

@@ -25,7 +25,7 @@ class PortfolioPage extends React.Component {
 
             <Layout>
 
-                {!this.props.portfolioPageState.isLoadingPorfolioChartData &&
+                {!this.props.portfolioPageState.isLoadingPorfolioChartData && this.props.portfolioPageState.portfolioChartData &&
                     <div className="row mt-20">
                         <div className="col-md-7">
                             <LineChart

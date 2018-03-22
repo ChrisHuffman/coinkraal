@@ -108,7 +108,7 @@ class TransactionTable extends React.Component {
                         {transaction.amount} <small className="text-secondary">INITIAL</small>
                     </div>
                     <div>
-                        {this.props.transactionStore.getTransactionAmountBalance(transaction)} <small className="text-secondary">BALANCE</small>
+                        {this.props.transactionStore.getTransactionAmountBalance(transaction)} <small className="text-secondary">CURRENT</small>
                     </div>
                 </td>
                 <td>

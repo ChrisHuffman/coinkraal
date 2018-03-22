@@ -17,12 +17,12 @@ class Percentage extends React.Component {
         var value = '?';
 
         if(!isNaN(props.value))
-            value = parseFloat(props.value).toFixed(2);
+            value = parseFloat(props.value).toFixed(2) + '%';
 
         var colorClass = '';
-        if(value < 0)
+        if(props.value < 0)
             colorClass = 'text-danger';
-        if(value > 0)
+        if(props.value > 0)
             colorClass = 'text-success'
 
         return {
@@ -34,7 +34,7 @@ class Percentage extends React.Component {
     render() {
         return (
             <span className={this.state.colorClass}>
-                { this.state.value }%
+                { this.state.value }
             </span>
         )
     }

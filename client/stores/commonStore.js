@@ -50,7 +50,7 @@ class CommonStore {
     if (!rate)
       return '?';
 
-    return rate.rate;
+    return rate.rate == 0 ? '?' : rate.rate;
   }
 
   getCurrentPrice(symbol, transaction, priceIndex) {
@@ -77,9 +77,17 @@ class CommonStore {
     return 1 / value;
   }
 
-  getPercentageChange(oldNumber, newNumber) {
-    var decreaseValue = oldNumber - newNumber;
-    return (decreaseValue / oldNumber) * 100;
+  getPercentageChange(sellingPrice, costPrice) {
+
+    if(sellingPrice == costPrice)
+      return 0;
+
+    var isGain = sellingPrice > costPrice;
+
+    if(isGain)
+      return ((sellingPrice - costPrice) / costPrice) * 100;
+
+    return -((costPrice - sellingPrice) / costPrice) * 100;
   }
 
 }

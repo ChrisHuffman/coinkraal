@@ -142,6 +142,9 @@ export class CommonService {
 
     formatCurrency(amount) {
 
+        if(isNaN(amount))
+            return '?';
+
         var minimumFractionDigits = 2;
         var maximumFractionDigits = 2;
 

@@ -179,7 +179,7 @@ class TransactionRepository {
         });
     }
 
-    getExchangeRates(fromSymbol, date, toSymbol, toPrice) {
+    getExchangeRates(fromSymbol, date, toSymbol, toRate) {
 
         var self = this;
 
@@ -189,24 +189,22 @@ class TransactionRepository {
         //Most probably want to add this to the config...
         var tSyms = ["USD", "ZAR", "EUR", "GBP", "AUD", "BTC", "ETH", "NEO"];
 
-        //Max 30 chars - take out same symbol
-        tSyms.splice(tSyms.indexOf(fromSymbol), 1);
+        //Take out same symbol
+        if (tSyms.indexOf(fromSymbol) != -1)
+            tSyms.splice(tSyms.indexOf(fromSymbol), 1);
+
+        //console.log('fromSymbol: ', fromSymbol);
+        //console.log('tSyms: ', tSyms);
 
         return new Promise(function (resolve, reject) {
 
-            self.getPricehistoricalApi(fromSymbol, tSyms, date)
-                .end((err, resp) => {
-                    if (err) {
-                        res.status(500).send('');
-                        return;
-                    };
+            self.getPricehistorical(fromSymbol, tSyms, date)
+                .then((rates) => {
 
                     var exchangeRates = {
                         fromSymbol: fromSymbol,
                         rates: []
                     }
-
-                    var rates = resp.body[fromSymbol];
 
                     for (var symbol in rates) {
 
@@ -218,25 +216,35 @@ class TransactionRepository {
                         }
                     }
 
-                    resolve(exchangeRates);
+                    //console.log('##########################################');
+                    //console.log('Original Rates: ', exchangeRates);
+                    //console.log('##########################################');
+                    self.checkExchangeRates(toSymbol, toRate, date, exchangeRates.rates, [],
+                        (ratesOut) => {
+                            exchangeRates.rates = ratesOut;
+                            resolve(exchangeRates);
+                        })
                 });
         });
     }
 
-    checkExchangeRates(toSymbol, toRate, exchangeRatesIn, exchangeRatesOut, resolve) {
+    checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve) {
 
         var self = this;
 
-        if (exchangeRatesIn.length == 0) {
-            resolve(exchangeRatesOut);
+        if (ratesIn.length == 0) {
+            resolve(ratesOut);
             return;
         }
 
-        var rate = exchangeRatesIn.pop();
+        var rate = ratesIn.pop();
 
         if (rate.rate != 0) {
-            exchangeRatesOut.push(rate);
-            self.checkExchangeRates(toSymbol, toRate, exchangeRatesIn, exchangeRatesOut, resolve);
+            //console.log('*********************************')
+            //console.log('Have rate: ', rate);
+            ratesOut.push(rate);
+            //console.log('*********************************')
+            self.checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve);
         }
         else {
 
@@ -244,16 +252,51 @@ class TransactionRepository {
             self.exchange('BTC', [toSymbol], date)
                 .then(btcExchangeRate => {
 
+                    //console.log('=======================================')
+                    //console.log('1. ------------------------------------')
+
+                    //No btc conversion, nothing we can do
+                    if (btcExchangeRate == 0) {
+                        //console.log('No btc conversion, nothing we can do')
+                        ratesOut.push(rate);
+                        self.checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve);
+                        return;
+                    }
+
+
+                    //console.log('BTC' + ' -> ' + toSymbol)
+                    //console.log('btcExchangeRate -> ' + btcExchangeRate)
+                    //console.log('toRate -> ' + toRate)
+
                     var ex1 = btcExchangeRate / toRate;
 
+                    //console.log('ex1 -> ' + ex1)
+
                     //Now convert to exchange we actually need
-                    self.exchange('BTC', rate.symbol, date)
+                    self.exchange('BTC', [rate.symbol], date)
                         .then(finalExchangeRate => {
 
-                            rate.rate = ex1 / finalExchangeRate;
+                            //console.log('2. ------------------------------------')
 
-                            exchangeRatesOut.push(rate);
-                            self.checkExchangeRates(toSymbol, toRate, exchangeRatesIn, exchangeRatesOut, resolve);
+                            //No btc conversion, nothing we can do
+                            if (finalExchangeRate == 0) {
+                                //console.log('No btc conversion, nothing we can do')
+                                ratesOut.push(rate);
+                                self.checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve);
+                                return;
+                            }
+
+                            //console.log('BTC' + ' -> ' + rate.symbol)
+                            //console.log('ex1 -> ' + ex1)
+                            //console.log('finalExchangeRate -> ' + finalExchangeRate)
+                            //console.log('Orginal: ' + rate.rate)
+
+                            rate.rate = (finalExchangeRate / ex1);
+
+                            //console.log('New: ' + rate.rate);
+
+                            ratesOut.push(rate);
+                            self.checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve);
 
                         });
                 })
@@ -262,25 +305,56 @@ class TransactionRepository {
 
     exchange(fromSym, toSym, date) {
 
+        var self = this;
+
         return new Promise(function (resolve, reject) {
 
-            this.getPricehistoricalApi(fromSym, [toSym], date)
-                .end((err, resp) => {
-                    resolve(resp.body[fromSym][toSym]);
+            self.getPricehistorical(fromSym, [toSym], date)
+                .then((rates) => {
+                    resolve(rates[toSym]);
                 });
         });
     }
 
-    getPricehistoricalApi(fromSymbol, tSyms, date) {
+    getPricehistorical(fromSymbol, tSyms, date) {
+
+        var self = this;
+
+        return new Promise(function (resolve, reject) {
+            self.getPricehistoricalInternal(fromSymbol, tSyms, date, { },
+                (rates) => {
+                    resolve(rates);
+                });
+        });
+    }
+
+    getPricehistoricalInternal(fromSymbol, tSyms, date, rates, completeCallback) {
+
+        var self = this;
+
+        if(tSyms.length == 0) {
+            completeCallback(rates)
+            return;
+        }
 
         var query = {
             fsym: fromSymbol,
-            tsyms: tSyms.join(),
+            tsyms: tSyms.splice(0, 7).join(), //Max 7 at a time
             ts: moment(date).unix(),
             calculationType: 'MidHighLow'
         }
 
-        return superagent.get('https://min-api.cryptocompare.com/data/pricehistorical').query(query);
+        return superagent.get('https://min-api.cryptocompare.com/data/pricehistorical')
+            .query(query)
+            .end((err, resp) => {
+                if (err) {
+                    reject();
+                    return;
+                };
+
+                rates = Object.assign(rates, resp.body[fromSymbol]);
+                self.getPricehistoricalInternal(fromSymbol, tSyms, date, rates, completeCallback)
+            });
     }
 }
 

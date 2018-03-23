@@ -157,7 +157,7 @@ class TransactionTable extends React.Component {
             </tr>
         ];
 
-        if (this.state.expandedRows.includes(transaction._id)) {
+        if (this.state.expandedRows.includes(transaction._id) && transaction.sales.length > 0) {
 
             rows.push(
                 <tr key={'sale-header' + transaction._id} className="font-weight-bold sub-table-header">

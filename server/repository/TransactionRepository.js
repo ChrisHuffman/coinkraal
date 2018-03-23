@@ -191,8 +191,8 @@ class TransactionRepository {
         var tSyms = ["USD", "ZAR", "EUR", "GBP", "AUD", "BTC", "ETH", "NEO"];
 
         //Take out same symbol
-        if (tSyms.indexOf(fromSymbol) != -1)
-            tSyms.splice(tSyms.indexOf(fromSymbol), 1);
+        //if (tSyms.indexOf(fromSymbol) != -1)
+            //tSyms.splice(tSyms.indexOf(fromSymbol), 1);
 
         var exchangeRates = {
             fromSymbol: fromSymbol,
@@ -217,7 +217,7 @@ class TransactionRepository {
                         return;
                     }
 
-                    self.checkExchangeRates(toSymbol, toRate, btcExchangeRate, date, exchangeRates.rates, [],
+                    self.checkExchangeRates(fromSymbol, toSymbol, toRate, btcExchangeRate, date, exchangeRates.rates, [],
                         (ratesOut) => {
                             exchangeRates.rates = ratesOut;
                             resolve(exchangeRates);
@@ -226,7 +226,7 @@ class TransactionRepository {
         });
     }
 
-    checkExchangeRates(toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve) {
+    checkExchangeRates(fromSymbol, toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve) {
 
         var self = this;
 
@@ -244,8 +244,10 @@ class TransactionRepository {
 
         //console.log('ex1 -> ' + ex1)
 
-        //Now convert to exchange we actually need
-        self.exchange('BTC', [rate.symbol], date)
+        //Now convert to exchange we actually 
+        var baseCurrency = 'BTC';
+
+        self.exchange(baseCurrency, [rate.symbol], date)
             .then(finalExchangeRate => {
 
                 //console.log('2. ------------------------------------')
@@ -254,20 +256,23 @@ class TransactionRepository {
                 if (finalExchangeRate == 0) {
                     //console.log('No btc conversion, nothing we can do')
                     ratesOut.push(rate);
-                    self.checkExchangeRates(toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
+                    self.checkExchangeRates(fromSymbol, toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
                     return;
                 }
 
                 //console.log('BTC' + ' -> ' + rate.symbol)
-                //console.log('ex1 -> ' + ex1)
+                //console.log('weighting -> ' + weighting)
                 //console.log('finalExchangeRate -> ' + finalExchangeRate)
 
-                rate.rate = new BigNumber(finalExchangeRate.toString()).dividedBy(weighting).toNumber();
+                if(fromSymbol == rate.symbol)
+                    rate.rate = 1;
+                else
+                    rate.rate = new BigNumber(finalExchangeRate.toString()).dividedBy(weighting).toNumber();
 
                 //console.log('New: ' + rate.rate);
 
                 ratesOut.push(rate);
-                self.checkExchangeRates(toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
+                self.checkExchangeRates(fromSymbol, toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
             });
     }
 

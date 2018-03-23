@@ -79,7 +79,7 @@ class CommonStore {
 
   getPercentageChange(sellingPrice, costPrice) {
 
-    if(isNaN(sellingPrice) || isNaN(costPrice))
+    if(!sellingPrice || isNaN(sellingPrice) || !costPrice || isNaN(costPrice))
       return ""
 
     var sp = new BigNumber(sellingPrice.toString());
@@ -88,12 +88,12 @@ class CommonStore {
     if(sp.isEqualTo(cp))
       return 0;
 
-    var isGain = sp.isGreaterThan(costPrice);
+    var isGain = sp.isGreaterThan(cp);
 
     if(isGain)
       return sp.minus(cp).dividedBy(cp).multipliedBy(100).toNumber();
 
-    return cp.minus(sp).dividedBy(costPrice).multipliedBy(-100).toNumber();
+    return cp.minus(sp).dividedBy(cp).multipliedBy(-100).toNumber();
   }
 
 }

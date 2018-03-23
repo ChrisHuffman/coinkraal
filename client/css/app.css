@@ -65,6 +65,11 @@ table .narrow {
     width: 250px;
 }
 
+.sub-table-header td {
+    background-color: #070707;
+    border-bottom: 2px solid #e9ecef
+}
+
 
 /* Bootstrap Extenstions -------------------------------------------------------------------------------------*/
 .btn-xs, .btn-group-xs > .btn {
@@ -76,6 +81,8 @@ table .narrow {
 
 .nav-tabs {
     cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
 }
 
 .table .clearTopBorder {

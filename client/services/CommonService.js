@@ -149,15 +149,15 @@ export class CommonService {
         var maximumFractionDigits = 2;
 
         if(amount < 0.01)
-            maximumFractionDigits = 4
-
-        if(amount < 0.001)
             maximumFractionDigits = 6
 
-        if(amount < 0.00001)
+        if(amount < 0.001)
+            maximumFractionDigits = 7
+
+        if(amount < 0.0001)
             maximumFractionDigits = 8
 
-        if(amount >= 1000) {
+        if(amount >= 1000 || amount % 1 == 0) {
             maximumFractionDigits = 0;
             minimumFractionDigits = 0;
         }

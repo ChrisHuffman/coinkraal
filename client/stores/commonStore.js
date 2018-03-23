@@ -2,6 +2,7 @@ import { observable, action, reaction } from 'mobx';
 import agent from '../agent';
 import { notify } from 'react-notify-toast';
 import moment from 'moment';
+import { BigNumber } from 'bignumber.js';
 
 class CommonStore {
 
@@ -53,7 +54,7 @@ class CommonStore {
     return rate.rate == 0 ? '?' : rate.rate;
   }
 
-  getCurrentPrice(symbol, transaction, priceIndex) {
+  getCurrentPrice(symbol, currency, priceIndex) {
 
     if (!priceIndex || !priceIndex['USD'] || !priceIndex['BTC'])
       return '';
@@ -61,33 +62,38 @@ class CommonStore {
     if (symbol == 'USD')
       return {
         from: 'USD',
-        amount: this.invertExchange(priceIndex['USD'][transaction.currency])
+        amount: this.invertExchange(priceIndex['USD'][currency])
       }
 
     return {
       from: 'BTC',
-      amount: this.invertExchange(priceIndex['BTC'][transaction.currency])
+      amount: this.invertExchange(priceIndex['BTC'][currency])
     };
-
   }
 
   invertExchange(value) {
     if (value == null)
       return '';
-    return 1 / value;
+    return new BigNumber(1).dividedBy(value).toNumber();
   }
 
   getPercentageChange(sellingPrice, costPrice) {
 
-    if(sellingPrice == costPrice)
+    if(isNaN(sellingPrice) || isNaN(costPrice))
+      return ""
+
+    var sp = new BigNumber(sellingPrice.toString());
+    var cp = new BigNumber(costPrice.toString());
+
+    if(sp.isEqualTo(cp))
       return 0;
 
-    var isGain = sellingPrice > costPrice;
+    var isGain = sp.isGreaterThan(costPrice);
 
     if(isGain)
-      return ((sellingPrice - costPrice) / costPrice) * 100;
+      return sp.minus(cp).dividedBy(cp).multipliedBy(100).toNumber();
 
-    return -((costPrice - sellingPrice) / costPrice) * 100;
+    return cp.minus(sp).dividedBy(costPrice).multipliedBy(-100).toNumber();
   }
 
 }

@@ -1,6 +1,7 @@
 
 const superagent = require('superagent');
 var moment = require('moment');
+var BigNumber = require('bignumber.js');
 
 var Transaction = require('../models/Transaction');
 
@@ -193,33 +194,30 @@ class TransactionRepository {
         if (tSyms.indexOf(fromSymbol) != -1)
             tSyms.splice(tSyms.indexOf(fromSymbol), 1);
 
-        //console.log('fromSymbol: ', fromSymbol);
-        //console.log('tSyms: ', tSyms);
+        var exchangeRates = {
+            fromSymbol: fromSymbol,
+            rates: []
+        }
+
+        tSyms.forEach(s => {
+            exchangeRates.rates.push({
+                symbol: s,
+                rate: 0
+            })
+        });
 
         return new Promise(function (resolve, reject) {
 
-            self.getPricehistorical(fromSymbol, tSyms, date)
-                .then((rates) => {
+            self.exchange('BTC', [toSymbol], date)
+                .then(btcExchangeRate => {
 
-                    var exchangeRates = {
-                        fromSymbol: fromSymbol,
-                        rates: []
+                    if (btcExchangeRate == 0) {
+                        //console.log('No btc conversion, nothing we can do')
+                        resolve(exchangeRates);
+                        return;
                     }
 
-                    for (var symbol in rates) {
-
-                        if (rates.hasOwnProperty(symbol)) {
-                            exchangeRates.rates.push({
-                                symbol: symbol,
-                                rate: rates[symbol]
-                            })
-                        }
-                    }
-
-                    //console.log('##########################################');
-                    //console.log('Original Rates: ', exchangeRates);
-                    //console.log('##########################################');
-                    self.checkExchangeRates(toSymbol, toRate, date, exchangeRates.rates, [],
+                    self.checkExchangeRates(toSymbol, toRate, btcExchangeRate, date, exchangeRates.rates, [],
                         (ratesOut) => {
                             exchangeRates.rates = ratesOut;
                             resolve(exchangeRates);
@@ -228,7 +226,7 @@ class TransactionRepository {
         });
     }
 
-    checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve) {
+    checkExchangeRates(toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve) {
 
         var self = this;
 
@@ -239,68 +237,38 @@ class TransactionRepository {
 
         var rate = ratesIn.pop();
 
-        if (rate.rate != 0) {
-            //console.log('*********************************')
-            //console.log('Have rate: ', rate);
-            ratesOut.push(rate);
-            //console.log('*********************************')
-            self.checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve);
-        }
-        else {
+        //console.log('=======================================')
 
-            //First BTC exchange
-            self.exchange('BTC', [toSymbol], date)
-                .then(btcExchangeRate => {
+        //Apply weighting
+        var weighting = new BigNumber(btcExchangeRate.toString()).dividedBy(toRate);
 
-                    //console.log('=======================================')
-                    //console.log('1. ------------------------------------')
+        //console.log('ex1 -> ' + ex1)
 
-                    //No btc conversion, nothing we can do
-                    if (btcExchangeRate == 0) {
-                        //console.log('No btc conversion, nothing we can do')
-                        ratesOut.push(rate);
-                        self.checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve);
-                        return;
-                    }
+        //Now convert to exchange we actually need
+        self.exchange('BTC', [rate.symbol], date)
+            .then(finalExchangeRate => {
 
+                //console.log('2. ------------------------------------')
 
-                    //console.log('BTC' + ' -> ' + toSymbol)
-                    //console.log('btcExchangeRate -> ' + btcExchangeRate)
-                    //console.log('toRate -> ' + toRate)
+                //No btc conversion, nothing we can do
+                if (finalExchangeRate == 0) {
+                    //console.log('No btc conversion, nothing we can do')
+                    ratesOut.push(rate);
+                    self.checkExchangeRates(toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
+                    return;
+                }
 
-                    var ex1 = btcExchangeRate / toRate;
+                //console.log('BTC' + ' -> ' + rate.symbol)
+                //console.log('ex1 -> ' + ex1)
+                //console.log('finalExchangeRate -> ' + finalExchangeRate)
 
-                    //console.log('ex1 -> ' + ex1)
+                rate.rate = new BigNumber(finalExchangeRate.toString()).dividedBy(weighting).toNumber();
 
-                    //Now convert to exchange we actually need
-                    self.exchange('BTC', [rate.symbol], date)
-                        .then(finalExchangeRate => {
+                //console.log('New: ' + rate.rate);
 
-                            //console.log('2. ------------------------------------')
-
-                            //No btc conversion, nothing we can do
-                            if (finalExchangeRate == 0) {
-                                //console.log('No btc conversion, nothing we can do')
-                                ratesOut.push(rate);
-                                self.checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve);
-                                return;
-                            }
-
-                            //console.log('BTC' + ' -> ' + rate.symbol)
-                            //console.log('ex1 -> ' + ex1)
-                            //console.log('finalExchangeRate -> ' + finalExchangeRate)
-                            //console.log('Orginal: ' + rate.rate)
-
-                            rate.rate = (finalExchangeRate / ex1);
-
-                            //console.log('New: ' + rate.rate);
-
-                            ratesOut.push(rate);
-                            self.checkExchangeRates(toSymbol, toRate, date, ratesIn, ratesOut, resolve);
-
-                        });
-                })
-        }
+                ratesOut.push(rate);
+                self.checkExchangeRates(toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
+            });
     }
 
     exchange(fromSym, toSym, date) {
@@ -308,6 +276,11 @@ class TransactionRepository {
         var self = this;
 
         return new Promise(function (resolve, reject) {
+
+            if(fromSym == toSym) {
+                resolve(1);
+                return;
+            }
 
             self.getPricehistorical(fromSym, [toSym], date)
                 .then((rates) => {
@@ -321,18 +294,18 @@ class TransactionRepository {
         var self = this;
 
         return new Promise(function (resolve, reject) {
-            self.getPricehistoricalInternal(fromSymbol, tSyms, date, { },
+            self.getPricehistoricalRecurse(fromSymbol, tSyms, date, {},
                 (rates) => {
                     resolve(rates);
                 });
         });
     }
 
-    getPricehistoricalInternal(fromSymbol, tSyms, date, rates, completeCallback) {
+    getPricehistoricalRecurse(fromSymbol, tSyms, date, rates, completeCallback) {
 
         var self = this;
 
-        if(tSyms.length == 0) {
+        if (tSyms.length == 0) {
             completeCallback(rates)
             return;
         }
@@ -353,7 +326,7 @@ class TransactionRepository {
                 };
 
                 rates = Object.assign(rates, resp.body[fromSymbol]);
-                self.getPricehistoricalInternal(fromSymbol, tSyms, date, rates, completeCallback)
+                self.getPricehistoricalRecurse(fromSymbol, tSyms, date, rates, completeCallback)
             });
     }
 }

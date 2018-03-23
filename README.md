@@ -14,7 +14,7 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
-- Always manually check/calc exchange rates on server
+- CommonStore to use BigNumber
 - Clear add transaction modals after save
 - Volumn on summary chart
 - Notification on Portfolio chart to say 'TAU data only available from x date'

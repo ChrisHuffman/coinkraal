@@ -12,9 +12,13 @@ import RemoveSale from './modals/RemoveSale'
 import TransactionPrice from './TransactionPrice'
 import TransactionProfit from './TransactionProfit'
 import SalePrice from './SalePrice'
+import SaleProfit from './SaleProfit'
+import Number from '../common/Number'
 import CurrentPrice from './CurrentPrice'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
 import ChevronDown from 'react-feather/dist/icons/chevron-down';
+import MinusSquare from 'react-feather/dist/icons/minus-square';
+import PlusSquare from 'react-feather/dist/icons/plus-square';
 import Layout from '../Layout'
 
 @inject('global', 'transactionsPageState', 'transactionStore', 'commonStore', 'priceStore', 'coinsPageState')
@@ -90,8 +94,8 @@ class TransactionTable extends React.Component {
 
         if (transaction.sales && transaction.sales.length > 0) {
             expander =
-                <div>
-                    {this.state.expandedRows.includes(transaction._id) ? <ChevronDown size={22} /> : <ChevronRight size={22} />}
+                <div className="text-secondary">
+                    {this.state.expandedRows.includes(transaction._id) ? <MinusSquare className="align-middle" size={20} /> : <PlusSquare className="align-middle" size={20} />}
                 </div>
         }
 
@@ -106,10 +110,10 @@ class TransactionTable extends React.Component {
                 <td className="align-middle">{transaction.currency}</td>
                 <td className="align-middle">
                     <div>
-                        {transaction.amount} <small className="text-secondary">INITIAL</small>
+                        <Number amount={this.props.transactionStore.getTransactionAmountBalance(transaction)} /> <small className="text-secondary">CURRENT</small>
                     </div>
                     <div>
-                        {this.props.transactionStore.getTransactionAmountBalance(transaction)} <small className="text-secondary">CURRENT</small>
+                        <Number amount={transaction.amount} /> <small className="text-secondary">INITIAL</small>
                     </div>
                 </td>
                 <td>
@@ -155,10 +159,24 @@ class TransactionTable extends React.Component {
 
         if (this.state.expandedRows.includes(transaction._id)) {
 
+            rows.push(
+                <tr key={'sale-header' + transaction._id} className="font-weight-bold sub-table-header">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Sale Amount</td>
+                    <td>Sale Price</td>
+                    <td></td>
+                    <td>Sale Profit</td>
+                    <td>Date</td>
+                    <td></td>
+                </tr>
+            );
+
             transaction.sales.forEach(sale => {
 
                 rows.push(
-                    <tr key={'sale-' + sale._id}>
+                    <tr key={'sale-' + sale._id} className="bg-dark">
                         <td></td>
                         <td></td>
                         <td></td>
@@ -174,7 +192,16 @@ class TransactionTable extends React.Component {
                             </div>
                         </td>
                         <td className="align-middle"></td>
-                        <td className="align-middle"></td>
+                        <td>
+                            <div>
+                                <SaleProfit symbol={this.props.global.selectedFiat} transaction={transaction} sale={sale} />
+                                <small>&nbsp;{this.props.global.selectedFiat}</small>
+                            </div>
+                            <div>
+                                <SaleProfit symbol={this.props.global.selectedCoin} transaction={transaction} sale={sale} />
+                                <small>&nbsp;{this.props.global.selectedCoin}</small>
+                            </div>
+                        </td>
                         <td className="align-middle">{this.props.commonStore.formatDate(sale.date)}</td>
                         <td className='align-middle'>
                             <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editSale.bind(event, transaction, sale)}>Edit</Button>

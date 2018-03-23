@@ -14,9 +14,10 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
-- Cant have zero rates on server on save transactions (manually calc if zero)
+- Always manually check/calc exchange rates on server
 - Clear add transaction modals after save
 - Volumn on summary chart
+- Notification on Portfolio chart to say 'TAU data only available from x date'
 - IOTA Price not loading?
 - Sale dates must be after transaction date
 - why do we need to root api?

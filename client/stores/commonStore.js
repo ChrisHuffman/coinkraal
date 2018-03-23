@@ -38,12 +38,12 @@ class CommonStore {
     return 'is-invalid';
   }
 
-  getTransactionPrice(symbol, transaction) {
+  getExchangeRate(symbol, toSymbol, price, exchangeRates) {
 
-    if (transaction.purchaseCurrency == symbol)
-      return transaction.purchaseUnitPrice;
+    if (symbol == toSymbol)
+      return price;
 
-    var rate = transaction.exchangeRates.rates.find((r) => {
+    var rate = exchangeRates.rates.find((r) => {
       return r.symbol == symbol;
     })
 

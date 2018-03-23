@@ -4,7 +4,7 @@ import Currency from '../common/Currency';
 
 @inject('commonStore')
 @observer
-class TransactionPrice extends React.Component {
+class SalePrice extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,7 +19,7 @@ class TransactionPrice extends React.Component {
     getState(props) {
 
         return {
-            value: this.props.commonStore.getExchangeRate(props.symbol, props.transaction.purchaseCurrency, props.transaction.purchaseUnitPrice, props.transaction.exchangeRates)
+            value: this.props.commonStore.getExchangeRate(props.symbol, props.sale.saleCurrency, props.sale.saleUnitPrice, props.sale.exchangeRates)
         }
     }
 
@@ -29,4 +29,4 @@ class TransactionPrice extends React.Component {
         )
     }
 }
-export default TransactionPrice;
+export default SalePrice;

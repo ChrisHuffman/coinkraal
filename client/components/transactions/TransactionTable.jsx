@@ -11,6 +11,7 @@ import EditSale from './modals/EditSale'
 import RemoveSale from './modals/RemoveSale'
 import TransactionPrice from './TransactionPrice'
 import TransactionProfit from './TransactionProfit'
+import SalePrice from './SalePrice'
 import CurrentPrice from './CurrentPrice'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
 import ChevronDown from 'react-feather/dist/icons/chevron-down';
@@ -141,7 +142,7 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-               
+
                 <td className="align-middle">{this.props.commonStore.formatDate(transaction.date)}</td>
                 <td className='align-middle'>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editTransaction.bind(this, transaction)}>Edit</Button>
@@ -161,10 +162,19 @@ class TransactionTable extends React.Component {
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
                         <td className="align-middle">{sale.amount}</td>
-                        <td className="align-middle">{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
-                        <td className="align-middle">{sale.saleCurrency} @ {sale.saleUnitPrice}</td>
+                        <td>
+                            <div>
+                                <SalePrice symbol={this.props.global.selectedFiat} sale={sale} />
+                                <small>&nbsp;{this.props.global.selectedFiat}</small>
+                            </div>
+                            <div>
+                                <SalePrice symbol={this.props.global.selectedCoin} sale={sale} />
+                                <small>&nbsp;{this.props.global.selectedCoin}</small>
+                            </div>
+                        </td>
+                        <td className="align-middle"></td>
+                        <td className="align-middle"></td>
                         <td className="align-middle">{this.props.commonStore.formatDate(sale.date)}</td>
                         <td className='align-middle'>
                             <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editSale.bind(event, transaction, sale)}>Edit</Button>

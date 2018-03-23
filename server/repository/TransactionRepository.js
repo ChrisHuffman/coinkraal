@@ -111,7 +111,7 @@ class TransactionRepository {
             self.getTransaction(transactionId)
                 .then(transaction => {
 
-                    self.getExchangeRates(sale.saleCurrency, sale.date, sale.saleCurrency, sale.saleUnitPrice)
+                    self.getExchangeRates(transaction.currency, sale.date, sale.saleCurrency, sale.saleUnitPrice)
                         .then((exchangeRates) => {
 
                             sale.exchangeRates = exchangeRates;
@@ -145,7 +145,7 @@ class TransactionRepository {
                     toUpdate.saleUnitPrice = sale.saleUnitPrice;
                     toUpdate.notes = sale.notes;
 
-                    self.getExchangeRates(sale.saleCurrency, sale.date, sale.saleCurrency, sale.saleUnitPrice)
+                    self.getExchangeRates(transaction.currency, sale.date, sale.saleCurrency, sale.saleUnitPrice)
                         .then((exchangeRates) => {
 
                             toUpdate.exchangeRates = exchangeRates;

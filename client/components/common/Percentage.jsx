@@ -1,4 +1,5 @@
 import React from 'react';
+import CommonService from '../../services/CommonService'
 
 class Percentage extends React.Component {
 
@@ -16,8 +17,21 @@ class Percentage extends React.Component {
 
         var value = '?';
 
-        if(!isNaN(props.value))
-            value = parseFloat(props.value).toFixed(2) + '%';
+        if(!CommonService.isNaN(props.value)) {
+            
+            var minimumFractionDigits = 2;
+            var maximumFractionDigits = 2;
+
+            if(props.value >= 10 || props.value <= -10 || props.value % 1 == 0) {
+                maximumFractionDigits = 0;
+                minimumFractionDigits = 0;
+            }
+
+            value = parseFloat(props.value).toLocaleString(undefined, {
+                minimumFractionDigits: minimumFractionDigits,
+                maximumFractionDigits: maximumFractionDigits
+            }) + '%';
+        }
 
         var colorClass = '';
         if(props.value < 0)

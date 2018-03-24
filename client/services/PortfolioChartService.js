@@ -18,7 +18,7 @@ export class PortfolioChartService {
                 return;
             }
 
-            var dataFrequencyLimit = 90;
+            var dataFrequencyLimit = 7;
             var dataFrequency = timeRange <= dataFrequencyLimit ? 'hours' : 'days';
             var limit = self.getLimit(transactions, dataFrequency);
 

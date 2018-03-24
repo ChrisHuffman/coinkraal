@@ -13,6 +13,7 @@ import TransactionPrice from './TransactionPrice'
 import TransactionProfit from './TransactionProfit'
 import SalePrice from './SalePrice'
 import SaleProfit from './SaleProfit'
+import TransactionValue from './TransactionValue'
 import Number from '../common/Number'
 import CurrentPrice from './CurrentPrice'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
@@ -136,7 +137,7 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-                <td className="align-middle">
+                <td>
                     <div>
                         <TransactionProfit symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -146,7 +147,16 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-
+                <td>
+                <div>
+                        <TransactionValue symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
+                        <small>&nbsp;{this.props.global.selectedFiat}</small>
+                    </div>
+                    <div>
+                        <TransactionValue symbol={this.props.global.selectedCoin} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
+                        <small>&nbsp;{this.props.global.selectedCoin}</small>
+                    </div>
+                </td>
                 <td className="align-middle">{this.props.commonStore.formatDate(transaction.date)}</td>
                 <td className='align-middle'>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editTransaction.bind(this, transaction)}>Edit</Button>
@@ -168,6 +178,7 @@ class TransactionTable extends React.Component {
                     <td>Sale Price</td>
                     <td></td>
                     <td>Sale Profit</td>
+                    <td></td>
                     <td>Date</td>
                     <td></td>
                 </tr>
@@ -201,6 +212,8 @@ class TransactionTable extends React.Component {
                                 <SaleProfit symbol={this.props.global.selectedCoin} transaction={transaction} sale={sale} />
                                 <small>&nbsp;{this.props.global.selectedCoin}</small>
                             </div>
+                        </td>
+                        <td>
                         </td>
                         <td className="align-middle">{this.props.commonStore.formatDate(sale.date)}</td>
                         <td className='align-middle'>
@@ -239,6 +252,7 @@ class TransactionTable extends React.Component {
                                         <th className="clearTopBorder">Purchase Price</th>
                                         <th className="clearTopBorder">Current Price</th>
                                         <th className="clearTopBorder">Profit</th>
+                                        <th className="clearTopBorder">Value</th>
                                         <th className="clearTopBorder">Date</th>
                                         <th className="clearTopBorder">Actions</th>
                                     </tr>

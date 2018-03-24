@@ -6,9 +6,8 @@ class Number extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            amount: CommonService.formatCurrency(props.amount)
-        }
+        this.getState = this.getState.bind(this);
+        this.state = this.getState(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -16,9 +15,13 @@ class Number extends React.Component {
         if(nextProps.amount == this.props.amount)
             return;
 
-        this.setState({
-            amount: CommonService.formatCurrency(nextProps.amount)
-        });
+        this.setState(this.getState(nextProps));
+    }
+
+    getState(props) {
+        return {
+            amount: CommonService.formatCurrency(props.amount)
+        }
     }
 
     render() {

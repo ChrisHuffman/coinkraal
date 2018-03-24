@@ -15,11 +15,12 @@ export class CommonService {
             label: label,
             data: data,
             borderWidth: 1,
-            fill: false,
             pointRadius: 0,
+            backgroundColor: 'rgb(255, 99, 132)',
+            fill: 'start',
             borderColor: borderColor,
             yAxisID: yAxisId,
-            lineTension: 0.3,
+            lineTension: 0,
             pointStyle: 'rectRot'
         };
     }
@@ -60,7 +61,7 @@ export class CommonService {
                 xAxes: [{
                     type: 'time',
                     time: {
-                        unit: dataFrequency == 'days' ? 'month' : 'day'
+                        unit: (arr1 && arr1.length < 90)  || (arr2 && arr2.length < 90) ? 'day' : 'month'
                     }
                 }],
                 yAxes: [],
@@ -140,21 +141,29 @@ export class CommonService {
         return [verticalLinePlugin]
     }
 
+    isNaN(number) {
+        
+        if (number === "")
+            return true;
+
+        return isNaN(number);
+    }
+
     formatCurrency(amount) {
 
-        if(isNaN(amount))
+        if(this.isNaN(amount))
             return '?';
 
         var minimumFractionDigits = 2;
         var maximumFractionDigits = 2;
 
-        if(amount < 0.01)
+        if(amount < 0.09)
+            maximumFractionDigits = 4
+
+        if(amount < 0.009)
             maximumFractionDigits = 6
 
-        if(amount < 0.001)
-            maximumFractionDigits = 7
-
-        if(amount < 0.0001)
+        if(amount < 0.0009)
             maximumFractionDigits = 8
 
         if(amount >= 1000 || amount % 1 == 0) {

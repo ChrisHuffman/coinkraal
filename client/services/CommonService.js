@@ -1,5 +1,6 @@
 import moment from 'moment';
 import agentExt from '../agent-ext';
+import { BigNumber } from 'bignumber.js';
 
 export class CommonService {
 
@@ -190,6 +191,29 @@ export class CommonService {
                 return "rgba(40, 167, 69, 0.8)";
         }
 
+    }
+
+    getUniqueCurrencies(transactions) {
+        var currencies = transactions.map(t => {
+            return t.currency;
+        })
+        return currencies.filter(this.unique);
+    }
+
+    unique(value, index, self) {
+        return self.indexOf(value) === index;
+    }
+
+    getTransactionAmountBalance(transaction) {
+
+        if(!transaction.sales || transaction.sales.length == 0)
+          return transaction.amount;
+  
+        var salesAmount = transaction.sales
+          .map(s => s.amount)
+          .reduce((a1, a2) => a1 + a2, 0);
+  
+        return new BigNumber(transaction.amount.toString()).minus(salesAmount).toNumber();
     }
 }
 

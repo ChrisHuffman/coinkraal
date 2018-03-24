@@ -15,11 +15,12 @@ import SalePrice from './SalePrice'
 import SaleProfit from './SaleProfit'
 import TransactionValue from './TransactionValue'
 import Number from '../common/Number'
-import CurrentPrice from './CurrentPrice'
+import CurrentPrice from '../common/CurrentPrice'
 import ChevronRight from 'react-feather/dist/icons/chevron-right';
 import ChevronDown from 'react-feather/dist/icons/chevron-down';
 import MinusSquare from 'react-feather/dist/icons/minus-square';
 import PlusSquare from 'react-feather/dist/icons/plus-square';
+import CommonService from '../../services/CommonService'
 import Layout from '../Layout'
 
 @inject('global', 'transactionsPageState', 'transactionStore', 'commonStore', 'priceStore', 'coinsPageState')
@@ -111,7 +112,7 @@ class TransactionTable extends React.Component {
                 <td className="align-middle">{transaction.currency}</td>
                 <td className="align-middle">
                     <div>
-                        <Number amount={this.props.transactionStore.getTransactionAmountBalance(transaction)} /> <small className="text-secondary">CURRENT</small>
+                        <Number amount={CommonService.getTransactionAmountBalance(transaction)} /> <small className="text-secondary">CURRENT</small>
                     </div>
                     <div>
                         <Number amount={transaction.amount} /> <small className="text-secondary">INITIAL</small>
@@ -129,11 +130,11 @@ class TransactionTable extends React.Component {
                 </td>
                 <td>
                     <div>
-                        <CurrentPrice symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
+                        <CurrentPrice currentSymbol={this.props.global.selectedFiat} targetSymbol={transaction.currency} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
                     </div>
                     <div>
-                        <CurrentPrice symbol={this.props.global.selectedCoin} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
+                        <CurrentPrice currentSymbol={this.props.global.selectedCoin} targetSymbol={transaction.currency} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
@@ -148,7 +149,7 @@ class TransactionTable extends React.Component {
                     </div>
                 </td>
                 <td>
-                <div>
+                    <div>
                         <TransactionValue symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
                     </div>

@@ -1,6 +1,6 @@
 import CommonService from './CommonService';
 import moment from 'moment';
-import PortfolioChartServiceDataPoint from './PortfolioChartServiceDataPoint';
+import PortfolioChartServiceDataPoint from '../models/PortfolioChartServiceDataPoint';
 
 export class PortfolioChartService {
 
@@ -29,14 +29,14 @@ export class PortfolioChartService {
                 limit = self.getLimit(transactions, dataFrequency);
             }
 
-            var inCurrencies = self.getUniqueInCurrencies(transactions);
+            var inCurrencies = CommonService.getUniqueCurrencies(transactions);
 
             //console.log('Starting to load chart data..');
 
-            self.loadDataPoints(self.getUniqueInCurrencies(transactions), currency1, transactions, limit, dataFrequency)
+            self.loadDataPoints(CommonService.getUniqueCurrencies(transactions), currency1, transactions, limit, dataFrequency)
                 .then((dataPoints1) => {
 
-                    self.loadDataPoints(self.getUniqueInCurrencies(transactions), currency2, transactions, limit, dataFrequency)
+                    self.loadDataPoints(CommonService.getUniqueCurrencies(transactions), currency2, transactions, limit, dataFrequency)
                         .then((dataPoints2) => {
 
                             var chart = self.getChartJsInfo(currency1, dataPoints1, currency2, dataPoints2, timeRange, dataFrequency);
@@ -169,17 +169,6 @@ export class PortfolioChartService {
             return Math.ceil(duration.asDays());
 
         return Math.ceil(duration.asHours());
-    }
-
-    getUniqueInCurrencies(transactions) {
-        var currencies = transactions.map(t => {
-            return t.currency;
-        })
-        return currencies.filter(this.unique);
-    }
-
-    unique(value, index, self) {
-        return self.indexOf(value) === index;
     }
 
     getTransactions(transactions, date, currency) {

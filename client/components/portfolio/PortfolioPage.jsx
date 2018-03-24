@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 import Layout from '../Layout'
 import LineChart from '../common/LineChart'
 import PortfolioSummary from './PortfolioSummary'
+import TransactionSummaryTable from './TransactionSummaryTable'
 import Loader from '../common/Loader'
 
 @inject('portfolioPageState')
@@ -25,28 +26,29 @@ class PortfolioPage extends React.Component {
 
             <Layout>
 
-                {!this.props.portfolioPageState.isLoadingPorfolioChartData && this.props.portfolioPageState.portfolioChartData &&
-                    <div className="row mt-20">
-                        <div className="col-md-7">
+                <div className="row mt-20">
+                    <div className="col-md-6">
+                        {!this.props.portfolioPageState.isLoadingPorfolioChartData && this.props.portfolioPageState.portfolioChartData &&
                             <LineChart
                                 chart={this.props.portfolioPageState.portfolioChartData}
                                 onFiltersChanged={this.onFiltersChanged}
                                 filters={{
                                     selectedTimeRange: this.props.portfolioPageState.portfolioChartSelectedTimeRange
                                 }} />
-                        </div>
-                        <div className="col-md-5">
-                            <PortfolioSummary />
-                            <hr />
+                        }
+                        <div className="row justify-content-center mt-20">
+                            <div className="col-auto">
+                                <Loader visible={this.props.portfolioPageState.isLoadingPorfolioChartData} />
+                            </div>
                         </div>
                     </div>
-                }
-
-                <div className="row justify-content-center mt-20">
-                    <div className="col-auto">
-                        <Loader visible={this.props.portfolioPageState.isLoadingPorfolioChartData} />
+                    <div className="col-md-6">
+                        <PortfolioSummary />
+                        <hr />
+                        <TransactionSummaryTable />
                     </div>
                 </div>
+
             </Layout>
         );
     }

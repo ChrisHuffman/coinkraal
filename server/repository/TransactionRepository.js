@@ -213,7 +213,7 @@ class TransactionRepository {
 
                     if (btcExchangeRate == 0) {
                         //console.log('No btc conversion, nothing we can do')
-                        resolve(exchangeRates);
+                        resolve([]);
                         return;
                     }
 
@@ -255,22 +255,23 @@ class TransactionRepository {
                 //No btc conversion, nothing we can do
                 if (finalExchangeRate == 0) {
                     //console.log('No btc conversion, nothing we can do')
-                    ratesOut.push(rate);
+                    //ratesOut.push(rate);
                     self.checkExchangeRates(fromSymbol, toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
                     return;
                 }
 
-                //console.log('BTC' + ' -> ' + rate.symbol)
-                //console.log('weighting -> ' + weighting)
-                //console.log('finalExchangeRate -> ' + finalExchangeRate)
+                //console.log('From' + ' -> ' + fromSymbol)
+                //console.log('To' + ' -> ' + rate.symbol)
+                //console.log('Weighting -> ' + weighting)
+                //console.log('FinalExchangeRate -> ' + finalExchangeRate)
 
                 if(fromSymbol == rate.symbol)
                     rate.rate = 1;
                 else
                     rate.rate = new BigNumber(finalExchangeRate.toString()).dividedBy(weighting).toNumber();
 
-                //console.log('New: ' + rate.rate);
-
+                //console.log('Final: ' + rate.rate);
+                
                 ratesOut.push(rate);
                 self.checkExchangeRates(fromSymbol, toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
             });

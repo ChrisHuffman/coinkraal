@@ -43,15 +43,17 @@ var global = new Global(authStore, currencyStore, coinStore, transactionStore, e
 //Services
 import PortfolioChartService from './services/PortfolioChartService';
 import CoinChartService from './services/CoinChartService';
+import TransactionSummaryService from './services/TransactionSummaryService';
 var portfolioChartService = new PortfolioChartService();
 var coinChartService = new CoinChartService();
+var transactionSummaryService = new TransactionSummaryService();
 
 
 //PageState
 import PortfolioPageState from './components/portfolio/PortfolioPageState';
 import TransactionsPageState from './components/transactions/TransactionsPageState'
 import CoinsPageState from './components/coins/CoinsPageState'
-var portfolioPageState = new PortfolioPageState(global, transactionStore, portfolioChartService);
+var portfolioPageState = new PortfolioPageState(global, transactionStore, portfolioChartService, transactionSummaryService);
 var transactionsPageState = new TransactionsPageState();
 var coinsPageState = new CoinsPageState(global, coinStore, coinChartService);
 

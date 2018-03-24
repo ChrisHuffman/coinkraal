@@ -1,11 +1,10 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Number from '../common/Number';
-import CommonService from '../../services/CommonService'
 
-@inject('commonStore', 'exchangeStore', 'transactionStore')
+@inject('commonStore', 'exchangeStore')
 @observer
-class TransactionValue extends React.Component {
+class TransactionSummaryValue extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,11 +18,11 @@ class TransactionValue extends React.Component {
 
     getState(props) {
 
-        var currentPrice = props.commonStore.getCurrentPrice(props.symbol, props.transaction.currency, props.priceIndex);
+        var currentPrice = props.commonStore.getCurrentPrice(props.symbol, props.summary.currency, props.priceIndex);
         var exchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
 
         return {
-            value: exchanged * CommonService.getTransactionAmountBalance(props.transaction)
+            value: exchanged * props.summary.totalAmount
         }
     }
 
@@ -33,4 +32,4 @@ class TransactionValue extends React.Component {
         )
     }
 }
-export default TransactionValue;
+export default TransactionSummaryValue;

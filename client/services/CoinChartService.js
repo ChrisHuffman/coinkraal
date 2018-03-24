@@ -1,6 +1,6 @@
 import moment from 'moment';
 import CommonService from './CommonService';
-import CoinChartServiceDataPoint from './CoinChartServiceDataPoint';
+import CoinChartServiceDataPoint from '../models/CoinChartServiceDataPoint';
 
 export class CoinChartService {
 

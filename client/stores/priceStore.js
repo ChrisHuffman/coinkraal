@@ -22,7 +22,7 @@ export class PriceStore {
         this.loadCount = 2;
         this.tempPriceIndex = {}
 
-        var coins = this.getUniqueInCurrencies(transactions);
+        var coins = this.getUniqueCurrencies(transactions);
 
         if (coins.length == 0)
             return;
@@ -53,7 +53,7 @@ export class PriceStore {
             }));
     }
 
-    getUniqueInCurrencies(transactions) {
+    getUniqueCurrencies(transactions) {
         var currencies = transactions.map(t => {
             return t.currency;
         })

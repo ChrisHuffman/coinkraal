@@ -4,33 +4,37 @@ export class PortfolioPageState {
 
     transactionStore = null;
     portfolioChartService = null;
+    transactionSummaryService = null;
 
     @observable portfolioChartData = { };
     @observable portfolioRawData = { };
     portfolioChartSelectedTimeRange = 30;
-
     @observable isLoadingPorfolioChartData = true;
+
+    @observable transactionSummaries = [];
     
-    constructor(global, transactionStore, portfolioChartService) {
+    constructor(global, transactionStore, portfolioChartService, transactionSummaryService) {
 
         this.global = global;
         this.transactionStore = transactionStore;
         this.portfolioChartService = portfolioChartService;
+        this.transactionSummaryService = transactionSummaryService;
         
         observe(this.transactionStore.transactions, () => {
-            this.portfolioChartLoadData();
+            this.loadTransactionSummaries();
+            this.loadPortfolioChartData();
         });
 
         reaction(() => this.global.selectedFiat, () => {
-            this.portfolioChartLoadData();
+            this.loadPortfolioChartData();
         });
 
         reaction(() => this.global.selectedCoin, () => {
-            this.portfolioChartLoadData();
+            this.loadPortfolioChartData();
         });
     }
 
-    @action portfolioChartLoadData() {
+    @action loadPortfolioChartData() {
 
         this.isLoadingPorfolioChartData = true;
 
@@ -59,6 +63,14 @@ export class PortfolioPageState {
             return 0;
 
         return this.portfolioRawData.coin[this.portfolioRawData.coin.length - 1].getTotal();
+    }
+
+    @action loadTransactionSummaries() {
+
+        this.transactionSummaryService.getTransactionSummaries(this.transactionStore.transactions)
+            .then(action(summaries => {
+                this.transactionSummaries = summaries;
+            }));
     }
 }
 

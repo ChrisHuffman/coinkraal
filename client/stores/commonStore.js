@@ -51,23 +51,24 @@ class CommonStore {
     if (!rate)
       return '?';
 
-    return rate.rate == 0 ? '?' : rate.rate;
+    //return rate.rate == 0 ? '?' : rate.rate;
+    return rate.rate;
   }
 
-  getCurrentPrice(symbol, currency, priceIndex) {
+  getCurrentPrice(currentSymbol, targetSymbol, priceIndex) {
 
     if (!priceIndex || !priceIndex['USD'] || !priceIndex['BTC'])
       return '';
 
-    if (symbol == 'USD')
+    if (currentSymbol == 'USD')
       return {
         from: 'USD',
-        amount: this.invertExchange(priceIndex['USD'][currency])
+        amount: this.invertExchange(priceIndex['USD'][targetSymbol])
       }
 
     return {
       from: 'BTC',
-      amount: this.invertExchange(priceIndex['BTC'][currency])
+      amount: this.invertExchange(priceIndex['BTC'][targetSymbol])
     };
   }
 

@@ -1,5 +1,4 @@
 import { observable, action, computed } from 'mobx';
-import { BigNumber } from 'bignumber.js';
 import agent from '../agent';
 
 export class TransactionStore {
@@ -65,17 +64,6 @@ export class TransactionStore {
       }));
   }
 
-  getTransactionAmountBalance(transaction) {
-
-      if(!transaction.sales || transaction.sales.length == 0)
-        return transaction.amount;
-
-      var salesAmount = transaction.sales
-        .map(s => s.amount)
-        .reduce((a1, a2) => a1 + a2, 0);
-
-      return new BigNumber(transaction.amount.toString()).minus(salesAmount).toNumber();
-  }
 }
 
 export default TransactionStore;

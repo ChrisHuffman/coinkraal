@@ -1,4 +1,4 @@
-import { observable, observe, action, reaction, computed } from 'mobx';
+import { observable, action, reaction, computed } from 'mobx';
 
 export class PortfolioPageState {
 
@@ -23,7 +23,7 @@ export class PortfolioPageState {
         this.portfolioChartService = portfolioChartService;
         this.transactionSummaryService = transactionSummaryService;
         
-        observe(this.transactionStore.transactions, () => {
+        reaction(() => this.transactionStore.transactions, () => {
             this.loadTransactionSummaries();
             this.loadPortfolioChartData();
         });
@@ -45,7 +45,7 @@ export class PortfolioPageState {
 
         this.isLoadingPorfolioChartData = true;
 
-        this.portfolioChartService.getData(this.transactionStore.transactions, this.global.selectedFiat, this.global.selectedCoin, this.portfolioChartSelectedTimeRange)
+        this.portfolioChartService.getData(this.transactionStore.transactions.slice(), this.global.selectedFiat, this.global.selectedCoin, this.portfolioChartSelectedTimeRange)
             .then(action(data => {
                 this.portfolioChartData = data.chartjs;
                 this.portfolioRawData = data.rawData;
@@ -55,21 +55,7 @@ export class PortfolioPageState {
 
     portfolioChartSetFilters(filters) {
         this.portfolioChartSelectedTimeRange = filters.selectedTimeRange;
-        this.portfolioChartLoadData();
-    }
-
-    @computed get latestFiatValue() {
-        if(!this.portfolioRawData.fiat || this.portfolioRawData.fiat.length == 0)
-            return 0;
-
-        return this.portfolioRawData.fiat[this.portfolioRawData.fiat.length - 1].getTotal();
-    }
-
-    @computed get latestCoinValue() {
-        if(!this.portfolioRawData.coin || this.portfolioRawData.coin.length == 0)
-            return 0;
-
-        return this.portfolioRawData.coin[this.portfolioRawData.coin.length - 1].getTotal();
+        this.loadPortfolioChartData();
     }
 
     @action loadTransactionSummaries() {

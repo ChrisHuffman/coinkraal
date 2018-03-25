@@ -18,6 +18,11 @@ export class PortfolioChartService {
                 return;
             }
 
+            //Sort transaction by date asc
+            transactions.sort(function(a,b){
+                return new Date(b.date) - new Date(a.date);
+            }).reverse();
+
             var dataFrequencyLimit = 7;
             var dataFrequency = timeRange <= dataFrequencyLimit ? 'hours' : 'days';
             var limit = self.getLimit(transactions, dataFrequency);

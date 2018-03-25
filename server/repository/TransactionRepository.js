@@ -26,7 +26,7 @@ class TransactionRepository {
         return new Promise(function (resolve, reject) {
 
             Transaction.find({ userId: userId })
-                .sort({ date: 'asc' })
+                .sort({ date: 'desc' })
                 .exec(function (error, transactions) {
                     if (error)
                         reject(error);

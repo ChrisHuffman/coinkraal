@@ -24,6 +24,10 @@ export class TransactionSummaryService {
 
                 summary.totalAmount = self.getTransactionsTotalAmount(matches);
 
+                //No coins left in the this transaction
+                if(summary.totalAmount == 0)
+                    return;
+
                 //Convert ALL as if they were purchased in BTC                                
                 summary.purchaseCurrency = "BTC";
 

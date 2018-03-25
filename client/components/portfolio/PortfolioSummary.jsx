@@ -1,8 +1,9 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Currency from '../common/Currency'
+import PortfolioValue from './PortfolioValue'
 
-@inject('global', 'portfolioPageState')
+@inject('global', 'transactionStore', 'priceStore')
 @observer
 class PortfolioSummary extends React.Component {
 
@@ -27,18 +28,18 @@ class PortfolioSummary extends React.Component {
                     </div>
                 </div>
 
-                {/* <div className="row justify-content-around">
+                <div className="row justify-content-around">
                     <div className="col-6 text-center">
                         <h3>
-                            <Currency amount={this.props.portfolioPageState.latestFiatValue} />
+                            <PortfolioValue symbol={this.props.global.selectedFiat} transactions={this.props.transactionStore.transactions} priceIndex={this.props.priceStore.priceIndex} />
                         </h3>
                     </div>
                     <div className="col-6 text-center">
                         <h3>
-                            <Currency amount={this.props.portfolioPageState.latestCoinValue} />
+                            <PortfolioValue symbol={this.props.global.selectedCoin} transactions={this.props.transactionStore.transactions} priceIndex={this.props.priceStore.priceIndex} />
                         </h3>
                     </div>
-                </div> */}
+                </div>
             </div>
         );
     }

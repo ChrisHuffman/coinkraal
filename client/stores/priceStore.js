@@ -1,4 +1,4 @@
-import { observable, action, computed, observe } from 'mobx';
+import { observable, action, computed, reaction } from 'mobx';
 import agentExt from '../agent-ext';
 
 export class PriceStore {
@@ -11,7 +11,7 @@ export class PriceStore {
 
         this.checkComplete = this.checkComplete.bind(this);
 
-        observe(transactionStore.transactions, () => {
+        reaction(() => transactionStore.transactions, () => {
             this.loadPriceIndex(transactionStore.transactions);
         });
     }

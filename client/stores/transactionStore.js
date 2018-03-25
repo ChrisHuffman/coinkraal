@@ -3,7 +3,7 @@ import agent from '../agent';
 
 export class TransactionStore {
 
-  @observable transactions = observable([{}]); //Slight hack, set a empty obj so that an empty list of transactions with still trigger obs events
+  @observable transactions = []; //Slight hack, set a empty obj so that an empty list of transactions with still trigger obs events
   @observable isLoading = false;
 
   constructor() {
@@ -13,7 +13,7 @@ export class TransactionStore {
     this.isLoading = true;
     return agent.Transactions.getTransactions()
       .then(action((transactions) => {
-        this.transactions.replace(transactions);
+        this.transactions = transactions;
         //console.log('TransactionStore: transactions loaded')
       }))
       .finally(action(() => { this.isLoading = false; }));

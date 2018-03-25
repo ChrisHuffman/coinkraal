@@ -53,7 +53,7 @@ var transactionSummaryService = new TransactionSummaryService();
 import PortfolioPageState from './components/portfolio/PortfolioPageState';
 import TransactionsPageState from './components/transactions/TransactionsPageState'
 import CoinsPageState from './components/coins/CoinsPageState'
-var portfolioPageState = new PortfolioPageState(global, transactionStore, portfolioChartService, transactionSummaryService);
+var portfolioPageState = new PortfolioPageState(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService);
 var transactionsPageState = new TransactionsPageState();
 var coinsPageState = new CoinsPageState(global, coinStore, coinChartService);
 

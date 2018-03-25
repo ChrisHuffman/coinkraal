@@ -2,7 +2,9 @@ import { observable, observe, action, reaction, computed } from 'mobx';
 
 export class PortfolioPageState {
 
+    global = null;
     transactionStore = null;
+    priceStore = null;
     portfolioChartService = null;
     transactionSummaryService = null;
 
@@ -13,16 +15,21 @@ export class PortfolioPageState {
 
     @observable transactionSummaries = [];
     
-    constructor(global, transactionStore, portfolioChartService, transactionSummaryService) {
+    constructor(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService) {
 
         this.global = global;
         this.transactionStore = transactionStore;
+        this.priceStore = priceStore;
         this.portfolioChartService = portfolioChartService;
         this.transactionSummaryService = transactionSummaryService;
         
         observe(this.transactionStore.transactions, () => {
             this.loadTransactionSummaries();
             this.loadPortfolioChartData();
+        });
+
+        reaction(() => this.priceStore.priceIndex, () => {
+            this.loadTransactionSummaries();
         });
 
         reaction(() => this.global.selectedFiat, () => {
@@ -67,7 +74,10 @@ export class PortfolioPageState {
 
     @action loadTransactionSummaries() {
 
-        this.transactionSummaryService.getTransactionSummaries(this.transactionStore.transactions)
+        this.transactionSummaryService.getTransactionSummaries(this.transactionStore.transactions, 
+                        this.global.fiatOptions, 
+                        this.global.coinOptions,
+                        this.priceStore.priceIndex)
             .then(action(summaries => {
                 this.transactionSummaries = summaries;
             }));

@@ -5,7 +5,7 @@ import { BigNumber } from 'bignumber.js';
 
 export class TransactionSummaryService {
 
-    getTransactionSummaries(transactions) {
+    getTransactionSummaries(transactions, fiats, coins, priceIndex) {
 
         var self = this;
 
@@ -13,6 +13,7 @@ export class TransactionSummaryService {
 
             var summaries = [];
             var uniqueCurrencies = CommonService.getUniqueCurrencies(transactions);
+            var allCurrencies = self.mergeCurrencies(fiats, coins); //This is a FULL list of all currencies
 
             uniqueCurrencies.forEach(currency => {
 
@@ -21,27 +22,51 @@ export class TransactionSummaryService {
 
                 var matches = self.getTransactionsForCurrency(transactions, currency);
 
-                var t = matches[0];
-
-                summary.totalAmount = t.amount;
-                //summary.totalAmount = self.getTransactionsTotalAmount(matches);
+                summary.totalAmount = self.getTransactionsTotalAmount(matches);
 
                 //Convert ALL as if they were purchased in BTC                                
-                summary.purchaseCurrency = t.purchaseCurrency;
-                //summary.purchaseCurrency = "BTC";
-                
-                summary.averagePurchaseUnitPrice = t.purchaseUnitPrice
-                summary.averagedExchangeRates = t.exchangeRates;
+                summary.purchaseCurrency = "BTC";
+
+                var exchangeRates = {
+                    fromSymbol: currency,
+                    rates: []
+                }
+
+                allCurrencies.forEach(c => {
+
+                    var averageUnitPrice = self.getAveragePurchaseUnitPrice(c, matches);
+
+                    if (c == summary.purchaseCurrency) {
+                        summary.averagePurchaseUnitPrice = averageUnitPrice;
+
+                        summary.btcValue = self.getCurrentPriceInBtc(summary.currency, priceIndex) * summary.totalAmount; //Only really need this for ordering..
+                    }
+                    else {
+                        var rate = {
+                            symbol: c,
+                            rate: averageUnitPrice
+                        }
+                        exchangeRates.rates.push(rate);
+                    }
+                });
+
+                summary.averagedExchangeRates = exchangeRates;
 
                 summaries.push(summary);
             });
 
-            // summaries.sort((s1, s2) => {
-            //     return s1.
-            // })
+            summaries.sort((s1, s2) => {
+                return s1.btcValue < s2.btcValue;
+            })
 
             resolve(summaries);
         });
+    }
+
+    mergeCurrencies(fiats, coins) {
+        fiats = fiats.map(f => f.symbol);
+        coins = coins.map(c => c.symbol);
+        return fiats.concat(coins);
     }
 
     getTransactionsForCurrency(transactions, currency) {
@@ -63,17 +88,24 @@ export class TransactionSummaryService {
 
     getAveragePurchaseUnitPrice(fromSymbol, transactions) {
 
-        var total = 0;
-        
+        var totalUnitPrice = new BigNumber(0);
+        var totalAmount = new BigNumber(0);
+
         transactions.forEach(t => {
-            
-            if(t.purchaseCurrency == fromSymbol)
-                total += t.purchaseUnitPrice;
+
+            var amount = new BigNumber(t.amount.toString());
+            totalAmount = totalAmount.plus(amount);
+
+            var unitPrice;
+            if (t.purchaseCurrency == fromSymbol)
+                unitPrice = new BigNumber(t.purchaseUnitPrice.toString());
             else
-                total += this.getExchangeRate(t, fromSymbol);
+                unitPrice = new BigNumber(this.getExchangeRate(t, fromSymbol).toString());
+
+            totalUnitPrice = totalUnitPrice.plus(unitPrice.multipliedBy(amount)); //weighted average
         });
 
-        return new BigNumber(total).dividedBy(transactions.length).toNumber();
+        return new BigNumber(totalUnitPrice).dividedBy(totalAmount).toNumber();
     }
 
     getExchangeRate(transaction, currency) {
@@ -82,12 +114,23 @@ export class TransactionSummaryService {
             return r.symbol == currency;
         })
 
-        if(!rate)
+        if (!rate)
             return 0;
 
         return rate.rate;
     }
 
+    getCurrentPriceInBtc(targetSymbol, priceIndex) {
+        if (!priceIndex || !priceIndex['BTC'])
+            return 0;
+        return this.invertExchange(priceIndex['BTC'][targetSymbol]);
+    }
+
+    invertExchange(value) {
+        if (value == null)
+            return 0;
+        return new BigNumber(1).dividedBy(value).toNumber();
+    }
 
 }
 

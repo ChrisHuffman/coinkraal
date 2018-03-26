@@ -10,7 +10,6 @@ class TransactionSummaryPrice extends React.Component {
         super(props);
         this.getState = this.getState.bind(this);
         this.state = this.getState(props);
-
     }
 
     componentWillReceiveProps(nextProps) {

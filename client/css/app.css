@@ -98,6 +98,20 @@ small.xs {
     font-weight: lighter;
 }
 
+@media (min-width: 992px) {
+    .modal-xl {
+        max-width: 950px;
+    }
+}
+
+@media (min-width: 1230px) {
+    .modal-xl {
+        max-width: 1200px;
+    }
+}
+
+
+
 /* ----------------------------------------------------------------------------------------------------------- */
 
 /* Theme styling override, wasnt able to tweak this in Bootstrap Magic --------------------------------------- */

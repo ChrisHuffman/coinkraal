@@ -1,15 +1,11 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import CoinLogo from '../../common/CoinLogo'
 import LineChart from '../../common/LineChart'
-import TwitterFeed from './TwitterFeed'
-import RedditFeed from './RedditFeed'
 import CoinValues from './CoinValues'
 import CoinCaps from './CoinCaps'
-import { Button, TabContent, TabPane, Nav, NavItem, NavLink, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import classnames from 'classnames';
+import CoinSocial from './CoinSocial'
 
-@inject('socialStore', 'coinStore', 'coinsPageState')
+@inject('coinsPageState')
 @observer
 class CoinSummary extends React.Component {
 
@@ -18,69 +14,19 @@ class CoinSummary extends React.Component {
         super(props);
 
         this.state = {
-            coin: null,
-            activeTab: '1',
-            twitterUrl: '',
-            redditUrl: ''
+            coin: props.coin,
+            links: props.links
         }
-
-        this.toggleModal = this.toggleModal.bind(this);
-        this.toggleTab = this.toggleTab.bind(this);
-        this.setTab = this.setTab.bind(this);
 
         this.onFiltersChanged = this.onFiltersChanged.bind(this);
     }
 
-    componentWillMount() {
-
-       
-    }
-
-    getUrl(name, links) {
-        var link = links.find((l) => {
-            return l.name == name;
-        })
-        return link ? link.url : '';
-    }
-
     componentWillReceiveProps(nextProps) {
 
-        if (!nextProps.coinSymbol || nextProps.coinSymbol == this.props.coinSymbol)
-            return;
-
-        this.props.coinsPageState.loadCoinChartData();
-
-        var coin =  this.props.coinStore.getCoin(nextProps.coinSymbol);
-
-        this.props.coinStore.getCoinLinks(nextProps.coinSymbol)
-            .then((links) => {
-                this.setState({
-                    twitterUrl: this.getUrl('twitter', links),
-                    redditUrl: this.getUrl('reddit', links)
-                });
-            })
-        
         this.setState({
-            coin: coin,
+            coin: nextProps.coin,
+            links: nextProps.links
         });
-    }
-
-    setTab(tab) {
-        this.setState({
-            activeTab: tab
-        });
-    }
-
-    toggleModal() {
-        this.props.coinsPageState.toggleCoinSummaryModal();
-    }
-
-    toggleTab(tab) {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab
-            });
-        }
     }
 
     onFiltersChanged(filters) {
@@ -92,73 +38,34 @@ class CoinSummary extends React.Component {
         return (
             <div>
 
-                <Modal isOpen={this.props.coinsPageState.coinSummaryModal} toggle={this.toggleModal} onOpened={this.setTab.bind(null, '1')} size='lg'>
+                <div className="row">
+                    <div className="col">
+                        <CoinValues coin={this.state.coin} />
+                    </div>
+                </div>
 
-                    <div className="modal-header">
-                        <CoinLogo coin={this.state.coin ? this.state.coin.symbol : ""} />
-                        <h5 className="modal-title ml-10">{this.state.coin ? this.state.coin.name : ""}</h5>
-                        <button type="button" className="close" aria-label="Close" onClick={this.toggleModal}><span aria-hidden="true">&times;</span></button>
+                <div className="row">
+                    <div className="col-sm-9 pt-2">
+
+                        {!this.props.coinsPageState.isLoadingCoinChartData &&
+                            <LineChart
+                                chart={this.props.coinsPageState.coinChartData}
+                                onFiltersChanged={this.onFiltersChanged}
+                                filters={{
+                                    selectedTimeRange: this.props.coinsPageState.coinChartSelectedTimeRange
+                                }} />
+                        }
+
                     </div>
 
-                    <ModalBody>
-                        <Nav tabs>
-                            <NavItem>
-                                <NavLink
-                                    className={classnames({ active: this.state.activeTab === '1' })}
-                                    onClick={() => { this.toggleTab('1'); }}>
-                                    Summary
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink
-                                    className={classnames({ active: this.state.activeTab === '2' })}
-                                    onClick={() => { this.toggleTab('2'); }}>
-                                    Reddit
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink
-                                    className={classnames({ active: this.state.activeTab === '3' })}
-                                    onClick={() => { this.toggleTab('3'); }}>
-                                    Twitter
-                                </NavLink>
-                            </NavItem>
-                        </Nav>
-                        <TabContent activeTab={this.state.activeTab}>
-                            <TabPane tabId="1">
-                                
-                                <div className="mb-10" />
-                                <CoinValues coin={this.state.coin} />
-                                
-                                <div className="mb-10" />
-                                {!this.props.coinsPageState.isLoadingCoinChartData &&
-                                    <LineChart 
-                                        chart={this.props.coinsPageState.coinChartData}
-                                        onFiltersChanged={this.onFiltersChanged}
-                                        filters={{
-                                            selectedTimeRange: this.props.coinsPageState.coinChartSelectedTimeRange
-                                        }} />
-                                }
+                    <div className="col-sm-3 pt-2 pl-0">
+                        <CoinCaps coin={this.state.coin} />
+                        <div className="mt-1" />
+                        <CoinSocial links={this.state.links} />
+                    </div>
 
-                                <div className="mb-20" />
-                                <CoinCaps coin={this.state.coin} />
-
-                            </TabPane>
-                            <TabPane tabId="2">
-                                <div className="mb-10" />
-                                <RedditFeed redditUrl={this.state.redditUrl} />
-                            </TabPane>
-                            <TabPane tabId="3">
-                                <div className="mb-10" />
-                                <TwitterFeed twitterUrl={this.state.twitterUrl} />
-                            </TabPane>
-                        </TabContent>
-                    </ModalBody>
-
-                    <ModalFooter>
-                        <Button outline color="secondary" onClick={this.toggleModal}>Close</Button>
-                    </ModalFooter>
-                </Modal>
+                </div>
+                
             </div>
         )
     }

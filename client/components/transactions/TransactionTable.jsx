@@ -16,8 +16,6 @@ import SaleProfit from './SaleProfit'
 import TransactionValue from './TransactionValue'
 import Number from '../common/Number'
 import CurrentPrice from '../common/CurrentPrice'
-import ChevronRight from 'react-feather/dist/icons/chevron-right';
-import ChevronDown from 'react-feather/dist/icons/chevron-down';
 import MinusSquare from 'react-feather/dist/icons/minus-square';
 import PlusSquare from 'react-feather/dist/icons/plus-square';
 import CommonService from '../../services/CommonService'

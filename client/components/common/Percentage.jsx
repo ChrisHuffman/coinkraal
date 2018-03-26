@@ -39,9 +39,12 @@ class Percentage extends React.Component {
         if(props.value > 0)
             colorClass = 'text-success'
 
+        if(props.includeBrackets)
+            value = `(${value})`;
+
         return {
             value: value,
-            colorClass: colorClass,
+            colorClass: colorClass
         }
     }
 

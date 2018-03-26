@@ -48,7 +48,7 @@ export class CoinStore {
     });
   }
 
-  @action getHistoricalPrice(fromCurrency, toCurrency, timestamp) {
+  getHistoricalPrice(fromCurrency, toCurrency, timestamp) {
     return agentExt.External.getHistoricalPrice(fromCurrency, toCurrency, timestamp);
   }
 
@@ -91,6 +91,10 @@ export class CoinStore {
           resolve(links);
         });
     });
+  }
+
+  get24HrPriceChange(fromCurrency, toCurrency) {
+    return agentExt.External.get24HrPriceChange(fromCurrency, toCurrency);
   }
 
 }

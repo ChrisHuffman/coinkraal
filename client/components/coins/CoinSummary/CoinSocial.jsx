@@ -24,9 +24,6 @@ class CoinSocial extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-
-        console.log(nextProps.links)
-
         this.setState({
             links: nextProps.links
         });

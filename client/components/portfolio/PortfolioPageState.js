@@ -10,7 +10,7 @@ export class PortfolioPageState {
 
     @observable portfolioChartData = { };
     @observable portfolioRawData = { };
-    portfolioChartSelectedTimeRange = 30;
+    portfolioChartSelectedTimeRange = 90;
     @observable isLoadingPorfolioChartData = true;
 
     @observable transactionSummaries = [];

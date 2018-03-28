@@ -4,6 +4,7 @@ import CoinLogo from '../../common/CoinLogo'
 import TwitterFeed from './TwitterFeed'
 import RedditFeed from './RedditFeed'
 import CoinSummary from './CoinSummary'
+import CoinExchanges from './CoinExchanges'
 import { Button, TabContent, TabPane, Nav, NavItem, NavLink, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classnames from 'classnames';
 
@@ -41,15 +42,12 @@ class CoinSummaryModal extends React.Component {
             return;
 
         this.props.coinsPageState.loadCoinChartData();
-
         var coin =  this.props.coinStore.getCoin(nextProps.coinSymbol);
 
         this.props.coinStore.getCoinLinks(nextProps.coinSymbol)
             .then((links) => {
                 this.setState({
                     links: links,
-                    twitterUrl: this.getUrl('twitter', links),
-                    redditUrl: this.getUrl('reddit', links)
                 });
             })
         
@@ -72,6 +70,20 @@ class CoinSummaryModal extends React.Component {
         if (this.state.activeTab !== tab) {
             this.setState({
                 activeTab: tab
+            });
+        }
+
+        //Only set reddit url when we navigate there
+        if(tab == '3') {
+            this.setState({
+                redditUrl: this.getUrl('reddit', this.state.links)
+            });
+        }
+
+        //Only set twitter url when we navigate there
+        if(tab == '4') {
+            this.setState({
+                twitterUrl: this.getUrl('twitter', this.state.links)
             });
         }
     }
@@ -102,13 +114,20 @@ class CoinSummaryModal extends React.Component {
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '2' })}
                                     onClick={() => { this.toggleTab('2'); }}>
-                                    Reddit
+                                    Exchanges
                                 </NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '3' })}
                                     onClick={() => { this.toggleTab('3'); }}>
+                                    Reddit
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink
+                                    className={classnames({ active: this.state.activeTab === '4' })}
+                                    onClick={() => { this.toggleTab('4'); }}>
                                     Twitter
                                 </NavLink>
                             </NavItem>
@@ -120,9 +139,13 @@ class CoinSummaryModal extends React.Component {
                             </TabPane>
                             <TabPane tabId="2">
                                 <div className="mb-10" />
-                                <RedditFeed redditUrl={this.state.redditUrl} />
+                                <CoinExchanges coin={this.state.coin} />
                             </TabPane>
                             <TabPane tabId="3">
+                                <div className="mb-10" />
+                                <RedditFeed redditUrl={this.state.redditUrl} />
+                            </TabPane>
+                            <TabPane tabId="4">
                                 <div className="mb-10" />
                                 <TwitterFeed twitterUrl={this.state.twitterUrl} />
                             </TabPane>

@@ -82,6 +82,9 @@ table .narrow {
 .nav-tabs {
     cursor: pointer;
     font-size: 0.95rem;
+}
+
+.nav-tabs .active {
     font-weight: bold;
 }
 

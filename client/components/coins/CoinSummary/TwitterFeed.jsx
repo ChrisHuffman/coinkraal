@@ -33,8 +33,8 @@ class TwitterFeed extends React.Component {
 
                 {this.state.twitterUrl &&
                     <div className="row justify-content-lg-center">
-                        <div className="col col-lg-9">
-                            <a className="twitter-timeline text-muted" data-dnt="true" data-theme="dark" data-link-color="#007bff" href={this.state.twitterUrl}>loading...</a>
+                        <div className="col col-lg-6">
+                            <a className="twitter-timeline text-muted" data-dnt="true" data-theme="dark" data-link-color="#067bc2" href={this.state.twitterUrl}>loading...</a>
                         </div>
                     </div>
                 }

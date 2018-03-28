@@ -97,6 +97,10 @@ export class CoinStore {
     return agentExt.External.get24HrPriceChange(fromCurrency, toCurrency);
   }
 
+  getCoinExchanges(fromCurrency, toCurrency, limit) {
+    return agentExt.External.getCoinExchanges(fromCurrency, toCurrency, limit);
+  }
+
 }
 
 export default CoinStore;

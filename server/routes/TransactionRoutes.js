@@ -33,8 +33,6 @@ router.route('/api/transactions/add').post(function (req, res) {
   transaction.purchaseUnitPrice = req.body.purchaseUnitPrice;
   transaction.sell = [];
 
-  console.log('at route');
-
   transactionRepository.addTransaction(transaction)
     .then(() => res.send(""))
     .catch((error) => res.status(400).send(error));

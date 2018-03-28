@@ -74,7 +74,8 @@ class Header extends React.Component {
         return (
             <Navbar color="faded" light expand="md">
                 <NavbarBrand href="/">
-                    <img src="logo_2.png" height="25" />
+                    <img src="logo_1_36x37.png" className="mr-2" />
+                    <img src="logo_2_25x233.png" />
                 </NavbarBrand>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>

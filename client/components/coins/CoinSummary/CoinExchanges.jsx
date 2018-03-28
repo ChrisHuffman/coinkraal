@@ -42,9 +42,6 @@ class CoinExchanges extends React.Component {
         var exchanges = this.state.exchanges;
         var fromSymbol = this.state.fromSymbol;
 
-        console.log("fromSymbol: " + fromSymbol)
-        console.log("exchanges: " + exchanges)
-
         return (
             <div>
 

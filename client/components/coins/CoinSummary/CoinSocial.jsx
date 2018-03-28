@@ -5,6 +5,9 @@ import Percentage from '../../common/Percentage';
 import Number from '../../common/Number';
 import Layout from 'react-feather/dist/icons/layout';
 import Github from 'react-feather/dist/icons/github';
+import Twitter from 'react-feather/dist/icons/twitter';
+import Send from 'react-feather/dist/icons/send';
+import Search from 'react-feather/dist/icons/search';
 import { UncontrolledTooltip } from 'reactstrap';
 
 @inject('global')
@@ -24,6 +27,7 @@ class CoinSocial extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
         this.setState({
             links: nextProps.links
         });
@@ -51,16 +55,36 @@ class CoinSocial extends React.Component {
                     { this.getUrl('website') &&
                         <div className="col-auto">
                             <Layout className="clickable" id="websiteLink" size={20} onClick={this.openLink.bind(null, 'website')} />
-                            <UncontrolledTooltip target="websiteLink">Website</UncontrolledTooltip>
+                            <UncontrolledTooltip target="websiteLink" delay={{ show: 600 }}>Website</UncontrolledTooltip>
+                        </div>
+                    }
+
+                    { this.getUrl('explorer') &&
+                        <div className="col-auto">
+                            <Search className="clickable" id="explorer" size={20} onClick={this.openLink.bind(null, 'explorer')} />
+                            <UncontrolledTooltip target="explorer" delay={{ show: 600 }}>Explorer</UncontrolledTooltip>
                         </div>
                     }
 
                     { this.getUrl('sourceCode') &&
                         <div className="col-auto">
                             <Github className="clickable" id="sourceCodeLink" size={20} onClick={this.openLink.bind(null, 'sourceCode')} />
-                            <UncontrolledTooltip target="sourceCodeLink">Source Code</UncontrolledTooltip>
+                            <UncontrolledTooltip target="sourceCodeLink" delay={{ show: 600 }}>Source Code</UncontrolledTooltip>
                         </div>
                     }
+
+                    { this.getUrl('twitter') &&
+                        <div className="col-auto">
+                            <Twitter className="clickable" id="twitter" size={20} onClick={this.openLink.bind(null, 'twitter')} />
+                        </div>
+                    }
+
+                    { this.getUrl('telegram') &&
+                        <div className="col-auto">
+                            <Send className="clickable" id="telegram" size={20} onClick={this.openLink.bind(null, 'telegram')} />
+                        </div>
+                    }
+
 
                     </div>
 

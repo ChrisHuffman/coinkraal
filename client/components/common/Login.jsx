@@ -20,8 +20,9 @@ export default class Login extends React.Component {
     responseGoogle(response) {
 
         this.props.authStore.googleLogin(response.tokenId)
-            .then(() => {
-                this.props.history.push("/");
+            .then((isFirstLogin) => {
+                //this.props.history.push("/");
+                this.props.history.push("/settings");
             });
     }
 

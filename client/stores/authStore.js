@@ -23,6 +23,7 @@ class AuthStore {
         return agent.Auth.login(googleTokenId)
             .then(action((data) => {
                 this.token = data.token;
+                return data.isFirstLogin;
             }));
 
     }

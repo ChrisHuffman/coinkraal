@@ -84,10 +84,16 @@ const Social = {
   getRedditContent: (url) => requests.getText(`/api/social/reddit?url=${encodeURIComponent(url)}`)
 };
 
+const User = {
+  getSettings: () => requests.get(`/api/user/settings`),
+  updateSettings: (settings) => requests.post(`/api/user/settings`, settings)
+};
+
 export default {
   Auth,
   Transactions,
   Sales,
   Coins,
-  Social
+  Social,
+  User
 };

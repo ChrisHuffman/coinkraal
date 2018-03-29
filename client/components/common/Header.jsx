@@ -1,9 +1,11 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import VirtualizedSelect from 'react-virtualized-select';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
-            NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu,DropdownItem,
-            ButtonDropdown, Button } from 'reactstrap';
+import {
+    Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
+    NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+    ButtonDropdown, Button
+} from 'reactstrap';
 import LogOut from 'react-feather/dist/icons/log-out';
 
 @inject('global', 'authStore', 'coinStore', 'coinsPageState')
@@ -16,7 +18,9 @@ class Header extends React.Component {
             isOpen: false,
 
             selectedFiat: props.global.selectedFiat,
-            selectedCoin: props.global.selectedCoin
+            selectedCoin: props.global.selectedCoin,
+
+            hideCurrencyItems: props.hideCurrencyItems
         };
 
         this.toggle = this.toggle.bind(this);
@@ -82,43 +86,49 @@ class Header extends React.Component {
 
                     <form className="ml-auto form-inline my-2 my-lg-0">
 
-                        <ButtonDropdown className="mr-2" isOpen={this.state.fiatDropDownOpen} toggle={this.toggleFiatDropDown}>
-                            <DropdownToggle caret>
-                                {this.state.selectedFiat}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {
-                                    this.props.global.fiatOptions.map(fiat => {
-                                        return <DropdownItem key={fiat.symbol} onClick={this.selectFiat.bind(null, fiat.symbol)}>{fiat.symbol}</DropdownItem>
-                                    })
-                                }
-                            </DropdownMenu>
-                        </ButtonDropdown>
+                        {!this.state.hideCurrencyItems &&
+                            <ButtonDropdown className="mr-2" isOpen={this.state.fiatDropDownOpen} toggle={this.toggleFiatDropDown}>
+                                <DropdownToggle caret>
+                                    {this.state.selectedFiat}
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    {
+                                        this.props.global.fiatOptions.map(fiat => {
+                                            return <DropdownItem key={fiat.symbol} onClick={this.selectFiat.bind(null, fiat.symbol)}>{fiat.name}</DropdownItem>
+                                        })
+                                    }
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        }
 
-                        <ButtonDropdown className="mr-2" isOpen={this.state.coinDropDownOpen} toggle={this.toggleCoinDropDown}>
-                            <DropdownToggle caret>
-                                {this.state.selectedCoin}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {
-                                    this.props.global.coinOptions.map(coin => {
-                                        return <DropdownItem key={coin.symbol} onClick={this.selectCoin.bind(null, coin.symbol)}>{coin.symbol}</DropdownItem>
-                                    })
-                                }
-                            </DropdownMenu>
-                        </ButtonDropdown>
+                        {!this.state.hideCurrencyItems &&
+                            <ButtonDropdown className="mr-2" isOpen={this.state.coinDropDownOpen} toggle={this.toggleCoinDropDown}>
+                                <DropdownToggle caret>
+                                    {this.state.selectedCoin}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    {
+                                        this.props.global.coinOptions.map(coin => {
+                                            return <DropdownItem key={coin.symbol} onClick={this.selectCoin.bind(null, coin.symbol)}>{coin.name}</DropdownItem>
+                                        })
+                                    }
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        }
 
-                        <VirtualizedSelect
-                            placeholder="Find Coin..."
-                            className="header-select mt-2 mt-sm-0 mr-2"
-                            options={this.props.coinStore.coins}
-                            searchable={true}
-                            simpleValue={true}
-                            clearable={true}
-                            onChange={this.handleCoinChange}
-                            labelKey="fullName"
-                            valueKey="symbol"
-                        />
+                        {!this.state.hideCurrencyItems &&
+                            <VirtualizedSelect
+                                placeholder="Find Coin..."
+                                className="header-select mt-2 mt-sm-0 mr-2"
+                                options={this.props.coinStore.coins}
+                                searchable={true}
+                                simpleValue={true}
+                                clearable={true}
+                                onChange={this.handleCoinChange}
+                                labelKey="fullName"
+                                valueKey="symbol"
+                            />
+                        }
 
                         <LogOut className="text-secondary clickable" onClick={this.signout} />
 

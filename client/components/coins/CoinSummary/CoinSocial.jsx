@@ -76,20 +76,18 @@ class CoinSocial extends React.Component {
                     { this.getUrl('twitter') &&
                         <div className="col-auto">
                             <Twitter className="clickable" id="twitter" size={20} onClick={this.openLink.bind(null, 'twitter')} />
+                            <UncontrolledTooltip target="twitter" delay={{ show: 1000 }}>Twitter</UncontrolledTooltip>
                         </div>
                     }
 
                     { this.getUrl('telegram') &&
                         <div className="col-auto">
                             <Send className="clickable" id="telegram" size={20} onClick={this.openLink.bind(null, 'telegram')} />
+                            <UncontrolledTooltip target="telegram" delay={{ show: 1000 }}>Telegram</UncontrolledTooltip>
                         </div>
                     }
 
-
                     </div>
-
-
-
 
                     {/* <span className="clickable" onClick={this.openUrl.bind(null, 'hi')}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20" fill="currentcolor" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414">

@@ -45,16 +45,23 @@ router.post('/auth/signin', function (req, res) {
                     user.picture = payload.picture;
                     user.email = payload.email;
                     user.googleId = googleId;
+                    user.messages = [];
 
                     user.save(function (err, u) {
                         if (err)
                             return res.send(err);
 
-                        res.json({ token: generateJwt(u) });
+                        res.json({ 
+                            isFirstLogin: true,
+                            token: generateJwt(u) 
+                        });
                     });
                 }
                 else {
-                    res.json({ token: generateJwt(user) });
+                    res.json({ 
+                        isFirstLogin: false,
+                        token: generateJwt(user) 
+                    });
                 }
             })
             .catch((error) => {

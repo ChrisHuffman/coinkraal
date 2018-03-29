@@ -7,26 +7,29 @@ export class Global {
     coinStore = null;
     transactionStore = null;
     exchangeStore = null;
+    userStore = null;
 
     @observable isLoaded = false;
-    loadCount = 2;
+    loadCount = 3;
 
-    @observable selectedFiat = "USD";
-    @observable selectedCoin = "BTC";
+    @observable selectedFiat = "";
+    @observable selectedCoin = "";
+    @observable profilePictureUrl = ""
 
     fiatOptions = [];
     coinOptions = [];
 
-    constructor(authStore, currencyStore, coinStore, transactionStore, exchangeStore) {
+    constructor(authStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore) {
         this.authStore = authStore;
         this.currencyStore = currencyStore;
         this.coinStore = coinStore;
         this.transactionStore = transactionStore;
         this.exchangeStore = exchangeStore;
+        this.userStore = userStore;
 
         this.loadFiatOptions();
         this.loadCoinOptions();
-
+        
         this.checkLoadComplete = this.checkLoadComplete.bind(this);
     }
 
@@ -44,6 +47,22 @@ export class Global {
         this.coinOptions.push({ symbol: 'NEO', name: 'NEO', fullName: 'NEO (NEO)'});
     }
 
+    loadUserData() {
+        this.userStore.getUser()
+            .then(user => {
+
+                this.setProfilePictureUrl(user.picture);
+
+                var settings = user.settings;
+                this.setSelectedFiat(settings.find(s => s.name == 'defaultFiat').value);
+                this.setSelectedCoin(settings.find(s => s.name == 'defaultCoin').value);
+
+                this.checkLoadComplete();
+
+                this.transactionStore.loadTransactions();
+            });
+    }
+
     loadApplicationData() {
 
         this.coinStore.loadCoins().then(this.checkLoadComplete);
@@ -51,13 +70,15 @@ export class Global {
 
         //Can only load transaction if the user is authenticated
         reaction(() => this.authStore.token, (token) => {
-            if(token)
-                this.transactionStore.loadTransactions();
+            if(token) {
+                this.loadUserData();
+            }
         });
 
         //If they are currently authenticated then load transactions
-        if(this.authStore.token)
-            this.transactionStore.loadTransactions();
+        if(this.authStore.token) {
+            this.loadUserData();
+        }
     }
 
     @action checkLoadComplete() {
@@ -73,6 +94,10 @@ export class Global {
 
     @action setSelectedCoin(coin) {
         this.selectedCoin = coin;
+    }
+
+    @action setProfilePictureUrl(url) {
+        this.profilePictureUrl = url;
     }
 
     @computed get supportedCurrencies() {

@@ -85,7 +85,7 @@ const Social = {
 };
 
 const User = {
-  getSettings: () => requests.get(`/api/user/settings`),
+  getUser: () => requests.get(`/api/user`),
   updateSettings: (settings) => requests.post(`/api/user/settings`, settings)
 };
 

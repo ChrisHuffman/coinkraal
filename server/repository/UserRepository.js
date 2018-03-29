@@ -26,34 +26,24 @@ class UserRepository {
                 .exec(function (error, user) {
                     if (error)
                         reject(error);
-                    else
+                    else {
+
+                        var settings = user.settings ? user.settings : [];
+
+                        //Set defaults IF not setting exists
+                        if(!settings.find(s => s.name == 'defautFiat'))
+                            settings.push({ name: "defaultFiat", value: "USD"});
+
+                        if(!settings.find(s => s.name == 'defaultCoin'))
+                            settings.push({ name: "defaultCoin", value: "BTC"});
+
+                        if(!settings.find(s => s.name == 'defaultChartTimeRangeDays'))
+                            settings.push({ name: "defaultChartTimeRangeDays", value: "90"});
+
+                        user.settings = settings;
+
                         resolve(user);
-                });
-        })
-    }
-
-    getSettings(userId) {
-
-        var self = this;
-
-        return new Promise(function (resolve, reject) {
-
-            self.getUser(userId)
-                .then(user => {
-                    
-                    var settings = user.settings ? user.settings : [];
-
-                    //Set defaults IF not setting exists
-                    if(!settings.find(s => s.name == 'defautFiat'))
-                        settings.push({ name: "defaultFiat", value: "USD"});
-
-                    if(!settings.find(s => s.name == 'defaultCoin'))
-                        settings.push({ name: "defaultCoin", value: "BTC"});
-
-                    if(!settings.find(s => s.name == 'defaultChartTimeRangeDays'))
-                        settings.push({ name: "defaultChartTimeRangeDays", value: "90"});
-
-                    resolve(settings);
+                    }
                 });
         })
     }

@@ -28,6 +28,8 @@ export class PriceStore {
             return;
 
         this.loadIndex("BTC", coins.slice(), this.checkComplete)
+
+        //PERFORMANCE: could remove this and only use the BTC one..
         this.loadIndex("USD", coins.slice(), this.checkComplete)
     }
 

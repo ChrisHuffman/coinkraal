@@ -10,11 +10,11 @@ var User = require('../models/User')
 var userRespository = new UserRespository();
 
 
-router.get('/api/user/settings', function (req, res) {
+router.get('/api/user', function (req, res) {
 
-    userRespository.getSettings(req.user._id)
-        .then((settings) => {
-            res.json(settings);
+    userRespository.getUser(req.user._id)
+        .then((user) => {
+            res.json(user);
         })
         .catch((error) => {
             res.status(500).send(error);

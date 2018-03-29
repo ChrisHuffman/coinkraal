@@ -6,8 +6,8 @@ export class UserStore {
   constructor() {
   }
 
-  getSettings() {
-    return agent.User.getSettings();
+  getUser() {
+    return agent.User.getUser();
   }
 
   updateSettings(settings) {

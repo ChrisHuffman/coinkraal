@@ -1,5 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import ReactDOM from 'react-dom';
+import { Link } from "react-router-dom";
 import VirtualizedSelect from 'react-virtualized-select';
 import {
     Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
@@ -32,6 +34,8 @@ class Header extends React.Component {
 
         this.toggleCoinDropDown = this.toggleCoinDropDown.bind(this);
         this.selectCoin = this.selectCoin.bind(this);
+
+        this.toggleOptionsDropDown = this.toggleOptionsDropDown.bind(this);
     }
 
     signout() {
@@ -64,6 +68,12 @@ class Header extends React.Component {
     toggleCoinDropDown() {
         this.setState({
             coinDropDownOpen: !this.state.coinDropDownOpen
+        });
+    }
+
+    toggleOptionsDropDown() {
+        this.setState({
+            optionsDropDownOpen: !this.state.optionsDropDownOpen
         });
     }
 
@@ -130,7 +140,17 @@ class Header extends React.Component {
                             />
                         }
 
-                        <LogOut className="text-secondary clickable" onClick={this.signout} />
+                        <ButtonDropdown className="profileIcon" isOpen={this.state.optionsDropDownOpen} toggle={this.toggleOptionsDropDown}>
+                            <DropdownToggle>
+                                <img src={this.props.global.profilePictureUrl} height="34px" />
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <Link to="settings">
+                                    <DropdownItem>Settings</DropdownItem>    
+                                </Link>
+                                <DropdownItem onClick={this.signout}>Signout</DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
 
                     </form>
                 </Collapse>

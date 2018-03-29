@@ -39,7 +39,7 @@ var userStore = new UserStore();
 
 //Global
 import Global from './global';
-var global = new Global(authStore, currencyStore, coinStore, transactionStore, exchangeStore);
+var global = new Global(authStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore);
 
 
 //Services

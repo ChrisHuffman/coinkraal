@@ -27,8 +27,9 @@ export default class SettingPage extends React.Component {
         this.handleDefaultFiatChange = this.handleDefaultFiatChange.bind(this);
         this.handleDefaultCoinChange = this.handleDefaultCoinChange.bind(this);
 
-        this.props.userStore.getSettings()
-            .then(settings => {
+        this.props.userStore.getUser()
+            .then(user => {
+                var settings = user.settings;
                 this.setState({
                     loading: false,
                     defaultFiat: settings.find(s => s.name == 'defaultFiat').value,
@@ -50,13 +51,14 @@ export default class SettingPage extends React.Component {
             { name: 'defaultCoin', value: this.state.defaultCoin }
         ];
 
+        this.props.global.setSelectedFiat(this.state.defaultFiat);
+        this.props.global.setSelectedCoin(this.state.defaultCoin);
+
         this.props.userStore.updateSettings(dto)
             .then(() => {
-
                 this.setState({
                     updating: false
                 });
-
                 this.props.history.push("/");
             })
     }

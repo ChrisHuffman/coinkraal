@@ -113,6 +113,20 @@ small.xs {
     }
 }
 
+.profileIcon > button {
+    padding: 0;
+    border-top-right-radius: 0.15rem !important;
+    border-bottom-right-radius: 0.15rem !important;
+}
+
+.profileIcon img {
+    border-radius: 0.15rem;
+}
+
+.profileIcon a {
+    text-decoration: none !important;
+}
+
 
 
 /* ----------------------------------------------------------------------------------------------------------- */

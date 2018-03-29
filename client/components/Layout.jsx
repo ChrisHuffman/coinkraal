@@ -6,6 +6,7 @@ import Notifications from 'react-notify-toast';
 import { Nav, NavItem, NavLink } from 'reactstrap';
 import Header from './common/Header'
 import Loader from './common/Loader'
+
 import CoinSummaryModal from './coins/CoinSummary/CoinSummaryModal'
 
 @inject('global', 'coinsPageState')

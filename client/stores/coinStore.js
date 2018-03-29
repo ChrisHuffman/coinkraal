@@ -101,6 +101,10 @@ export class CoinStore {
     return agentExt.External.getCoinExchanges(fromCurrency, toCurrency, limit);
   }
 
+  getGlobalData() {
+    return agent.Coins.getGlobalData();
+  }
+
 }
 
 export default CoinStore;

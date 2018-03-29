@@ -36,7 +36,6 @@ const External = {
   get24HrPriceChange: (fromCurrency, toCurrency) => requests.get(`${API_ROOT1}/data/pricemultifull?fsyms=${fromCurrency}&tsyms=${toCurrency}`).then(body => body.RAW[fromCurrency][toCurrency].CHANGEPCT24HOUR),
   getCoinExchanges: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/top/exchanges/full?fsym=${fromCurrency}&tsym=${toCurrency}&limit=${limit}`).then(body => body.Data.Exchanges),
   getCoinTopList: (start, limit) => requests.get(`${API_ROOT2}/ticker/?start=${start}&limit=${limit}`)
-  
 };
 
 export default {

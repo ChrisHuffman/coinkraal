@@ -70,6 +70,24 @@ table .narrow {
     border-bottom: 2px solid #e9ecef
 }
 
+.profileIcon > button {
+    padding: 0;
+    border-top-right-radius: 0.15rem !important;
+    border-bottom-right-radius: 0.15rem !important;
+}
+
+.profileIcon img {
+    border-radius: 0.15rem;
+}
+
+.profileIcon a {
+    text-decoration: none !important;
+}
+
+.text-08 {
+    font-size: 0.8rem;
+}
+
 
 /* Bootstrap Extenstions -------------------------------------------------------------------------------------*/
 .btn-xs, .btn-group-xs > .btn {
@@ -112,22 +130,6 @@ small.xs {
         max-width: 1200px;
     }
 }
-
-.profileIcon > button {
-    padding: 0;
-    border-top-right-radius: 0.15rem !important;
-    border-bottom-right-radius: 0.15rem !important;
-}
-
-.profileIcon img {
-    border-radius: 0.15rem;
-}
-
-.profileIcon a {
-    text-decoration: none !important;
-}
-
-
 
 /* ----------------------------------------------------------------------------------------------------------- */
 

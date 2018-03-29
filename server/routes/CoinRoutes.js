@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+const superagent = require('superagent');
 //var Cacheman = require('cacheman');
 
 var CoinRepository = require('../repository/CoinRepository');
@@ -42,6 +43,18 @@ router.get('/api/coins/:symbol/logo', function (req, res) {
         }
     );
 
+});
+
+router.get('/api/coins/globaldata', function (req, res) {
+
+    superagent.get('https://api.coinmarketcap.com/v1/global')
+        .end((err, resp) => {
+            if (err) { 
+                res.status(500).send('');
+                return; 
+            }
+            res.json(JSON.parse(resp.text));
+        });
 });
 
 

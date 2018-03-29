@@ -16,6 +16,9 @@ export class Global {
     @observable selectedCoin = "";
     @observable profilePictureUrl = ""
 
+    @observable marketCap = 0;
+    @observable btcDominace = 0
+
     fiatOptions = [];
     coinOptions = [];
 
@@ -29,6 +32,7 @@ export class Global {
 
         this.loadFiatOptions();
         this.loadCoinOptions();
+        this.loadGlobalData();
         
         this.checkLoadComplete = this.checkLoadComplete.bind(this);
     }
@@ -61,6 +65,15 @@ export class Global {
 
                 this.transactionStore.loadTransactions();
             });
+    }
+
+    loadGlobalData() {
+        this.coinStore.getGlobalData()
+            .then(action((data) => {
+                console.log(data);
+                this.marketCap = data.total_market_cap_usd;
+                this.btcDominace = data.bitcoin_percentage_of_market_cap;
+            }));
     }
 
     loadApplicationData() {

@@ -14,10 +14,11 @@ export class Global {
 
     @observable selectedFiat = "";
     @observable selectedCoin = "";
-    @observable profilePictureUrl = ""
+    @observable profilePictureUrl = "";
+    @observable isFirstLogin = false;
 
     @observable marketCap = 0;
-    @observable btcDominace = 0
+    @observable btcDominace = 0;
 
     fiatOptions = [];
     coinOptions = [];
@@ -52,6 +53,7 @@ export class Global {
     }
 
     loadUserData() {
+
         this.userStore.getUser()
             .then(user => {
 
@@ -70,7 +72,6 @@ export class Global {
     loadGlobalData() {
         this.coinStore.getGlobalData()
             .then(action((data) => {
-                console.log(data);
                 this.marketCap = data.total_market_cap_usd;
                 this.btcDominace = data.bitcoin_percentage_of_market_cap;
             }));
@@ -111,6 +112,10 @@ export class Global {
 
     @action setProfilePictureUrl(url) {
         this.profilePictureUrl = url;
+    }
+
+    @action setIsFirstLogin(isFirstLogin) {
+        this.isFirstLogin = isFirstLogin;
     }
 
     @computed get supportedCurrencies() {

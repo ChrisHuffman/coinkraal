@@ -20,7 +20,7 @@ app.set('views', path.join(__dirname, './dist'));
 app.use(express.static(path.join(__dirname, './dist')));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
-app.use(jwt({ secret: config.get('auth.jwtPrivateKey')}).unless({path: ['/', '/auth/signin', '/favicon.ico', new RegExp('\/api\/coins\/(.*)\/logo')]}));
+app.use(jwt({ secret: config.get('auth.jwtPrivateKey')}).unless({path: ['/', '/auth/signin', '/api/coins/globaldata', '/favicon.ico', new RegExp('\/api\/coins\/(.*)\/logo')]}));
 
 mongoose.connect(config.get('db.connection'));
 

@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react';
 import GoogleLogin from 'react-google-login';
 
 
-@inject('authStore')
+@inject('global', 'authStore')
 @withRouter
 @observer
 export default class Login extends React.Component {
@@ -21,8 +21,14 @@ export default class Login extends React.Component {
 
         this.props.authStore.googleLogin(response.tokenId)
             .then((isFirstLogin) => {
-                //this.props.history.push("/");
-                this.props.history.push("/settings");
+
+                if (isFirstLogin) {
+                    this.props.global.isFirstLogin = true;
+                    this.props.history.push("/settings");
+                }
+                else {
+                    this.props.history.push("/");
+                }
             });
     }
 
@@ -37,9 +43,17 @@ export default class Login extends React.Component {
                     </div>
                 </div>
 
+                <div className="row justify-content-center mt-4 mb-3">
+                    <div className="col-auto">
+                        <p className="text-muted font-italic">
+                            keep those cryptos in check
+                        </p>
+                    </div>
+                </div>
+
                 <div className="row justify-content-center mt-5">
 
-                 <div className="col-auto">
+                    <div className="col-auto">
                         <GoogleLogin
                             clientId={this.googleClientId}
                             buttonText="Sign in with Google"

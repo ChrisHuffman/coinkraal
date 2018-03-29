@@ -22,7 +22,7 @@ class UserRepository {
 
         return new Promise(function (resolve, reject) {
 
-            User.find({ userId: userId })
+            User.findOne({ _id: userId })
                 .exec(function (error, user) {
                     if (error)
                         reject(error);
@@ -34,28 +34,26 @@ class UserRepository {
 
     getSettings(userId) {
 
+        var self = this;
+
         return new Promise(function (resolve, reject) {
 
-            User.find({ userId: userId })
-                .exec(function (error, user) {
-                    if (error)
-                        reject(error);
-                    else {
+            self.getUser(userId)
+                .then(user => {
+                    
+                    var settings = user.settings ? user.settings : [];
 
-                        var settings = user.settings ? user.settings : [];
+                    //Set defaults IF not setting exists
+                    if(!settings.find(s => s.name == 'defautFiat'))
+                        settings.push({ name: "defaultFiat", value: "USD"});
 
-                        //Set defaults IF not setting exists
-                        if(!settings.find(s => s.name == 'defautFiat'))
-                            settings.push({ name: "defaultFiat", value: "USD"});
+                    if(!settings.find(s => s.name == 'defaultCoin'))
+                        settings.push({ name: "defaultCoin", value: "BTC"});
 
-                        if(!settings.find(s => s.name == 'defautCoin'))
-                            settings.push({ name: "defautCoin", value: "BTC"});
+                    if(!settings.find(s => s.name == 'defaultChartTimeRangeDays'))
+                        settings.push({ name: "defaultChartTimeRangeDays", value: "90"});
 
-                        if(!settings.find(s => s.name == 'defaultChartTimeRangeDays'))
-                            settings.push({ name: "defaultChartTimeRange", value: "90"});
-
-                        resolve(settings);
-                    }
+                    resolve(settings);
                 });
         })
     }
@@ -67,14 +65,16 @@ class UserRepository {
         return new Promise(function (resolve, reject) {
 
             self.getUser(userId)
-                .then(currentSettings => {
+                .then(user => {
+
+                    if(!user.settings)
+                        user.settings = [];
+
+                    var currentSetting = user.settings;
 
                     newSettings.forEach(newSetting => {
 
-                        var currentSetting = null;
-
-                        if (user.settings)
-                            currentSetting = user.settings.find(m => m.name = name);
+                        currentSetting = user.settings.find(m => m.name == newSetting.name);
     
                         //Insert
                         if (!currentSetting) {

@@ -24,7 +24,7 @@ router.get('/api/user/settings', function (req, res) {
 
 router.post('/api/user/settings', function (req, res) {
 
-    userRespository.updateSettings(req.user._id, req.body.settings)
+    userRespository.updateSettings(req.user._id, req.body)
         .then(() => {
             res.json();
         })

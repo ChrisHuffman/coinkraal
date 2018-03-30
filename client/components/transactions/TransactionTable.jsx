@@ -238,7 +238,7 @@ class TransactionTable extends React.Component {
         return (
             <div>
 
-                {!this.props.transactionStore.isLoading &&
+                {(!this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length > 0) &&
                     <div className="row">
                         <div className="col-md">
                             <Table responsive>

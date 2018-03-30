@@ -117,7 +117,7 @@ class CoinSummaryModal extends React.Component {
                                     Exchanges
                                 </NavLink>
                             </NavItem>
-                            <NavItem>
+                            <NavItem className="d-none d-md-block">
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '3' })}
                                     onClick={() => { this.toggleTab('3'); }}>

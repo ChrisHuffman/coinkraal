@@ -3,8 +3,8 @@ import agent from '../agent';
 
 export class TransactionStore {
 
-  @observable transactions = []; //Slight hack, set a empty obj so that an empty list of transactions with still trigger obs events
-  @observable isLoading = false;
+  @observable transactions = []; 
+  @observable isLoading = true;
 
   constructor() {
   }

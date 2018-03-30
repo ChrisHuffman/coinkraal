@@ -6,7 +6,7 @@ import PortfolioSummary from './PortfolioSummary'
 import TransactionSummaryTable from './TransactionSummaryTable'
 import Loader from '../common/Loader'
 
-@inject('portfolioPageState')
+@inject('portfolioPageState', 'transactionStore')
 @observer
 class PortfolioPage extends React.Component {
 
@@ -28,13 +28,20 @@ class PortfolioPage extends React.Component {
 
                 <div className="row mt-20">
                     <div className="col-md-6">
-                        {!this.props.portfolioPageState.isLoadingPorfolioChartData && this.props.portfolioPageState.portfolioChartData &&
+                        {(!this.props.portfolioPageState.isLoadingPorfolioChartData && this.props.portfolioPageState.portfolioChartData) &&
                             <LineChart
                                 chart={this.props.portfolioPageState.portfolioChartData}
                                 onFiltersChanged={this.onFiltersChanged}
                                 filters={{
                                     selectedTimeRange: this.props.portfolioPageState.portfolioChartSelectedTimeRange
                                 }} />
+                        }
+                        {(!this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length == 0) &&
+                            <div className="row justify-content-center mt-20">
+                                <div className="col-auto">
+                                    <p>You have no transactions, head over to the transactions tab to add your first one.</p>
+                                </div>
+                            </div>
                         }
                         <div className="row justify-content-center mt-20">
                             <div className="col-auto">
@@ -45,7 +52,16 @@ class PortfolioPage extends React.Component {
                     <div className="col-md-6">
                         <PortfolioSummary />
                         <hr />
-                        <TransactionSummaryTable />
+
+                       {(!this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length > 0) &&
+                            <div>
+                                <h4 className="text-primary">
+                                    Transaction Summary
+                                </h4>
+                                <TransactionSummaryTable />
+                            </div>
+                        }
+
                     </div>
                 </div>
 

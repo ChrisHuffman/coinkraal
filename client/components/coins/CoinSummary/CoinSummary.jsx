@@ -58,7 +58,7 @@ class CoinSummary extends React.Component {
 
                     </div>
 
-                    <div className="col-sm-3 pt-2 pl-0">
+                    <div className="col-sm-3 pt-2 pl-sm-0">
                         <CoinCaps coin={this.state.coin} />
                         <div className="mt-1" />
                         <CoinSocial links={this.state.links} />

@@ -36,12 +36,12 @@ class CoinTable extends React.Component {
                     <thead>
                         <tr>
                             <th className="clearTopBorder clickable narrow" onClick={self.sort.bind(null, "rank")}>#</th>
-                            <th className="clearTopBorder clickable narrow" onClick={self.sort.bind(null, "name")}>Coin</th>
-                            <th className="clearTopBorder clickable" onClick={self.sort.bind(null, "name")}></th>
-                            <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "marketCapUsd")}>Market Cap ({self.props.global.selectedFiat})</th>
+                            <th colSpan="2" className="clearTopBorder clickable narrow d-none d-md-table-cell" onClick={self.sort.bind(null, "name")}>Coin</th>
+                            <th colSpan="2" className="clearTopBorder clickable narrow d-table-cell d-md-none" onClick={self.sort.bind(null, "name")}>Coin</th>
+                            <th className="clearTopBorder text-right clickable d-none d-md-table-cell" onClick={self.sort.bind(null, "marketCapUsd")}>Market Cap ({self.props.global.selectedFiat})</th>
                             <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "priceUsd")}>Price ({self.props.global.selectedFiat})</th>
-                            <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "priceBtc")}>Price ({self.props.global.selectedCoin})</th>
-                            <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "volumeUsd24h")}>Volume ({self.props.global.selectedFiat})</th>
+                            <th className="clearTopBorder text-right clickable d-none d-sm-table-cell" onClick={self.sort.bind(null, "priceBtc")}>Price ({self.props.global.selectedCoin})</th>
+                            <th className="clearTopBorder text-right clickable d-none d-lg-table-cell" onClick={self.sort.bind(null, "volumeUsd24h")}>Volume ({self.props.global.selectedFiat})</th>
                             <th className="clearTopBorder text-right clickable" onClick={self.sort.bind(null, "percentChange24h")}>Change 24h ({self.props.global.selectedFiat})</th>
                         </tr>
                     </thead>
@@ -51,8 +51,9 @@ class CoinTable extends React.Component {
                                 return <tr key={coin.symbol} onClick={self.coinSummary.bind(null, coin)} className='clickable'>
                                     <td>{coin.rank}</td>
                                     <td><CoinLogo coin={coin.symbol} /></td>
-                                    <td>{coin.name}</td>
-                                    <td className="text-right">
+                                    <td className="d-none d-md-table-cell">{coin.name}</td>
+                                    <td className="d-table-cell d-md-none">{coin.symbol}</td>
+                                    <td className="text-right d-none d-md-table-cell">
                                         {
                                             <Exchange amount={coin.marketCapUsd} from="USD" to={self.props.global.selectedFiat} />
                                         }
@@ -62,12 +63,12 @@ class CoinTable extends React.Component {
                                             <Exchange amount={coin.priceUsd} from="USD" to={self.props.global.selectedFiat} />
                                         }
                                     </td>
-                                    <td className="text-right">
+                                    <td className="text-right d-none d-sm-table-cell">
                                         {
                                             <Exchange amount={coin.priceBtc} from="BTC" to={self.props.global.selectedCoin} />
                                         }
                                     </td>
-                                    <td className="text-right">
+                                    <td className="text-right d-none d-lg-table-cell">
                                         {
                                             <Exchange amount={coin.volumeUsd24h} from="USD" to={self.props.global.selectedFiat} />
                                         }

@@ -65,7 +65,6 @@ global.loadApplicationData();
 
 const stores = {
   authStore,
-
   commonStore,
   transactionStore,
   currencyStore,

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var moment = require('moment');
 
 var Schema = mongoose.Schema;
 
@@ -44,7 +45,18 @@ var transactionSchema = new Schema({
   },
   date: {
     type: Date,
-    required: [true, 'Date required']
+    required: [true, 'Date required'],
+    validate: {
+      validator: function (value) {
+
+        this.sales.forEach(sale => {
+          if (moment(sale.date).isBefore(value, 'day'))
+            throw new Error(`Sale dates must come after the transaction date of ${moment(value).format('LL')}.`);
+        });
+
+        return true;
+      }
+    }
   },
   exchange: String,
   notes: String,

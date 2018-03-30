@@ -84,6 +84,13 @@ table .narrow {
     text-decoration: none !important;
 }
 
+.icon-dropdown > button {
+    padding-top: 5px !important;
+    padding-bottom: 0 !important;
+    border-top-right-radius: 0.15rem !important;
+    border-bottom-right-radius: 0.15rem !important;
+}
+
 .text-08 {
     font-size: 0.8rem;
 }

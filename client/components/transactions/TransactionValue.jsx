@@ -23,7 +23,7 @@ class TransactionValue extends React.Component {
         var exchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
 
         return {
-            value: exchanged * CommonService.getTransactionAmountBalance(props.transaction)
+            value: exchanged * this.props.transactionStore.getTransactionAmountBalance(props.transaction)
         }
     }
 

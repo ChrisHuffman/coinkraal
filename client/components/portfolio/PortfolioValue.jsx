@@ -1,7 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Number from '../common/Number';
-import CommonService from '../../services/CommonService'
 
 @inject('commonStore', 'exchangeStore', 'transactionStore')
 @observer
@@ -26,7 +25,7 @@ class PortfolioValue extends React.Component {
             var currentPrice = props.commonStore.getCurrentPrice(props.symbol, transaction.currency, props.priceIndex);
             var exchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
             
-            total += (exchanged * CommonService.getTransactionAmountBalance(transaction));
+            total += (exchanged * this.props.transactionStore.getTransactionAmountBalance(transaction));
         });
 
         return {

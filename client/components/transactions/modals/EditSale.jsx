@@ -47,6 +47,7 @@ class EditSale extends React.Component {
 
         this.setState({
             transaction: nextProps.transaction,
+            errors: {}
         });
 
         if (nextProps.sale) {
@@ -194,7 +195,7 @@ class EditSale extends React.Component {
                                     value={this.state.date}
                                 />
                                 <div className="invalid-feedback displayBlock">
-                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date', 'Date required')}
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date')}
                                 </div>
                             </FormGroup>
                             <FormGroup>

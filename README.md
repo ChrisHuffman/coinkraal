@@ -14,12 +14,15 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
-- CommonStore to use BigNumber
-- Clear add transaction modals after save
+- NANO and IOTA issues CC vs CMC
+    - IOTA Price not loading?
+- Dont auto update price
+
+
 - Volumn on summary chart
 - Notification on Portfolio chart to say 'TAU data only available from x date'
-- IOTA Price not loading?
-- Sale dates must be after transaction date
+
+
 - why do we need to root api?
 - why do we keep getting a 401?
 - component cleanup 
@@ -34,7 +37,6 @@ TODO
 
 Ideas
 ---
-- Donate to Bitconnect get rick rolled
 - setting show random Carlos Matos quotes
 - TCs no Carlos
 - Ranking

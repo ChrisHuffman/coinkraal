@@ -54,7 +54,8 @@ class EditTransaction extends React.Component {
             currency: nextProps.transaction.currency,
             amount: nextProps.transaction.amount,
             purchaseCurrency: nextProps.transaction.purchaseCurrency,
-            purchaseUnitPrice: nextProps.transaction.purchaseUnitPrice
+            purchaseUnitPrice: nextProps.transaction.purchaseUnitPrice,
+            errors: {}
         }, this.loadTotalPrice);
     }
 
@@ -184,7 +185,7 @@ class EditTransaction extends React.Component {
                                     value={this.state.date}
                                 />
                                 <div className="invalid-feedback displayBlock">
-                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date', 'Date required')}
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date')}
                                 </div>
                             </FormGroup>
                             <FormGroup>

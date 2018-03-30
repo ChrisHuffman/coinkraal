@@ -2,7 +2,8 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import VirtualizedSelect from 'react-virtualized-select';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import CoinLogo from '../../common/CoinLogo'
+import CoinLogo from '../../common/CoinLogo';
+import CommonService from '../../../services/CommonService';
 import moment from 'moment';
 import {
     Button, Form, FormGroup, Label, Input, InputGroup, InputGroupText,
@@ -47,7 +48,13 @@ class AddSale extends React.Component {
             return;
 
         this.setState({
-            transaction: nextProps.transaction
+            date: new Date(),
+            amount: this.props.transactionStore.getTransactionAmountBalance(nextProps.transaction),
+            saleCurrency: 'BTC',
+            saleUnitPrice: '',
+            saleTotalPrice: '',
+            transaction: nextProps.transaction,
+            errors: {}
         }, this.loadUnitPrice);
     }
 
@@ -185,7 +192,7 @@ class AddSale extends React.Component {
                                     value={this.state.date}
                                 />
                                 <div className="invalid-feedback displayBlock">
-                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date', 'Date required')}
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date')}
                                 </div>
                             </FormGroup>
                             <FormGroup>

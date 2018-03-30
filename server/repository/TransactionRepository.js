@@ -184,29 +184,33 @@ class TransactionRepository {
 
         var self = this;
 
-        if (!fromSymbol || !date)
-            return {};
+        return new Promise(function (resolve, reject) {
 
-        //Most probably want to add this to the config...
-        var tSyms = ["USD", "ZAR", "EUR", "GBP", "AUD", "BTC", "ETH", "NEO"];
+            if (!fromSymbol || !moment(date).isValid()) {
+                resolve([]);
+                return;
+            }
 
-        //Take out same symbol
-        //if (tSyms.indexOf(fromSymbol) != -1)
+            //Most probably want to add this to the config...
+            var tSyms = ["USD", "ZAR", "EUR", "GBP", "AUD", "BTC", "ETH", "NEO"];
+
+            //Take out same symbol
+            //if (tSyms.indexOf(fromSymbol) != -1)
             //tSyms.splice(tSyms.indexOf(fromSymbol), 1);
 
-        var exchangeRates = {
-            fromSymbol: fromSymbol,
-            rates: []
-        }
+            var exchangeRates = {
+                fromSymbol: fromSymbol,
+                rates: []
+            }
 
-        tSyms.forEach(s => {
-            exchangeRates.rates.push({
-                symbol: s,
-                rate: 0
-            })
-        });
+            tSyms.forEach(s => {
+                exchangeRates.rates.push({
+                    symbol: s,
+                    rate: 0
+                })
+            });
 
-        return new Promise(function (resolve, reject) {
+
 
             self.exchange('BTC', [toSymbol], date)
                 .then(btcExchangeRate => {
@@ -265,13 +269,13 @@ class TransactionRepository {
                 //console.log('Weighting -> ' + weighting)
                 //console.log('FinalExchangeRate -> ' + finalExchangeRate)
 
-                if(fromSymbol == rate.symbol)
+                if (fromSymbol == rate.symbol)
                     rate.rate = 1;
                 else
                     rate.rate = new BigNumber(finalExchangeRate.toString()).dividedBy(weighting).toNumber();
 
                 //console.log('Final: ' + rate.rate);
-                
+
                 ratesOut.push(rate);
                 self.checkExchangeRates(fromSymbol, toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
             });
@@ -283,7 +287,7 @@ class TransactionRepository {
 
         return new Promise(function (resolve, reject) {
 
-            if(fromSym == toSym) {
+            if (fromSym == toSym) {
                 resolve(1);
                 return;
             }

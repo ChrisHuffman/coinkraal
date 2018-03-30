@@ -88,7 +88,7 @@ class Header extends React.Component {
         return (
             <Navbar color="faded" light expand="md">
                 <NavbarBrand href="/">
-                    <img src="logo_1_36x37.png" className="mr-2" />
+                    <img src="logo_1_36x37.png" className="mr-2 d-none d-md-inline" />
                     <img src="logo_2_25x233.png" />
                 </NavbarBrand>
                 <NavbarToggler onClick={this.toggle} />
@@ -140,7 +140,7 @@ class Header extends React.Component {
                             />
                         }
 
-                        <ButtonDropdown className="profileIcon" isOpen={this.state.optionsDropDownOpen} toggle={this.toggleOptionsDropDown}>
+                        <ButtonDropdown className="profileIcon mt-2 mt-sm-0 " isOpen={this.state.optionsDropDownOpen} toggle={this.toggleOptionsDropDown}>
                             <DropdownToggle>
                                 <img src={this.props.global.profilePictureUrl} height="34px" />
                             </DropdownToggle>

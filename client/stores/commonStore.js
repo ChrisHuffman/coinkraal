@@ -13,16 +13,8 @@ class CommonStore {
     notify.show(message, type);
   }
 
-  getUnixTimeStamp(date) {
-    return new Date(date).getTime() / 1000;
-  }
-
   formatDate(date) {
     return moment(date).format('ll');
-  }
-
-  formatUSD(amount) {
-    return parseFloat(amount).toLocaleString('en-us', { style: 'currency', currency: 'USD' });
   }
 
   getErrorMessage(errors, fieldName, message) {
@@ -51,7 +43,6 @@ class CommonStore {
     if (!rate)
       return '?';
 
-    //return rate.rate == 0 ? '?' : rate.rate;
     return rate.rate;
   }
 
@@ -106,7 +97,5 @@ class CommonStore {
   }
 
 }
-
-
 
 export default CommonStore;

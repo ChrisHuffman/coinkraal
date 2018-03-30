@@ -110,7 +110,7 @@ class TransactionTable extends React.Component {
                 <td className="align-middle">{transaction.currency}</td>
                 <td className="align-middle">
                     <div>
-                        <Number amount={CommonService.getTransactionAmountBalance(transaction)} /> <small className="text-secondary">CURRENT</small>
+                        <Number amount={this.props.transactionStore.getTransactionAmountBalance(transaction)} /> <small className="text-secondary">BALANCE</small>
                     </div>
                     <div>
                         <Number amount={transaction.amount} /> <small className="text-secondary">INITIAL</small>
@@ -230,7 +230,7 @@ class TransactionTable extends React.Component {
     render() {
         var allTransactionRows = [];
 
-        this.props.transactionStore.transactions.forEach(transaction => {
+        this.props.transactionsPageState.transactions.forEach(transaction => {
             var perTransactionRows = this.renderTransaction(transaction);
             allTransactionRows = allTransactionRows.concat(perTransactionRows);
         });
@@ -264,6 +264,7 @@ class TransactionTable extends React.Component {
                     </div>
                 }
 
+                <AddTransaction />
                 <EditTransaction transaction={this.props.transactionsPageState.selectedTransaction} />
                 <RemoveTransaction />
 

@@ -24,11 +24,10 @@ class AddTransaction extends React.Component {
             purchaseCurrency: 'BTC',
             purchaseUnitPrice: '',
             purchaseTotalPrice: '',
-            
-            enabled: true,
-            modal: false,
 
-            errors: { }
+            enabled: true,
+
+            errors: {}
         }
 
         this.handleTextChange = this.handleTextChange.bind(this);
@@ -59,7 +58,7 @@ class AddTransaction extends React.Component {
 
         var totalPrice = '';
 
-        if(this.state.amount != '' && this.state.purchaseUnitPrice != '')
+        if (this.state.amount != '' && this.state.purchaseUnitPrice != '')
             totalPrice = this.state.amount * this.state.purchaseUnitPrice;
 
         this.setState({
@@ -68,7 +67,7 @@ class AddTransaction extends React.Component {
     }
 
     addTransaction() {
-        
+
         var self = this;
 
         //Disable form
@@ -76,7 +75,7 @@ class AddTransaction extends React.Component {
 
         //Clear any errors
         self.setState({
-            errors: { }
+            errors: {}
         });
 
         var date = self.state.date ? self.state.date.toISOString() : '';
@@ -95,7 +94,7 @@ class AddTransaction extends React.Component {
             })
             .catch((error) => {
 
-                if(!error.response.body.errors) {
+                if (!error.response.body.errors) {
                     self.props.commonStore.notify('Error adding transaction', 'error');
                     return;
                 }
@@ -141,9 +140,19 @@ class AddTransaction extends React.Component {
     }
 
     toggleModal() {
+
+        //Clear form
         this.setState({
-            modal: !this.state.modal
+            date: new Date(),
+            currency: '',
+            amount: '',
+            purchaseCurrency: 'BTC',
+            purchaseUnitPrice: '',
+            purchaseTotalPrice: '',
+            errors: {}
         });
+
+        this.props.transactionsPageState.toggleAddTransactionModal();
     }
 
     enabled(enabled) {
@@ -155,109 +164,106 @@ class AddTransaction extends React.Component {
     render() {
 
         return (
-            <div>
 
-                <Button outline color="primary" size="sm" onClick={this.toggleModal}>Add Transaction</Button>
-
-                <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Add Transaction</ModalHeader>
-                    <ModalBody>
-                        <Form>
-                            <FormGroup>
-                                <Label for="date">Date</Label>
-                                <DayPickerInput
-                                    onDayChange={this.handleDateChange}
-                                    value={this.state.date}
-                                />
-                                <div className="invalid-feedback displayBlock">
-                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'date', 'Date required')}
-                                </div>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="currency">Coin</Label>
-                                <VirtualizedSelect ref="currency"
-                                    name="currency"
-                                    options={this.props.coinStore.coins}
-                                    searchable={true}
-                                    simpleValue={true}
-                                    clearable={false}
-                                    value={this.state.currency}
-                                    onChange={this.handleCoinChange}
-                                    labelKey="fullName"
-                                    valueKey="symbol"
-                                />
-                                <div className="invalid-feedback displayBlock">
-                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'currency')}
-                                </div>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="amount">Amount</Label>
+            <Modal isOpen={this.props.transactionsPageState.addTransactionModal} toggle={this.toggleModal}>
+                <ModalHeader toggle={this.toggleModal}>Add Transaction</ModalHeader>
+                <ModalBody>
+                    <Form>
+                        <FormGroup>
+                            <Label for="date">Date</Label>
+                            <DayPickerInput
+                                onDayChange={this.handleDateChange}
+                                value={this.state.date}
+                            />
+                            <div className="invalid-feedback displayBlock">
+                                {this.props.commonStore.getErrorMessage(this.state.errors, 'date')}
+                            </div>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="currency">Coin</Label>
+                            <VirtualizedSelect ref="currency"
+                                name="currency"
+                                options={this.props.coinStore.coins}
+                                searchable={true}
+                                simpleValue={true}
+                                clearable={false}
+                                value={this.state.currency}
+                                onChange={this.handleCoinChange}
+                                labelKey="fullName"
+                                valueKey="symbol"
+                            />
+                            <div className="invalid-feedback displayBlock">
+                                {this.props.commonStore.getErrorMessage(this.state.errors, 'currency')}
+                            </div>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="amount">Amount</Label>
+                            <Input
+                                className={this.props.commonStore.getErrorClass(this.state.errors, 'amount')}
+                                name="amount"
+                                id="amount"
+                                type="number"
+                                value={this.state.amount}
+                                onChange={this.handleTextChange} />
+                            <div className="invalid-feedback">
+                                {this.props.commonStore.getErrorMessage(this.state.errors, 'amount')}
+                            </div>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="purchaseCurrency">Purchased with</Label>
+                            <VirtualizedSelect ref="purchaseCurrency"
+                                options={this.props.global.supportedCurrencies}
+                                searchable={true}
+                                simpleValue={true}
+                                clearable={false}
+                                name="purchaseCurrency"
+                                value={this.state.purchaseCurrency}
+                                onChange={this.handleCurrencyChange}
+                                labelKey="fullName"
+                                valueKey="symbol"
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="purchaseUnitPrice">Unit Price</Label>
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    {this.state.purchaseCurrency}
+                                </InputGroupAddon>
                                 <Input
-                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'amount')}
-                                    name="amount"
-                                    id="amount"
+                                    name="purchaseUnitPrice"
+                                    id="purchaseUnitPrice"
                                     type="number"
-                                    value={this.state.amount}
+                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'purchaseUnitPrice')}
+                                    value={this.state.purchaseUnitPrice}
                                     onChange={this.handleTextChange} />
-                                    <div className="invalid-feedback">
-                                        {this.props.commonStore.getErrorMessage(this.state.errors, 'amount')}
-                                    </div>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="purchaseCurrency">Purchased with</Label>
-                                <VirtualizedSelect ref="purchaseCurrency"
-                                    options={this.props.global.supportedCurrencies}
-                                    searchable={true}
-                                    simpleValue={true}
-                                    clearable={false}
-                                    name="purchaseCurrency"
-                                    value={this.state.purchaseCurrency}
-                                    onChange={this.handleCurrencyChange}
-                                    labelKey="fullName"
-                                    valueKey="symbol"
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="purchaseUnitPrice">Unit Price</Label>
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        {this.state.purchaseCurrency}
-                                    </InputGroupAddon>
-                                    <Input
-                                        name="purchaseUnitPrice"
-                                        id="purchaseUnitPrice"
-                                        type="number"
-                                        className={this.props.commonStore.getErrorClass(this.state.errors, 'purchaseUnitPrice')}
-                                        value={this.state.purchaseUnitPrice}
-                                        onChange={this.handleTextChange} />
-                                    <div className="invalid-feedback">
-                                        {this.props.commonStore.getErrorMessage(this.state.errors, 'purchaseUnitPrice')}
-                                    </div>
-                                </InputGroup>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="purchaseUnitPrice">Total Price</Label>
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        {this.state.purchaseCurrency}
-                                    </InputGroupAddon>
-                                    <Input
-                                        name="purchaseTotalPrice"
-                                        id="purchaseTotalPrice"
-                                        disabled={true}
-                                        value={this.state.purchaseTotalPrice} />
-                                </InputGroup>
-                            </FormGroup>
+                                <div className="invalid-feedback">
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'purchaseUnitPrice')}
+                                </div>
+                            </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="purchaseUnitPrice">Total Price</Label>
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    {this.state.purchaseCurrency}
+                                </InputGroupAddon>
+                                <Input
+                                    name="purchaseTotalPrice"
+                                    id="purchaseTotalPrice"
+                                    disabled={true}
+                                    value={this.state.purchaseTotalPrice} />
+                            </InputGroup>
+                        </FormGroup>
 
-                        </Form>
+                    </Form>
 
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>Cancel</Button>
-                        <Button outline color="primary" onClick={this.addTransaction} disabled={!this.state.enabled}>Add Transaction</Button>
-                    </ModalFooter>
-                </Modal>
-            </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>Cancel</Button>
+                    <Button outline color="primary" onClick={this.addTransaction} disabled={!this.state.enabled}>Add Transaction</Button>
+                </ModalFooter>
+            </Modal>
+
         )
     }
 }

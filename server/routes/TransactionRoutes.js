@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var moment = require('moment');
 
 var Transaction = require('../models/Transaction')
 var TransactionRepository = require('../repository/TransactionRepository');
@@ -24,7 +25,7 @@ router.route('/api/transactions/add').post(function (req, res) {
 
   var transaction = new Transaction();
   transaction.userId = req.user._id;
-  transaction.date = new Date(req.body.date);
+  transaction.date = req.body.date ? new Date(req.body.date) : "";
   transaction.exchange = req.body.exchange;
   transaction.notes = req.body.notes;
   transaction.currency = req.body.currency;
@@ -41,7 +42,7 @@ router.route('/api/transactions/add').post(function (req, res) {
 router.route('/api/transactions/update').put(function (req, res) {
 
   var transaction = {
-    date: new Date(req.body.date),
+    date: req.body.date ? new Date(req.body.date) : "",
     exchange: req.body.exchange,
     notes: req.body.notes,
     currency: req.body.currency,
@@ -67,7 +68,7 @@ router.route('/api/transactions/remove').delete(function (req, res) {
 router.route('/api/transactions/:id/sales/add').post(function (req, res) {
 
   var sale = {
-    date: new Date(req.body.date),
+    date: req.body.date ? new Date(req.body.date) : "",
     amount: req.body.amount,
     saleCurrency: req.body.saleCurrency,
     saleUnitPrice: req.body.saleUnitPrice,
@@ -83,7 +84,7 @@ router.route('/api/transactions/:id/sales/update').put(function (req, res) {
 
   var sale = {
     _id: req.body._id,
-    date: new Date(req.body.date),
+    date: req.body.date ? new Date(req.body.date) : "",
     amount: req.body.amount,
     saleCurrency: req.body.saleCurrency,
     saleUnitPrice: req.body.saleUnitPrice,

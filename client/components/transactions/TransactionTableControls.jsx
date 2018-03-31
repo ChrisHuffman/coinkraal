@@ -16,6 +16,7 @@ class TransactionTableControls extends React.Component {
 
         this.nextPage = this.nextPage.bind(this);
         this.previousPage = this.previousPage.bind(this);
+        this.addTransaction = this.addTransaction.bind(this);
 
         this.toggleOptionsDropDown = this.toggleOptionsDropDown.bind(this);
         this.toggleZeroBalanceTransactions = this.toggleZeroBalanceTransactions.bind(this);
@@ -23,10 +24,6 @@ class TransactionTableControls extends React.Component {
 
     nextPage() {
         this.props.transactionsPageState.nextPage();
-    }
-
-    previousPage() {
-        this.props.transactionsPageState.previousPage();
     }
 
     previousPage() {

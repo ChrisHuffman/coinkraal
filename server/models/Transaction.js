@@ -23,7 +23,8 @@ var saleScheme = new Schema({
   },
   amount: {
     type: Number,
-    required: [true, 'Amount required']
+    required: [true, 'Amount required'],
+    min: [0, 'Amount cant be less than 0']
   },
   saleCurrency: {
     type: String,
@@ -31,7 +32,8 @@ var saleScheme = new Schema({
   },
   saleUnitPrice: {
     type: Number,
-    required: [true, 'Price required']
+    required: [true, 'Price required'],
+    min: [0, 'Price cant be less than 0']
   },
   notes: String,
 
@@ -68,6 +70,7 @@ var transactionSchema = new Schema({
   amount: {
     type: Number,
     required: [true, 'Amount required'],
+    min: [0, 'Amount cant be less than 0'],
     validate: {
       validator: function (value) {
 
@@ -89,7 +92,8 @@ var transactionSchema = new Schema({
   },
   purchaseUnitPrice: {
     type: Number,
-    required: [true, 'Price required']
+    required: [true, 'Price required'],
+    min: [0, 'Price cant be less than 0']
   },
 
   exchangeRates: exchangeRatesScheme,

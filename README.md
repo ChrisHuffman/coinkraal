@@ -15,16 +15,14 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 TODO
 ---
 - Disable forms on save and loader..
-- Min unitpirce and amoutn for ts and sales
-- logo caching
 - Chart tooltip styling    
 - Fix portfolio page and pie chart
 - Notification on Portfolio chart to say 'TAU data only available from x date'
 - Requery for coin summary chart is hours if low data
+
+
+
 - Volume on summary chart
-
-
-
 - why do we need to root api?
 - why do we keep getting a 401?
 - component cleanup 

@@ -24,6 +24,8 @@ class AddTransaction extends React.Component {
             purchaseCurrency: 'BTC',
             purchaseUnitPrice: '',
             purchaseTotalPrice: '',
+            purchaseType: 'unit',
+            notes: '',
 
             enabled: true,
 
@@ -35,35 +37,37 @@ class AddTransaction extends React.Component {
         this.handleCurrencyChange = this.handleCurrencyChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.addTransaction = this.addTransaction.bind(this);
-        this.loadUnitPrice = this.loadUnitPrice.bind(this);
-        this.loadTotalPrice = this.loadTotalPrice.bind(this);
+        this.loadPrice = this.loadPrice.bind(this);
+        this.calculatePrice = this.calculatePrice.bind(this);
+        this.handlePurchaseTypeChange = this.handlePurchaseTypeChange.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.enabled = this.enabled.bind(this);
     }
 
-    loadUnitPrice() {
+    loadPrice() {
 
         this.props.coinStore
             .getUnitPrice(this.state.currency, this.state.purchaseCurrency, this.state.date)
-
             .then(price => {
-
                 this.setState({
                     purchaseUnitPrice: price
-                }, this.loadTotalPrice);
+                }, this.calculatePrice);
             });
     }
 
-    loadTotalPrice() {
+    calculatePrice() {
 
-        var totalPrice = '';
+        if (this.state.purchaseType == 'unit') {
+            this.setState({
+                purchaseTotalPrice: this.props.transactionStore.calculateTotalPrice(this.state.amount, this.state.purchaseUnitPrice)
+            });
+        }
 
-        if (this.state.amount != '' && this.state.purchaseUnitPrice != '')
-            totalPrice = this.state.amount * this.state.purchaseUnitPrice;
-
-        this.setState({
-            purchaseTotalPrice: totalPrice
-        });
+        if (this.state.purchaseType == 'total') {
+            this.setState({
+                purchaseUnitPrice: this.props.transactionStore.calculateUnitPrice(this.state.amount, this.state.purchaseTotalPrice)
+            });
+        }
     }
 
     addTransaction() {
@@ -85,7 +89,8 @@ class AddTransaction extends React.Component {
             amount: self.state.amount,
             purchaseCurrency: self.state.purchaseCurrency,
             purchaseUnitPrice: self.state.purchaseUnitPrice,
-            date: date
+            date: date,
+            notes: self.state.notes
         };
 
         self.props.transactionStore.addTransaction(transaction)
@@ -112,31 +117,47 @@ class AddTransaction extends React.Component {
         if (e.target.name == "amount") {
             this.setState({
                 amount: e.target.value
-            }, this.loadTotalPrice);
+            }, this.calculatePrice);
         }
         if (e.target.name == "purchaseUnitPrice") {
             this.setState({
                 purchaseUnitPrice: e.target.value
-            }, this.loadTotalPrice);
+            }, this.calculatePrice);
+        }
+        if (e.target.name == "purchaseTotalPrice") {
+            this.setState({
+                purchaseTotalPrice: e.target.value
+            }, this.calculatePrice);
+        }
+        if (e.target.name == "notes") {
+            this.setState({
+                notes: e.target.value
+            });
         }
     }
 
     handleCoinChange(newValue) {
         this.setState({
             currency: newValue
-        }, this.loadUnitPrice);
+        });
     }
 
     handleCurrencyChange(newValue) {
         this.setState({
             purchaseCurrency: newValue
-        }, this.loadUnitPrice);
+        });
     }
 
     handleDateChange(newValue) {
         this.setState({
             date: newValue
-        }, this.loadUnitPrice);
+        });
+    }
+
+    handlePurchaseTypeChange(newValue) {
+        this.setState({
+            purchaseType: newValue
+        });
     }
 
     toggleModal() {
@@ -149,6 +170,8 @@ class AddTransaction extends React.Component {
             purchaseCurrency: 'BTC',
             purchaseUnitPrice: '',
             purchaseTotalPrice: '',
+            purchaseType: 'unit',
+            notes: '',
             errors: {}
         });
 
@@ -224,7 +247,23 @@ class AddTransaction extends React.Component {
                             />
                         </FormGroup>
                         <FormGroup>
+                            <Label for="purchaseType">Purchased Type</Label>
+                            <VirtualizedSelect ref="purchaseType"
+                                options={this.props.global.purchaseTypeOptions}
+                                simpleValue={true}
+                                clearable={false}
+                                name="purchaseType"
+                                value={this.state.purchaseType}
+                                onChange={this.handlePurchaseTypeChange}
+                                labelKey="name"
+                                valueKey="key"
+                            />
+                        </FormGroup>
+                        <FormGroup>
                             <Label for="purchaseUnitPrice">Unit Price</Label>
+                            {this.state.purchaseType == 'unit' &&
+                                <a className="float-right text-secondary clickable" onClick={this.loadPrice}>load unit price</a>
+                            }
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
                                     {this.state.purchaseCurrency}
@@ -233,16 +272,17 @@ class AddTransaction extends React.Component {
                                     name="purchaseUnitPrice"
                                     id="purchaseUnitPrice"
                                     type="number"
-                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'purchaseUnitPrice')}
+                                    disabled={this.state.purchaseType != 'unit'}
+                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'purchaseUnitPrice', this.state.purchaseType != 'unit')}
                                     value={this.state.purchaseUnitPrice}
                                     onChange={this.handleTextChange} />
                                 <div className="invalid-feedback">
-                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'purchaseUnitPrice')}
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'purchaseUnitPrice', this.state.purchaseType != 'unit')}
                                 </div>
                             </InputGroup>
                         </FormGroup>
                         <FormGroup>
-                            <Label for="purchaseUnitPrice">Total Price</Label>
+                            <Label for="purchaseTotalPrice">Total Price</Label>
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
                                     {this.state.purchaseCurrency}
@@ -250,9 +290,28 @@ class AddTransaction extends React.Component {
                                 <Input
                                     name="purchaseTotalPrice"
                                     id="purchaseTotalPrice"
-                                    disabled={true}
-                                    value={this.state.purchaseTotalPrice} />
+                                    type="number"
+                                    disabled={this.state.purchaseType != 'total'}
+                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'purchaseUnitPrice', this.state.purchaseType != 'total')}
+                                    value={this.state.purchaseTotalPrice}
+                                    onChange={this.handleTextChange} />
+                                <div className="invalid-feedback">
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'purchaseUnitPrice', this.state.purchaseType != 'total')}
+                                </div>
                             </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="notes">Notes</Label>
+                            <Input
+                                    name="notes"
+                                    id="notes"
+                                    type="textarea"
+                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'notes')}
+                                    value={this.state.notes}
+                                    onChange={this.handleTextChange} />
+                                <div className="invalid-feedback">
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'notes')}
+                                </div>
                         </FormGroup>
 
                     </Form>

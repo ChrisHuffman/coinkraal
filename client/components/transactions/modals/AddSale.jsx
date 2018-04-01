@@ -26,6 +26,8 @@ class AddSale extends React.Component {
             saleCurrency: 'BTC',
             saleUnitPrice: '',
             saleTotalPrice: '',
+            saleType: 'unit',
+            notes: '',
 
             enabled: true,
 
@@ -36,8 +38,9 @@ class AddSale extends React.Component {
         this.handleDateChange = this.handleDateChange.bind(this);
         this.addSale = this.addSale.bind(this);
         this.handleCurrencyChange = this.handleCurrencyChange.bind(this);
-        this.loadUnitPrice = this.loadUnitPrice.bind(this);
-        this.loadTotalPrice = this.loadTotalPrice.bind(this);
+        this.loadPrice = this.loadPrice.bind(this);
+        this.calculatePrice = this.calculatePrice.bind(this);
+        this.handleSaleTypeChange = this.handleSaleTypeChange.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.enabled = this.enabled.bind(this);
     }
@@ -53,34 +56,37 @@ class AddSale extends React.Component {
             saleCurrency: 'BTC',
             saleUnitPrice: '',
             saleTotalPrice: '',
+            saleType: 'unit',
+            notes: '',
             transaction: nextProps.transaction,
             errors: {}
-        }, this.loadUnitPrice);
+        }, this.calculatePrice);
     }
 
-    loadUnitPrice() {
+    loadPrice() {
 
         this.props.coinStore
             .getUnitPrice(this.state.transaction.currency, this.state.saleCurrency, this.state.date)
-
             .then(price => {
-
                 this.setState({
                     saleUnitPrice: price
-                }, this.loadTotalPrice);
+                }, this.calculatePrice);
             });
     }
 
-    loadTotalPrice() {
+    calculatePrice() {
 
-        var totalPrice = '';
+        if (this.state.saleType == 'unit') {
+            this.setState({
+                saleTotalPrice: this.props.transactionStore.calculateTotalPrice(this.state.amount, this.state.saleUnitPrice)
+            });
+        }
 
-        if (this.state.amount != '' && this.state.saleUnitPrice != '')
-            totalPrice = this.state.amount * this.state.saleUnitPrice;
-
-        this.setState({
-            saleTotalPrice: totalPrice
-        });
+        if (this.state.saleType == 'total') {
+            this.setState({
+                saleUnitPrice: this.props.transactionStore.calculateUnitPrice(this.state.amount, this.state.saleTotalPrice)
+            });
+        }
     }
 
     addSale() {
@@ -102,7 +108,7 @@ class AddSale extends React.Component {
             amount: self.state.amount,
             saleCurrency: self.state.saleCurrency,
             saleUnitPrice: self.state.saleUnitPrice,
-            notes: ''
+            notes: self.state.notes
         };
 
         self.props.transactionStore.addSale(self.state.transaction._id, sale)
@@ -111,16 +117,16 @@ class AddSale extends React.Component {
             })
             .catch((error) => {
 
-                var errors = error.response.body.errors 
+                var errors = error.response.body.errors
 
                 if (!errors) {
                     self.props.commonStore.notify('Error adding sale', 'error');
                     return;
                 }
-                
+
                 //Format errors make sales.1.amount -> amount
-                var errorsFormatted = { };
-                Object.keys(errors).forEach(function(key){
+                var errorsFormatted = {};
+                Object.keys(errors).forEach(function (key) {
                     var keyFormatted = key.split('.').pop();
                     errorsFormatted[keyFormatted] = errors[key];
                 });
@@ -139,12 +145,22 @@ class AddSale extends React.Component {
         if (e.target.name == "amount") {
             this.setState({
                 amount: e.target.value
-            }, this.loadTotalPrice);
+            }, this.calculatePrice);
         }
         if (e.target.name == "saleUnitPrice") {
             this.setState({
                 saleUnitPrice: e.target.value
-            }, this.loadTotalPrice);
+            }, this.calculatePrice);
+        }
+        if (e.target.name == "saleTotalPrice") {
+            this.setState({
+                saleTotalPrice: e.target.value
+            }, this.calculatePrice);
+        }
+        if (e.target.name == "notes") {
+            this.setState({
+                notes: e.target.value
+            });
         }
     }
 
@@ -158,6 +174,12 @@ class AddSale extends React.Component {
         this.setState({
             date: newValue
         }, this.loadUnitPrice);
+    }
+
+    handleSaleTypeChange(newValue) {
+        this.setState({
+            saleType: newValue
+        });
     }
 
     toggleModal() {
@@ -228,7 +250,23 @@ class AddSale extends React.Component {
                                 />
                             </FormGroup>
                             <FormGroup>
+                                <Label for="saleType">Sale Type</Label>
+                                <VirtualizedSelect ref="saleType"
+                                    options={this.props.global.purchaseTypeOptions}
+                                    simpleValue={true}
+                                    clearable={false}
+                                    name="saleType"
+                                    value={this.state.saleType}
+                                    onChange={this.handleSaleTypeChange}
+                                    labelKey="name"
+                                    valueKey="key"
+                                />
+                            </FormGroup>
+                            <FormGroup>
                                 <Label for="saleUnitPrice">At Unit Price</Label>
+                                {this.state.saleType == 'unit' &&
+                                    <a className="float-right text-secondary clickable" onClick={this.loadPrice}>load unit price</a>
+                                }
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
                                         {this.state.saleCurrency}
@@ -237,27 +275,47 @@ class AddSale extends React.Component {
                                         name="saleUnitPrice"
                                         id="saleUnitPrice"
                                         type="number"
-                                        className={this.props.commonStore.getErrorClass(this.state.errors, 'saleUnitPrice')}
+                                        disabled={this.state.saleType != 'unit'}
+                                        className={this.props.commonStore.getErrorClass(this.state.errors, 'saleUnitPrice', this.state.saleType != 'unit')}
                                         value={this.state.saleUnitPrice}
                                         onChange={this.handleTextChange} />
                                     <div className="invalid-feedback">
-                                        {this.props.commonStore.getErrorMessage(this.state.errors, 'saleUnitPrice')}
+                                        {this.props.commonStore.getErrorMessage(this.state.errors, 'saleUnitPrice', this.state.saleType != 'unit')}
                                     </div>
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="saleUnitPrice">Total Sales</Label>
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        {this.state.saleCurrency}
-                                    </InputGroupAddon>
-                                    <Input
-                                        name="saleTotalPrice"
-                                        id="saleTotalPrice"
-                                        disabled={true}
-                                        value={this.state.saleTotalPrice} />
-                                </InputGroup>
-                            </FormGroup>
+                            <Label for="saleUnitPrice">Total Sales</Label>
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    {this.state.saleCurrency}
+                                </InputGroupAddon>
+                                <Input
+                                    name="saleTotalPrice"
+                                    id="saleTotalPrice"
+                                    type="number"
+                                    disabled={this.state.saleType != 'total'}
+                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'saleUnitPrice', this.state.saleType != 'total')}
+                                    value={this.state.saleTotalPrice}
+                                    onChange={this.handleTextChange} />
+                                <div className="invalid-feedback">
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'saleUnitPrice', this.state.saleType != 'total')}
+                                </div>
+                            </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="notes">Notes</Label>
+                            <Input
+                                    name="notes"
+                                    id="notes"
+                                    type="textarea"
+                                    className={this.props.commonStore.getErrorClass(this.state.errors, 'notes')}
+                                    value={this.state.notes}
+                                    onChange={this.handleTextChange} />
+                                <div className="invalid-feedback">
+                                    {this.props.commonStore.getErrorMessage(this.state.errors, 'notes')}
+                                </div>
+                        </FormGroup>
 
                         </Form>
 

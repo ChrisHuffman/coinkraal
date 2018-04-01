@@ -14,17 +14,14 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
-- NANO and IOTA issues CC vs CMC
-    - IOTA Price not loading?
-        MIOTA -> IOTA
-        NANO -> XRB
-- logo caching
-- Chart tooltip styling    
 - Dont auto update price
-- BTC summary dates???
-- Fix portfolio page and pie chart
 - Total or unit price on edit transactions
 - Notes in transactions
+- Disable forms on save and loader..
+- Min unitpirce and amoutn for ts and sales
+- logo caching
+- Chart tooltip styling    
+- Fix portfolio page and pie chart
 - Notification on Portfolio chart to say 'TAU data only available from x date'
 - Requery for coin summary chart is hours if low data
 - Volume on summary chart

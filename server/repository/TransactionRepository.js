@@ -186,7 +186,7 @@ class TransactionRepository {
 
         return new Promise(function (resolve, reject) {
 
-            if (!fromSymbol || !moment(date).isValid()) {
+            if (!fromSymbol || !moment(date).isValid() || toRate == null) {
                 resolve([]);
                 return;
             }
@@ -209,8 +209,6 @@ class TransactionRepository {
                     rate: 0
                 })
             });
-
-
 
             self.exchange('BTC', [toSymbol], date)
                 .then(btcExchangeRate => {
@@ -244,7 +242,7 @@ class TransactionRepository {
         //console.log('=======================================')
 
         //Apply weighting
-        var weighting = new BigNumber(btcExchangeRate.toString()).dividedBy(toRate);
+        var weighting = new BigNumber(btcExchangeRate.toString()).dividedBy(toRate.toString());
 
         //console.log('ex1 -> ' + ex1)
 
@@ -272,7 +270,7 @@ class TransactionRepository {
                 if (fromSymbol == rate.symbol)
                     rate.rate = 1;
                 else
-                    rate.rate = new BigNumber(finalExchangeRate.toString()).dividedBy(weighting).toNumber();
+                    rate.rate = new BigNumber(finalExchangeRate.toString()).dividedBy(weighting.toString()).toNumber();
 
                 //console.log('Final: ' + rate.rate);
 
@@ -326,8 +324,6 @@ class TransactionRepository {
             ts: moment(date).unix(),
             calculationType: 'MidHighLow'
         }
-
-        console.log(query);
 
         return superagent.get('https://min-api.cryptocompare.com/data/pricehistorical')
             .query(query)

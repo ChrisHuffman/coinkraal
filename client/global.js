@@ -22,6 +22,7 @@ export class Global {
 
     fiatOptions = [];
     coinOptions = [];
+    purchaseTypeOptions = [];
 
     constructor(authStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore) {
         this.authStore = authStore;
@@ -33,6 +34,8 @@ export class Global {
 
         this.loadFiatOptions();
         this.loadCoinOptions();
+        this.loadPurchaseTypeOptions();
+        
         this.loadGlobalData();
         
         this.checkLoadComplete = this.checkLoadComplete.bind(this);
@@ -50,6 +53,11 @@ export class Global {
         this.coinOptions.push({ symbol: 'BTC', name: 'Bitcoin', fullName: 'Bitcoin (BTC)'});
         this.coinOptions.push({ symbol: 'ETH', name: 'Ethereum', fullName: 'Ethereum (ETH)'});
         this.coinOptions.push({ symbol: 'NEO', name: 'NEO', fullName: 'NEO (NEO)'});
+    }
+
+    loadPurchaseTypeOptions() {
+        this.purchaseTypeOptions.push({ key: 'unit', name: 'Per Unit'});
+        this.purchaseTypeOptions.push({ key: 'total', name: 'Total Value'});
     }
 
     loadUserData() {

@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js';
 
 export class TransactionStore {
 
-  @observable transactions = []; 
+  @observable transactions = [];
   @observable isLoading = true;
 
   constructor() {
@@ -67,7 +67,7 @@ export class TransactionStore {
 
   getTransactionAmountBalance(transaction) {
 
-    if(!transaction.sales || transaction.sales.length == 0)
+    if (!transaction.sales || transaction.sales.length == 0)
       return transaction.amount;
 
     var salesAmount = transaction.sales
@@ -75,7 +75,23 @@ export class TransactionStore {
       .reduce((a1, a2) => a1 + a2, 0);
 
     return new BigNumber(transaction.amount.toString()).minus(salesAmount).toNumber();
-}
+  }
+
+  calculateTotalPrice(amount, purchaseUnitPrice) {
+
+    if (amount == '' || purchaseUnitPrice == '')
+      return '';
+
+    return new BigNumber(amount.toString()).multipliedBy(purchaseUnitPrice.toString()).toNumber();
+  }
+
+  calculateUnitPrice(amount, purchaseTotalPrice) {
+
+    if (amount == '' || purchaseTotalPrice == '')
+      return '';
+
+    return new BigNumber(purchaseTotalPrice.toString()).dividedBy(amount.toString()).toNumber();
+  }
 
 }
 

@@ -31,7 +31,7 @@ var saleScheme = new Schema({
   },
   saleUnitPrice: {
     type: Number,
-    required: [true, 'Unit Price required']
+    required: [true, 'Price required']
   },
   notes: String,
 
@@ -89,7 +89,7 @@ var transactionSchema = new Schema({
   },
   purchaseUnitPrice: {
     type: Number,
-    required: [true, 'Unit Price required']
+    required: [true, 'Price required']
   },
 
   exchangeRates: exchangeRatesScheme,

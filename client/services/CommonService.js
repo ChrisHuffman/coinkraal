@@ -62,7 +62,7 @@ export class CommonService {
                 xAxes: [{
                     type: 'time',
                     time: {
-                        unit: (arr1 && arr1.length < 90)  || (arr2 && arr2.length < 90) ? 'day' : 'month'
+                        unit: (arr1 && arr1.length > 0 && arr1.length < 90)  || (arr2 && arr2.length > 0 && arr2.length < 90) || dataFrequency == 'hours' ? 'day' : 'month'
                     }
                 }],
                 yAxes: [],

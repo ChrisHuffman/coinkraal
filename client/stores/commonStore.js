@@ -17,16 +17,16 @@ class CommonStore {
     return moment(date).format('ll');
   }
 
-  getErrorMessage(errors, fieldName, message) {
+  getErrorMessage(errors, fieldName, hide) {
     var error = errors[fieldName];
-    if (!error)
+    if (!error || hide)
       return '';
-    return message || error.message;
+    return error.message;
   }
 
-  getErrorClass(errors, fieldName) {
+  getErrorClass(errors, fieldName, hide) {
     var error = errors[fieldName];
-    if (!error)
+    if (!error || hide)
       return '';
     return 'is-invalid';
   }

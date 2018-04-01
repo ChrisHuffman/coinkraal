@@ -67,7 +67,7 @@ export class ExchangeStore {
     if (!self.exchangeRates[currency])
       self.exchangeRates[currency] = { };
 
-    agentExt.External.getPrice(currency, chunck.map(c => c))
+    agentExt.External1.getPrice(currency, chunck.map(c => c))
       .then(action((rates) => {
 
         self.exchangeRates[currency] = Object.assign(self.exchangeRates[currency], rates);

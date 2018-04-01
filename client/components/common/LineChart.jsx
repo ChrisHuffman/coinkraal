@@ -25,6 +25,7 @@ class LineChart extends React.Component {
         this.selectTimeRange = this.selectTimeRange.bind(this);
         this.onFiltersChanged = this.onFiltersChanged.bind(this);
         this.getTimeRangeText = this.getTimeRangeText.bind(this);
+        this.hasData = this.hasData.bind(this);
     }
 
     //Remove observables (some reason chart js doesnt like them)
@@ -125,6 +126,10 @@ class LineChart extends React.Component {
         }
     }
 
+    hasData() {
+        return this.state.data.datasets.length > 0;
+    }
+
     render() {
 
         return (
@@ -153,13 +158,20 @@ class LineChart extends React.Component {
                 </div>
 
                 <div className="row">
-
+                    {this.hasData() && 
                     <div className="col">
                         <Line
                             data={this.state.data}
                             options={this.state.options}
                             plugins={this.state.plugins} />
                     </div>
+                    }
+
+                    {!this.hasData() && 
+                    <div className="col text-center text-danger pt-5">
+                        <h3>No data</h3>
+                    </div>
+                    }
 
                 </div>
 

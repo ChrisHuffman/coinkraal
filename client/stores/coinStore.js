@@ -12,10 +12,6 @@ export class CoinStore {
   constructor() {
   }
 
-  @action getCoins(start, limit) {
-    return agentExt.External.getCoinTopList(start, limit)
-  }
-
   @action loadCoins() {
 
     var self = this;
@@ -23,7 +19,7 @@ export class CoinStore {
 
     return new Promise(function (resolve, reject) {
 
-      return agentExt.External.getCoinTopList(0, 2000)
+      return agentExt.External2.getCoinTopList(0, 2000)
         .then(action((coins) => {
           self.coins = coins.map(c => {
 
@@ -48,8 +44,10 @@ export class CoinStore {
     });
   }
 
+  
+
   getHistoricalPrice(fromCurrency, toCurrency, timestamp) {
-    return agentExt.External.getHistoricalPrice(fromCurrency, toCurrency, timestamp);
+    return agentExt.External1.getHistoricalPrice(fromCurrency, toCurrency, timestamp);
   }
 
   getUnitPrice(fromCurrency, toCurrency, date) {
@@ -94,11 +92,11 @@ export class CoinStore {
   }
 
   get24HrPriceChange(fromCurrency, toCurrency) {
-    return agentExt.External.get24HrPriceChange(fromCurrency, toCurrency);
+    return agentExt.External1.get24HrPriceChange(fromCurrency, toCurrency);
   }
 
   getCoinExchanges(fromCurrency, toCurrency, limit) {
-    return agentExt.External.getCoinExchanges(fromCurrency, toCurrency, limit);
+    return agentExt.External1.getCoinExchanges(fromCurrency, toCurrency, limit);
   }
 
   getGlobalData() {

@@ -43,7 +43,7 @@ export class PriceStore {
         if (!self.tempPriceIndex[fromSymbol])
             self.tempPriceIndex[fromSymbol] = {};
 
-        agentExt.External.getPrice(fromSymbol, chunck)
+        agentExt.External1.getPrice(fromSymbol, chunck)
             .then(action((rates) => {
 
                 self.tempPriceIndex[fromSymbol] = Object.assign(self.tempPriceIndex[fromSymbol], rates);

@@ -179,7 +179,6 @@ export class PortfolioChartService {
     getTransactions(transactions, date, currency) {
 
         return transactions.filter(t => {
-            //return (t.date.indexOf(date) == 0 && t.currency == currency);
             return (moment(t.date).isBefore(date) && t.currency == currency);
         });
     }

@@ -6,8 +6,8 @@ export class CommonService {
 
     getHistoricalPriceApi(dataFrequency) {
         if (dataFrequency == 'days')
-            return agentExt.External.getDailyHistoricalPrice;
-        return agentExt.External.getHourlyHistoricalPrice;
+            return agentExt.External1.getDailyHistoricalPrice;
+        return agentExt.External1.getHourlyHistoricalPrice;
     }
 
     getChartJsDataset(data, label, borderColor, yAxisId) {

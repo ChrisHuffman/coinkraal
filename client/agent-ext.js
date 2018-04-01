@@ -16,6 +16,23 @@ const handleErrors = err => {
   return err;
 };
 
+//This fix function is needed because CryptoCompare and CoinMarketCap use different symbols for some coins .... meh
+const fixSyms = (symbols) => {
+  return symbols.map(fixSym);
+}
+
+const fixSym = (symbol) => {
+  if (symbol == 'MIOTA') return 'IOTA';
+  if (symbol == 'NANO') return 'XRB';
+  return symbol;
+}
+
+const fixSymInv = (symbol) => {
+  if (symbol == 'IOTA') return 'MIOTA';
+  if (symbol == 'XRB') return 'NANO';
+  return symbol;
+}
+
 const responseBody = res => res.body;
 
 const requests = {
@@ -26,18 +43,29 @@ const requests = {
       .then(responseBody)
 };
 
-const External = {
-  get: (url) => requests.get(`${url}`),
-  getCoinDataList: () => requests.get(`${API_ROOT1}/data/all/coinlist`).then(body => body.Data),
-  getPrice: (fromCurrency, toCurrencies) => requests.get(`${API_ROOT1}/data/price?fsym=${fromCurrency}&tsyms=${toCurrencies.join(',')}`),
-  getHistoricalPrice: (fromCurrency, toCurrency, timestamp) => requests.get(`${API_ROOT1}/data/pricehistorical?fsym=${fromCurrency}&tsyms=${toCurrency}&ts=${timestamp}`).then(body => body[fromCurrency][toCurrency]),
-  getDailyHistoricalPrice: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/histoday?fsym=${fromCurrency}&tsym=${toCurrency}&limit=${limit}`).then(body => body.Data),
-  getHourlyHistoricalPrice: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/histohour?fsym=${fromCurrency}&tsym=${toCurrency}&limit=${limit}`).then(body => body.Data),
-  get24HrPriceChange: (fromCurrency, toCurrency) => requests.get(`${API_ROOT1}/data/pricemultifull?fsyms=${fromCurrency}&tsyms=${toCurrency}`).then(body => body.RAW[fromCurrency][toCurrency].CHANGEPCT24HOUR),
-  getCoinExchanges: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/top/exchanges/full?fsym=${fromCurrency}&tsym=${toCurrency}&limit=${limit}`).then(body => body.Data.Exchanges),
+const External1 = {
+  getHistoricalPrice: (fromCurrency, toCurrency, timestamp) => requests.get(`${API_ROOT1}/data/pricehistorical?fsym=${fixSym(fromCurrency)}&tsyms=${fixSym(toCurrency)}&ts=${timestamp}`).then(body => body[fixSym(fromCurrency)][fixSym(toCurrency)]),
+  getDailyHistoricalPrice: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/histoday?fsym=${fixSym(fromCurrency)}&tsym=${fixSym(toCurrency)}&limit=${limit}`).then(body => body.Data),
+  getHourlyHistoricalPrice: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/histohour?fsym=${fixSym(fromCurrency)}&tsym=${fixSym(toCurrency)}&limit=${limit}`).then(body => body.Data),
+  get24HrPriceChange: (fromCurrency, toCurrency) => requests.get(`${API_ROOT1}/data/pricemultifull?fsyms=${fixSym(fromCurrency)}&tsyms=${fixSym(toCurrency)}`).then(body => body.RAW[fixSym(fromCurrency)] ? body.RAW[fixSym(fromCurrency)][fixSym(toCurrency)].CHANGEPCT24HOUR : null),
+  getCoinExchanges: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/top/exchanges/full?fsym=${fixSym(fromCurrency)}&tsym=${fixSym(toCurrency)}&limit=${limit}`).then(body => body.Data.Exchanges),
+  getPrice: (fromCurrency, toCurrencies) => requests.get(`${API_ROOT1}/data/price?fsym=${fixSym(fromCurrency)}&tsyms=${fixSyms(toCurrencies).join(',')}`)
+    .then(data => {
+        var d = {};
+        for (var s in data) {
+            if (data.hasOwnProperty(s)) {
+                d[fixSymInv(s)] = data[s];
+            }
+        }
+        return d;
+    })
+};
+
+const External2 = {
   getCoinTopList: (start, limit) => requests.get(`${API_ROOT2}/ticker/?start=${start}&limit=${limit}`)
 };
 
 export default {
-  External
+  External1,
+  External2
 };

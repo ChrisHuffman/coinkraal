@@ -69,7 +69,7 @@ export class CoinChartService {
             var date = moment.unix(d.time);
             
             var dataPoint = new CoinChartServiceDataPoint(date)
-            dataPoint.value = d.close;
+            dataPoint.value = d.close == 0 ? null : d.close;
 
             dataPoints.push(dataPoint);
         });
@@ -78,6 +78,14 @@ export class CoinChartService {
     }
 
     getChartJsData(currency1, dataPoints1, currency2, dataPoints2, timeRange, dataFrequency) {
+
+        var maxDataPoints1 = this.getMaxDataPoints(dataPoints1);
+        var maxDataPoints2 = this.getMaxDataPoints(dataPoints2);
+
+        var minDataPoints = maxDataPoints1 > maxDataPoints2 ? maxDataPoints1 : maxDataPoints2;
+
+        dataPoints1 = this.filterOutEmptyDataPoints(dataPoints1, minDataPoints);
+        dataPoints2 = this.filterOutEmptyDataPoints(dataPoints2, minDataPoints);
 
         var datasets = [];
 
@@ -114,6 +122,32 @@ export class CoinChartService {
         return arr.map(dp => {
             return dp.date;
         });
+    }
+
+    filterOutEmptyDataPoints(dataPoints, minDataPoints) {
+
+        while (dataPoints.length > 0 && dataPoints.length > minDataPoints) {
+            if (dataPoints[0].value == null)
+                dataPoints.shift();
+            else
+                return dataPoints;
+        }
+
+        return dataPoints;
+    }
+
+    getMaxDataPoints(dataPoints) {
+
+        dataPoints = dataPoints.slice(0);
+
+        while (dataPoints.length > 0) {
+            if (dataPoints[0].value == null) 
+                dataPoints.shift();
+            else
+                return dataPoints.length;
+        }
+
+        return dataPoints.length;
     }
 
 }

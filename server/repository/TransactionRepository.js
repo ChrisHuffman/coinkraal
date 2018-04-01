@@ -327,6 +327,8 @@ class TransactionRepository {
             calculationType: 'MidHighLow'
         }
 
+        console.log(query);
+
         return superagent.get('https://min-api.cryptocompare.com/data/pricehistorical')
             .query(query)
             .end((err, resp) => {

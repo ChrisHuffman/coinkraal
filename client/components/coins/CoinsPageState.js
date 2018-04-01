@@ -9,7 +9,7 @@ export class CoinsPageState {
 
     coinChartService = null;
     @observable coinChartData = { };
-    coinChartSelectedTimeRange = 90;
+    coinChartSelectedTimeRange = 365;
     @observable isLoadingCoinChartData = true;
 
     @observable isLoading = false;

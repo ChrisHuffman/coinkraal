@@ -86,7 +86,7 @@ const Social = {
 };
 
 const User = {
-  getUser: () => requests.get(`/api/user`),
+  getUser: () => requests.get(`/api/user`).catch(err => { authStore.signout() }),
   updateSettings: (settings) => requests.post(`/api/user/settings`, settings)
 };
 

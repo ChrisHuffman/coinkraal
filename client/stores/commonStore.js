@@ -66,7 +66,7 @@ class CommonStore {
   invertExchange(value) {
     if (value == null)
       return '';
-    return new BigNumber(1).dividedBy(value).toNumber();
+    return new BigNumber(1).dividedBy(value.toString()).toNumber();
   }
 
   getPercentageChange(sellingPrice, costPrice) {

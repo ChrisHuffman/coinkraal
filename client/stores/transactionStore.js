@@ -74,7 +74,7 @@ export class TransactionStore {
       .map(s => s.amount)
       .reduce((a1, a2) => a1 + a2, 0);
 
-    return new BigNumber(transaction.amount.toString()).minus(salesAmount).toNumber();
+    return new BigNumber(transaction.amount.toString()).minus(salesAmount.toString()).toNumber();
   }
 
   calculateTotalPrice(amount, purchaseUnitPrice) {

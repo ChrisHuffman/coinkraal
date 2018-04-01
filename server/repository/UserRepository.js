@@ -28,6 +28,11 @@ class UserRepository {
                         reject(error);
                     else {
 
+                        if(!user) {
+                            reject();
+                            return;
+                        }
+
                         var settings = user.settings ? user.settings : [];
 
                         //Set defaults IF not setting exists

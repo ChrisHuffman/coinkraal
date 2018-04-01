@@ -14,9 +14,6 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
-- Dont auto update price
-- Total or unit price on edit transactions
-- Notes in transactions
 - Disable forms on save and loader..
 - Min unitpirce and amoutn for ts and sales
 - logo caching

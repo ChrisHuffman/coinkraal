@@ -60,7 +60,9 @@ export class CommonService {
                 cornerRadius: 2,
                 callbacks: {
                     title: function(tooltipItems, data) {
-                        return tooltipItems[0].xLabel.format('lll');
+                        if(tooltipItems[0].xLabel.format)
+                            return tooltipItems[0].xLabel.format('lll');
+                        return tooltipItems[0].xLabel;
                     },
                     label: function(tooltipItem, data) {
                         var label = data.datasets[tooltipItem.datasetIndex].label || '';

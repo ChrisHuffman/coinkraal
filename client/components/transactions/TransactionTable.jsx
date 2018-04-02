@@ -20,7 +20,7 @@ import MinusSquare from 'react-feather/dist/icons/minus-square';
 import PlusSquare from 'react-feather/dist/icons/plus-square';
 import CommonService from '../../services/CommonService'
 import Layout from '../Layout'
-import Menu from 'react-feather/dist/icons/Menu';
+import Menu from 'react-feather/dist/icons/menu';
 
 @inject('global', 'transactionsPageState', 'transactionStore', 'commonStore', 'priceStore', 'coinsPageState')
 @observer

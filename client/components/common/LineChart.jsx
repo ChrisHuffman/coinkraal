@@ -1,6 +1,6 @@
 import React from 'react';
-import { Line, } from 'react-chartjs-2';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Line } from 'react-chartjs-2';
+import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class LineChart extends React.Component {
 
@@ -21,10 +21,8 @@ class LineChart extends React.Component {
             timeRangeDropDownOpen: false,
         }
 
-        this.toggleTimeRangeDropDown = this.toggleTimeRangeDropDown.bind(this);
         this.selectTimeRange = this.selectTimeRange.bind(this);
         this.onFiltersChanged = this.onFiltersChanged.bind(this);
-        this.getTimeRangeText = this.getTimeRangeText.bind(this);
         this.hasData = this.hasData.bind(this);
     }
 
@@ -88,12 +86,6 @@ class LineChart extends React.Component {
         // });
     }
 
-    toggleTimeRangeDropDown() {
-        this.setState({
-            timeRangeDropDownOpen: !this.state.timeRangeDropDownOpen
-        });
-    }
-
     selectTimeRange(timeRange) {
         this.setState({
             selectedTimeRange: timeRange
@@ -110,22 +102,6 @@ class LineChart extends React.Component {
         });
     }
 
-    getTimeRangeText() {
-
-        switch (this.state.selectedTimeRange) {
-            case 7:
-                return 'Last 7 Days';
-            case 30:
-                return 'Last Month';
-            case 90:
-                return 'Last 3 Months';
-            case 180:
-                return 'Last 6 Months';
-            case 365:
-                return 'Last Year';
-        }
-    }
-
     hasData() {
         return this.state.data.datasets.length > 0;
     }
@@ -136,22 +112,15 @@ class LineChart extends React.Component {
 
             <div>
 
-                <div className="row justify-content-end">
+                <div className="row justify-content-end mt-1">
 
                     <div className="col-auto">
 
-                        <ButtonDropdown color="dark" isOpen={this.state.timeRangeDropDownOpen} toggle={this.toggleTimeRangeDropDown}>
-                            <DropdownToggle caret>
-                                {this.getTimeRangeText()}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={this.selectTimeRange.bind(null, 7)}>Last 7 Days</DropdownItem>
-                                <DropdownItem onClick={this.selectTimeRange.bind(null, 30)}>Last Month</DropdownItem>
-                                <DropdownItem onClick={this.selectTimeRange.bind(null, 90)}>Last 3 Months</DropdownItem>
-                                <DropdownItem onClick={this.selectTimeRange.bind(null, 180)}>Last 6 Months</DropdownItem>
-                                <DropdownItem onClick={this.selectTimeRange.bind(null, 365)}>Last Year</DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
+                        <Button outline={this.state.selectedTimeRange != 7} color="secondary" className="mr-3" size="xs" onClick={this.selectTimeRange.bind(null, 7)}>7d</Button>
+                        <Button outline={this.state.selectedTimeRange != 30}  color="secondary" className="mr-3" size="xs" onClick={this.selectTimeRange.bind(null, 30)}>1m</Button>
+                        <Button outline={this.state.selectedTimeRange != 90}  color="secondary" className="mr-3" size="xs" onClick={this.selectTimeRange.bind(null, 90)}>3m</Button>
+                        <Button outline={this.state.selectedTimeRange != 180}  color="secondary" className="mr-3" size="xs" onClick={this.selectTimeRange.bind(null, 180)}>6m</Button>
+                        <Button outline={this.state.selectedTimeRange != 365}  color="secondary" className="" size="xs" onClick={this.selectTimeRange.bind(null, 365)}>1y</Button>
 
                     </div>
 
@@ -159,18 +128,18 @@ class LineChart extends React.Component {
 
                 <div className="row">
                     {this.hasData() && 
-                    <div className="col">
-                        <Line
-                            data={this.state.data}
-                            options={this.state.options}
-                            plugins={this.state.plugins} />
-                    </div>
+                        <div className="col">
+                            <Line
+                                data={this.state.data}
+                                options={this.state.options}
+                                plugins={this.state.plugins} />
+                        </div>
                     }
 
                     {!this.hasData() && 
-                    <div className="col text-center text-danger pt-5">
-                        <h3>No data</h3>
-                    </div>
+                        <div className="col text-center text-danger pt-5">
+                            <h3>No data</h3>
+                        </div>
                     }
 
                 </div>

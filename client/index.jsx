@@ -46,16 +46,18 @@ var global = new Global(authStore, currencyStore, coinStore, transactionStore, e
 import PortfolioChartService from './services/PortfolioChartService';
 import CoinChartService from './services/CoinChartService';
 import TransactionSummaryService from './services/TransactionSummaryService';
+import CoinRiskChartService from './services/CoinRiskChartService';
 var portfolioChartService = new PortfolioChartService();
 var coinChartService = new CoinChartService();
 var transactionSummaryService = new TransactionSummaryService();
+var coinRiskChartService = new CoinRiskChartService();
 
 
 //PageState
 import PortfolioPageState from './components/portfolio/PortfolioPageState';
 import TransactionsPageState from './components/transactions/TransactionsPageState'
 import CoinsPageState from './components/coins/CoinsPageState'
-var portfolioPageState = new PortfolioPageState(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService);
+var portfolioPageState = new PortfolioPageState(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService, coinRiskChartService);
 var transactionsPageState = new TransactionsPageState(transactionStore);
 var coinsPageState = new CoinsPageState(global, coinStore, coinChartService);
 
@@ -86,14 +88,16 @@ useStrict(true);
 
 //Chartjs Defaults
 defaults.global.defaultFontFamily = 'Roboto Mono';
-defaults.global.defaultFontColor = '#e9ecef';
+defaults.global.defaultFontColor = '#f4f4f4';
 
 defaults.global.tooltips.cornerRadius = 2;
-defaults.global.tooltips.backgroundColor = 'rgba(233, 236, 239, 1)';
-defaults.global.tooltips.titleFontColor = 'rgba(32, 32, 32, 1)';
-defaults.global.tooltips.bodyFontColor = 'rgba(32, 32, 32, 1)';
+defaults.global.tooltips.backgroundColor = 'rgba(233, 236, 239, 0.8)';
+defaults.global.tooltips.titleFontColor = 'rgba(0, 0, 0, 1)';
+defaults.global.tooltips.bodyFontColor = 'rgba(0, 0, 0, 1)';
 defaults.global.tooltips.borderColor = 'rgba(0,0,0,1)';
+defaults.global.tooltips.titleMarginBottom = 10;
 defaults.global.tooltips.borderWidth = 1;
+defaults.global.tooltips.bodySpacing = 6;
 defaults.global.tooltips.xPadding = 10;
 defaults.global.tooltips.yPadding = 10;
 

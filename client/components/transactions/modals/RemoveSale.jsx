@@ -60,7 +60,9 @@ class RemoveSale extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>No</Button>
-                        <Button outline color="danger" onClick={this.removeSale} disabled={!this.state.enabled}>Yes, nuke it</Button>
+                        <Button outline color="danger" onClick={this.removeSale} disabled={!this.state.enabled}>
+                            {this.state.enabled ? 'Yes, nuke it' : 'Nuking....'}
+                        </Button>
                     </ModalFooter>
                 </Modal>
             </div>

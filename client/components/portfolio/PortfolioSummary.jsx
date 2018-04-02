@@ -14,31 +14,16 @@ class PortfolioSummary extends React.Component {
     render() {
 
         return (
-            <div>
-                <div className="row justify-content-around">
-                    <div className="col-6 text-center">
-                        <h1>
-                            {this.props.global.selectedFiat}
-                        </h1>
-                    </div>
-                    <div className="col-6 text-center">
-                        <h1>
-                        {this.props.global.selectedCoin}
-                        </h1>
-                    </div>
+            <div className="row justify-content-around mt-3">
+                <div className="col-sm-6 text-center">
+                    <h1>
+                        {this.props.global.selectedFiat}: <PortfolioValue symbol={this.props.global.selectedFiat} transactions={this.props.transactionStore.transactions} priceIndex={this.props.priceStore.priceIndex} />
+                    </h1>
                 </div>
-
-                <div className="row justify-content-around">
-                    <div className="col-6 text-center">
-                        <h3>
-                            <PortfolioValue symbol={this.props.global.selectedFiat} transactions={this.props.transactionStore.transactions} priceIndex={this.props.priceStore.priceIndex} />
-                        </h3>
-                    </div>
-                    <div className="col-6 text-center">
-                        <h3>
-                            <PortfolioValue symbol={this.props.global.selectedCoin} transactions={this.props.transactionStore.transactions} priceIndex={this.props.priceStore.priceIndex} />
-                        </h3>
-                    </div>
+                <div className="col-sm-6 text-center">
+                    <h1>
+                        {this.props.global.selectedCoin}: <PortfolioValue symbol={this.props.global.selectedCoin} transactions={this.props.transactionStore.transactions} priceIndex={this.props.priceStore.priceIndex} />
+                    </h1>
                 </div>
             </div>
         );

@@ -14,14 +14,12 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
-- Disable forms on save and loader..
-- Chart tooltip styling    
-- Fix portfolio page and pie chart
-- Notification on Portfolio chart to say 'TAU data only available from x date'
 - Requery for coin summary chart is hours if low data
 
 
 
+- Notification on Portfolio chart to say 'TAU data only available from x date'
+- Filter on coin in transaction table
 - Volume on summary chart
 - why do we need to root api?
 - why do we keep getting a 401?

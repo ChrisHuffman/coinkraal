@@ -10,7 +10,7 @@ export class CoinChartService {
 
         return new Promise(function (resolve, reject) {
 
-            var dataFrequencyLimit = 7;
+            var dataFrequencyLimit = 30;
             var dataFrequency = timeRange <= dataFrequencyLimit ? 'hours' : 'days';
 
             var limit = timeRange;

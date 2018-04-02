@@ -53,10 +53,22 @@ export class CommonService {
                 }
             },
             tooltips: {
+                enabled: true,
                 position: 'nearest',
                 mode: 'index',
                 intersect: false,
-                cornerRadius: 2
+                cornerRadius: 2,
+                callbacks: {
+                    title: function(tooltipItems, data) {
+                        return tooltipItems[0].xLabel.format('lll');
+                    },
+                    label: function(tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        label += ': ';
+                        label += self.formatCurrency(tooltipItem.yLabel);
+                        return label;
+                    }
+                  }
             },
             scales: {
                 xAxes: [{

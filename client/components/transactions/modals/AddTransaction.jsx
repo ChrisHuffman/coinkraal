@@ -319,7 +319,9 @@ class AddTransaction extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>Cancel</Button>
-                    <Button outline color="primary" onClick={this.addTransaction} disabled={!this.state.enabled}>Add Transaction</Button>
+                    <Button outline color="primary" onClick={this.addTransaction} disabled={!this.state.enabled}>
+                        {this.state.enabled ? 'Add Transaction' : 'Saving....'}
+                    </Button>
                 </ModalFooter>
             </Modal>
 

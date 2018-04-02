@@ -322,7 +322,9 @@ class AddSale extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button outline color="secondary" onClick={this.toggleModal} disabled={!this.state.enabled}>Cancel</Button>
-                        <Button outline color="primary" onClick={this.addSale} disabled={!this.state.enabled}>Sell Coin</Button>
+                        <Button outline color="primary" onClick={this.addSale} disabled={!this.state.enabled}>
+                            {this.state.enabled ? 'Sell Coin' : 'Saving....'}
+                        </Button>
                     </ModalFooter>
                 </Modal>
             </div>

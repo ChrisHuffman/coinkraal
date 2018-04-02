@@ -7,6 +7,7 @@ export class PortfolioPageState {
     priceStore = null;
     portfolioChartService = null;
     transactionSummaryService = null;
+    coinRiskChartService = null;
 
     @observable portfolioChartData = { };
     @observable portfolioRawData = { };
@@ -14,14 +15,17 @@ export class PortfolioPageState {
     @observable isLoadingPorfolioChartData = true;
 
     @observable transactionSummaries = [];
+
+    @observable coinRiskChartData = { };
     
-    constructor(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService) {
+    constructor(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService, coinRiskChartService) {
 
         this.global = global;
         this.transactionStore = transactionStore;
         this.priceStore = priceStore;
         this.portfolioChartService = portfolioChartService;
         this.transactionSummaryService = transactionSummaryService;
+        this.coinRiskChartService = coinRiskChartService;
         
         reaction(() => this.transactionStore.transactions, () => {
             this.loadTransactionSummaries();
@@ -39,6 +43,10 @@ export class PortfolioPageState {
         reaction(() => this.global.selectedCoin, () => {
             this.loadPortfolioChartData();
         });
+
+        reaction(() => this.transactionSummaries, () => {
+            this.loadCoinRishChartData();
+        });
     }
 
     @action loadPortfolioChartData() {
@@ -50,6 +58,14 @@ export class PortfolioPageState {
                 this.portfolioChartData = data.chartjs;
                 this.portfolioRawData = data.rawData;
                 this.isLoadingPorfolioChartData = false;
+            }));
+    }
+
+    @action loadCoinRishChartData() {
+
+        this.coinRiskChartService.getData(this.transactionSummaries)
+            .then(action(data => {
+                this.coinRiskChartData = data;
             }));
     }
 

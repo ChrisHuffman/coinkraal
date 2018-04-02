@@ -24,14 +24,27 @@ class TransactionSummaryTable extends React.Component {
 
         return (
             <div>
-                <Table responsive>
+                <Table responsive className="mb-5">
                     <thead>
                         <tr>
-                            <th className="clearTopBorder narrow">Coin</th>
-                            <th className="clearTopBorder"></th>
+                            <th className="clearTopBorder narrow d-none d-sm-table-cell">
+                                Coin
+                            </th>
+                            <th className="clearTopBorder">
+                                <span className="d-block d-sm-none">
+                                    Coin
+                                </span>
+                            </th>
                             <th className="clearTopBorder">Amount</th>
-                            <th className="clearTopBorder">Avg Purchase Price</th>
-                            <th className="clearTopBorder">Current Price</th>
+                            <th className="clearTopBorder d-none d-sm-table-cell">
+                                <span className="d-none d-md-block">
+                                    Avg. Purchase Price
+                                </span>
+                                <span className="d-block d-md-none">
+                                    Avg. Pur. Price
+                                </span>
+                            </th>
+                            <th className="clearTopBorder d-none d-md-table-cell">Current Price</th>
                             <th className="clearTopBorder">Profit</th>
                             <th className="clearTopBorder">Value</th>
                         </tr>
@@ -40,12 +53,12 @@ class TransactionSummaryTable extends React.Component {
                         {
                             transactionSummaries.map(function (summary) {
                                 return <tr key={summary.currency}>
-                                    <td className="align-middle"><CoinLogo coin={summary.currency} /></td>
+                                    <td className="align-middle d-none d-sm-table-cell"><CoinLogo coin={summary.currency} /></td>
                                     <td className="align-middle">{summary.currency}</td>
                                     <td className="align-middle">
                                         <Number amount={summary.totalAmount} />
                                     </td>
-                                    <td>
+                                    <td className="d-none d-sm-table-cell">
                                         <div>
                                             <TransactionSummaryPrice symbol={self.props.global.selectedFiat} transactionSummary={summary} />
                                             <small>&nbsp;{self.props.global.selectedFiat}</small>
@@ -55,7 +68,7 @@ class TransactionSummaryTable extends React.Component {
                                             <small>&nbsp;{self.props.global.selectedCoin}</small>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td className="d-none d-md-table-cell">
                                         <div>
                                             <CurrentPrice currentSymbol={self.props.global.selectedFiat} targetSymbol={summary.currency} priceIndex={self.props.priceStore.priceIndex} />
                                             <small>&nbsp;{self.props.global.selectedFiat}</small>

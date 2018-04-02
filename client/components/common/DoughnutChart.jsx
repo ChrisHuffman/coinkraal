@@ -19,9 +19,6 @@ class DoughnutChart extends React.Component {
         if (!nextProps.chart)
              return;
 
-
-             console.log(nextProps);
-
          this.setState({
              data: this.formatData(nextProps.chart.data),
              options: nextProps.chart.options,

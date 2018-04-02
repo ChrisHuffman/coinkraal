@@ -55,7 +55,7 @@ class PortfolioPage extends React.Component {
                 {(!this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length > 0) &&
                     <div className="row">
 
-                        <div className="col-md-6">
+                        <div className="col-lg-6">
                             <div>
                                 <h4 className="text-primary">
                                     Transaction Summary
@@ -64,7 +64,7 @@ class PortfolioPage extends React.Component {
                             </div>
                         </div>
 
-                        <div className="col-md-6">
+                        <div className="col-lg-6">
 
                             <Nav tabs>
                                 <NavItem>

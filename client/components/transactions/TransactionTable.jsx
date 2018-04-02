@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Table, Button } from 'reactstrap';
+import { Table, Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Loader from '../common/Loader'
 import CoinLogo from '../common/CoinLogo'
 import RemoveTransaction from './modals/RemoveTransaction'
@@ -20,6 +20,7 @@ import MinusSquare from 'react-feather/dist/icons/minus-square';
 import PlusSquare from 'react-feather/dist/icons/plus-square';
 import CommonService from '../../services/CommonService'
 import Layout from '../Layout'
+import Menu from 'react-feather/dist/icons/Menu';
 
 @inject('global', 'transactionsPageState', 'transactionStore', 'commonStore', 'priceStore', 'coinsPageState')
 @observer
@@ -41,37 +42,26 @@ class TransactionTable extends React.Component {
     }
 
     editTransaction(transaction, event) {
-        this.stopPropagation(event);
         this.props.transactionsPageState.toggleEditTransactionModal(transaction);
     }
 
     removeTransaction(transaction, event) {
-        this.stopPropagation(event);
         this.props.transactionsPageState.toggleRemoveTransactionModal(transaction);
     }
 
     addSale(transaction, event) {
-        this.stopPropagation(event);
         this.props.transactionsPageState.toggleAddSaleModal(transaction);
     }
 
     editSale(transaction, sale, event) {
-        this.stopPropagation(event);
         this.props.transactionsPageState.toggleEditSaleModal(transaction, sale);
     }
 
     removeSale(transaction, sale, event) {
-        this.stopPropagation(event);
         this.props.transactionsPageState.toggleRemoveSaleModal(transaction, sale);
     }
 
-    stopPropagation(event) {
-        event.stopPropagation();
-        event.nativeEvent.stopImmediatePropagation();
-    }
-
     coinSummary(transaction, event) {
-        this.stopPropagation(event);
         this.props.coinsPageState.toggleCoinSummaryModal(transaction.currency);
     }
 
@@ -100,15 +90,17 @@ class TransactionTable extends React.Component {
         }
 
         var rows = [
-            <tr onClick={clickCallback} key={'transaction-' + transaction._id} className='clickable'>
-                <td className='align-middle'>
+            <tr key={'transaction-' + transaction._id} className='clickable'>
+                <td onClick={clickCallback} className='align-middle p-1'>
                     {expander}
                 </td>
-                <td className="align-middle">
-                    <CoinLogo coin={transaction.currency} />
+                <td onClick={clickCallback} className="align-middle p-0">
+                    <div className="d-none d-md-block pl-3">
+                        <CoinLogo coin={transaction.currency} />
+                    </div>
                 </td>
-                <td className="align-middle">{transaction.currency}</td>
-                <td className="align-middle">
+                <td onClick={clickCallback} className="align-middle">{transaction.currency}</td>
+                <td onClick={clickCallback} className="align-middle">
                     <div>
                         <Number amount={this.props.transactionStore.getTransactionAmountBalance(transaction)} /> <small className="text-secondary">BALANCE</small>
                     </div>
@@ -116,7 +108,7 @@ class TransactionTable extends React.Component {
                         <Number amount={transaction.amount} /> <small className="text-secondary">INITIAL</small>
                     </div>
                 </td>
-                <td>
+                <td onClick={clickCallback} >
                     <div>
                         <TransactionPrice symbol={this.props.global.selectedFiat} transaction={transaction} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -126,7 +118,7 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-                <td>
+                <td className="d-none d-md-table-cell" onClick={clickCallback} >
                     <div>
                         <CurrentPrice currentSymbol={this.props.global.selectedFiat} targetSymbol={transaction.currency} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -136,7 +128,7 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-                <td>
+                <td className="d-none d-sm-table-cell"  onClick={clickCallback} >
                     <div>
                         <TransactionProfit symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -146,7 +138,7 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-                <td>
+                <td className="d-none d-sm-table-cell" onClick={clickCallback} >
                     <div>
                         <TransactionValue symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -156,12 +148,25 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-                <td className="align-middle">{this.props.commonStore.formatDate(transaction.date)}</td>
-                <td className='align-middle'>
+                <td onClick={clickCallback} className="align-middle d-none d-lg-table-cell">{this.props.commonStore.formatDate(transaction.date)}</td>
+                <td className='align-middle d-none d-lg-table-cell'>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editTransaction.bind(this, transaction)}>Edit</Button>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.removeTransaction.bind(this, transaction)}>Remove</Button>
                     <Button outline color="secondary" size="xs" className="mr-10" onClick={this.addSale.bind(this, transaction)}>Sell</Button>
                     <Button outline color="secondary" size="xs" onClick={this.coinSummary.bind(this, transaction)}>Coin Info</Button>
+                </td>
+                <td className='align-middle d-table-cell d-lg-none'>
+                    <UncontrolledDropdown size="sm" className="icon-dropdown">
+                        <DropdownToggle>
+                            <Menu className="" size={18} />
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                            <DropdownItem onClick={this.editTransaction.bind(this, transaction)}>Edit</DropdownItem>
+                            <DropdownItem onClick={this.removeTransaction.bind(this, transaction)}>Remove</DropdownItem>
+                            <DropdownItem onClick={this.addSale.bind(this, transaction)}>Sell</DropdownItem>
+                            <DropdownItem onClick={this.coinSummary.bind(this, transaction)}>Coin Info</DropdownItem>
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
                 </td>
             </tr>
         ];
@@ -171,15 +176,15 @@ class TransactionTable extends React.Component {
             rows.push(
                 <tr key={'sale-header' + transaction._id} className="font-weight-bold sub-table-header">
                     <td></td>
-                    <td></td>
-                    <td></td>
+                    <td colSpan="2"></td>
                     <td>Sale Amount</td>
                     <td>Sale Price</td>
-                    <td></td>
-                    <td>Sale Profit</td>
-                    <td></td>
-                    <td>Date</td>
-                    <td></td>
+                    <td className="d-none d-md-table-cell"></td>
+                    <td className="d-none d-sm-table-cell">Sale Profit</td>
+                    <td className="d-none d-sm-table-cell"></td>
+                    <td className="d-none d-lg-table-cell">Date</td>
+                    <td className="d-none d-lg-table-cell"></td>
+                    <td className='align-middle d-table-cell d-lg-none'></td>
                 </tr>
             );
 
@@ -201,8 +206,8 @@ class TransactionTable extends React.Component {
                                 <small>&nbsp;{this.props.global.selectedCoin}</small>
                             </div>
                         </td>
-                        <td className="align-middle"></td>
-                        <td>
+                        <td className="align-middle d-none d-md-table-cell"></td>
+                        <td className="d-none d-sm-table-cell">
                             <div>
                                 <SaleProfit symbol={this.props.global.selectedFiat} transaction={transaction} sale={sale} />
                                 <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -212,12 +217,23 @@ class TransactionTable extends React.Component {
                                 <small>&nbsp;{this.props.global.selectedCoin}</small>
                             </div>
                         </td>
-                        <td>
+                        <td className="d-none d-sm-table-cell">
                         </td>
-                        <td className="align-middle">{this.props.commonStore.formatDate(sale.date)}</td>
-                        <td className='align-middle'>
+                        <td className="align-middle d-none d-lg-table-cell">{this.props.commonStore.formatDate(sale.date)}</td>
+                        <td className='align-middle d-none d-lg-table-cell'>
                             <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editSale.bind(event, transaction, sale)}>Edit</Button>
                             <Button outline color="secondary" size="xs" onClick={this.removeSale.bind(event, transaction, sale)}>Remove</Button>
+                        </td>
+                        <td className='align-middle d-table-cell d-lg-none'>
+                            <UncontrolledDropdown size="sm" className="icon-dropdown">
+                                <DropdownToggle>
+                                    <Menu className="" size={18} />
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem onClick={this.editSale.bind(event, transaction, sale)}>Edit</DropdownItem>
+                                    <DropdownItem onClick={this.removeSale.bind(event, transaction, sale)}>Remove</DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
                         </td>
                     </tr>
                 );
@@ -241,19 +257,26 @@ class TransactionTable extends React.Component {
                 {(!this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length > 0) &&
                     <div className="row">
                         <div className="col-md">
-                            <Table responsive>
+                            <Table responsive className="mb-5">
                                 <thead>
                                     <tr>
                                         <th className="clearTopBorder narrow"></th>
-                                        <th className="clearTopBorder narrow">Coin</th>
-                                        <th className="clearTopBorder"></th>
+                                        <th colSpan="2" className="clearTopBorder">Coin</th>
                                         <th className="clearTopBorder">Amount</th>
-                                        <th className="clearTopBorder">Purchase Price</th>
-                                        <th className="clearTopBorder">Current Price</th>
-                                        <th className="clearTopBorder">Profit</th>
-                                        <th className="clearTopBorder">Value</th>
-                                        <th className="clearTopBorder">Date</th>
-                                        <th className="clearTopBorder">Actions</th>
+                                        <th className="clearTopBorder">
+                                            <span className="d-none d-md-block">
+                                                Purchase Price
+                                            </span>
+                                            <span className="d-block d-md-none">
+                                                Pur. Price
+                                            </span>
+                                        </th>
+                                        <th className="clearTopBorder d-none d-md-table-cell">Current Price</th>
+                                        <th className="clearTopBorder d-none d-sm-table-cell">Profit</th>
+                                        <th className="clearTopBorder d-none d-sm-table-cell">Value</th>
+                                        <th className="clearTopBorder d-none d-lg-table-cell">Date</th>
+                                        <th className="clearTopBorder d-none d-lg-table-cell">Actions</th>
+                                        <th className='clearTopBorder align-middle d-table-cell d-lg-none'>Menu</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -277,6 +300,8 @@ class TransactionTable extends React.Component {
                         <Loader visible={this.props.transactionStore.isLoading} />
                     </div>
                 </div>
+
+                <div />
 
             </div>
         );

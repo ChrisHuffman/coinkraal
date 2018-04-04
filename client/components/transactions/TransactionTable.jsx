@@ -100,7 +100,7 @@ class TransactionTable extends React.Component {
                     </div>
                 </td>
                 <td onClick={clickCallback} className="align-middle">{transaction.currency}</td>
-                <td onClick={clickCallback} className="align-middle">
+                <td onClick={clickCallback} className="align-middle d-none d-sm-table-cell">
                     <div>
                         <Number amount={this.props.transactionStore.getTransactionAmountBalance(transaction)} /> <small className="text-secondary">BALANCE</small>
                     </div>
@@ -108,7 +108,7 @@ class TransactionTable extends React.Component {
                         <Number amount={transaction.amount} /> <small className="text-secondary">INITIAL</small>
                     </div>
                 </td>
-                <td onClick={clickCallback} >
+                <td className="d-none d-sm-table-cell" onClick={clickCallback} >
                     <div>
                         <TransactionPrice symbol={this.props.global.selectedFiat} transaction={transaction} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -128,7 +128,7 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-                <td className="d-none d-sm-table-cell"  onClick={clickCallback} >
+                <td onClick={clickCallback} >
                     <div>
                         <TransactionProfit symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -138,7 +138,7 @@ class TransactionTable extends React.Component {
                         <small>&nbsp;{this.props.global.selectedCoin}</small>
                     </div>
                 </td>
-                <td className="d-none d-sm-table-cell" onClick={clickCallback} >
+                <td onClick={clickCallback} >
                     <div>
                         <TransactionValue symbol={this.props.global.selectedFiat} transaction={transaction} priceIndex={this.props.priceStore.priceIndex} />
                         <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -177,11 +177,11 @@ class TransactionTable extends React.Component {
                 <tr key={'sale-header' + transaction._id} className="font-weight-bold sub-table-header">
                     <td></td>
                     <td colSpan="2"></td>
-                    <td>Sale Amount</td>
-                    <td>Sale Price</td>
+                    <td className="d-none d-sm-table-cell">Sale Amount</td>
+                    <td className="d-none d-sm-table-cell">Sale Price</td>
                     <td className="d-none d-md-table-cell"></td>
-                    <td className="d-none d-sm-table-cell">Sale Profit</td>
-                    <td className="d-none d-sm-table-cell"></td>
+                    <td>Sale Profit</td>
+                    <td></td>
                     <td className="d-none d-lg-table-cell">Date</td>
                     <td className="d-none d-lg-table-cell"></td>
                     <td className='align-middle d-table-cell d-lg-none'></td>
@@ -195,8 +195,8 @@ class TransactionTable extends React.Component {
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td className="align-middle">{sale.amount}</td>
-                        <td>
+                        <td className="align-middle d-none d-sm-table-cell">{sale.amount}</td>
+                        <td className="d-none d-sm-table-cell">
                             <div>
                                 <SalePrice symbol={this.props.global.selectedFiat} sale={sale} />
                                 <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -207,7 +207,7 @@ class TransactionTable extends React.Component {
                             </div>
                         </td>
                         <td className="align-middle d-none d-md-table-cell"></td>
-                        <td className="d-none d-sm-table-cell">
+                        <td>
                             <div>
                                 <SaleProfit symbol={this.props.global.selectedFiat} transaction={transaction} sale={sale} />
                                 <small>&nbsp;{this.props.global.selectedFiat}</small>
@@ -217,7 +217,7 @@ class TransactionTable extends React.Component {
                                 <small>&nbsp;{this.props.global.selectedCoin}</small>
                             </div>
                         </td>
-                        <td className="d-none d-sm-table-cell">
+                        <td>
                         </td>
                         <td className="align-middle d-none d-lg-table-cell">{this.props.commonStore.formatDate(sale.date)}</td>
                         <td className='align-middle d-none d-lg-table-cell'>
@@ -262,8 +262,8 @@ class TransactionTable extends React.Component {
                                     <tr>
                                         <th className="clearTopBorder narrow"></th>
                                         <th colSpan="2" className="clearTopBorder">Coin</th>
-                                        <th className="clearTopBorder">Amount</th>
-                                        <th className="clearTopBorder">
+                                        <th className="clearTopBorder d-none d-sm-table-cell">Amount</th>
+                                        <th className="clearTopBorder d-none d-sm-table-cell">
                                             <span className="d-none d-md-block">
                                                 Purchase Price
                                             </span>
@@ -272,8 +272,8 @@ class TransactionTable extends React.Component {
                                             </span>
                                         </th>
                                         <th className="clearTopBorder d-none d-md-table-cell">Current Price</th>
-                                        <th className="clearTopBorder d-none d-sm-table-cell">Profit</th>
-                                        <th className="clearTopBorder d-none d-sm-table-cell">Value</th>
+                                        <th className="clearTopBorder">Profit</th>
+                                        <th className="clearTopBorder">Value</th>
                                         <th className="clearTopBorder d-none d-lg-table-cell">Date</th>
                                         <th className="clearTopBorder d-none d-lg-table-cell">Actions</th>
                                         <th className='clearTopBorder align-middle d-table-cell d-lg-none'>Menu</th>

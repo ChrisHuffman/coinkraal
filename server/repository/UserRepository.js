@@ -42,9 +42,6 @@ class UserRepository {
                         if(!settings.find(s => s.name == 'defaultCoin'))
                             settings.push({ name: "defaultCoin", value: "BTC"});
 
-                        if(!settings.find(s => s.name == 'defaultChartTimeRangeDays'))
-                            settings.push({ name: "defaultChartTimeRangeDays", value: "90"});
-
                         user.settings = settings;
 
                         resolve(user);
@@ -61,31 +58,7 @@ class UserRepository {
 
             self.getUser(userId)
                 .then(user => {
-
-                    if(!user.settings)
-                        user.settings = [];
-
-                    var currentSetting = user.settings;
-
-                    newSettings.forEach(newSetting => {
-
-                        currentSetting = user.settings.find(m => m.name == newSetting.name);
-    
-                        //Insert
-                        if (!currentSetting) {
-                            var setting = {
-                                name: newSetting.name,
-                                value: newSetting.value
-                            };
-                            user.settings.push(setting);
-                        }
-                        //Update
-                        else {
-                            currentSetting.value = newSetting.value;
-                        }
-                    });
-
-                    //Save
+                    user.settings = newSettings;
                     user.save(function (err) {
                         if (err)
                             reject(err);

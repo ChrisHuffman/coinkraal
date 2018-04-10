@@ -15,6 +15,8 @@ export class PortfolioPageState {
     @observable isLoadingPorfolioChartData = true;
 
     @observable transactionSummaries = [];
+    @observable pageIndex = 0;
+    pageSize = 7;
 
     @observable coinRiskChartData = { };
     
@@ -76,6 +78,7 @@ export class PortfolioPageState {
 
     @action loadTransactionSummaries() {
 
+        this.pageIndex = 0;
         this.transactionSummaryService.getTransactionSummaries(this.transactionStore.transactions, 
                         this.global.fiatOptions, 
                         this.global.coinOptions,
@@ -83,6 +86,28 @@ export class PortfolioPageState {
             .then(action(summaries => {
                 this.transactionSummaries = summaries;
             }));
+    }
+
+    @computed get transactions() {
+        var start = this.pageIndex * this.pageSize;
+        var page = this.transactionSummaries.slice(start, start + this.pageSize);
+        return page;
+    }
+
+    @action nextPage() {
+        this.pageIndex += 1;
+    }
+
+    @action previousPage() {
+        this.pageIndex -= 1;
+    }
+
+    @computed get isFirstPage() {
+        return this.pageIndex == 0;
+    }
+
+    @computed get isLastPage() {
+        return this.transactionSummaries.length - (this.pageIndex * this.pageSize) <= this.pageSize;
     }
 }
 

@@ -5,6 +5,7 @@ import LineChart from '../common/LineChart'
 import DoughnutChart from '../common/DoughnutChart'
 import PortfolioSummary from './PortfolioSummary'
 import TransactionSummaryTable from './TransactionSummaryTable'
+import TransactionSummaryTableControls from './TransactionSummaryTableControls'
 import Loader from '../common/Loader'
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
@@ -56,11 +57,21 @@ class PortfolioPage extends React.Component {
                     <div className="row">
 
                         <div className="col-lg-6">
-                            <div>
-                                <h4 className="text-primary">
-                                    Transaction Summary
-                                </h4>
-                                <TransactionSummaryTable />
+                            <div className="row">
+                                <div className="col-10">
+                                    <h4 className="text-primary">
+                                        Transaction Summary
+                                    </h4>
+                                </div>
+                                <div className="col-2 text-right">
+                                    <TransactionSummaryTableControls />
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col">
+                                    <TransactionSummaryTable />
+                                </div>
                             </div>
                         </div>
 

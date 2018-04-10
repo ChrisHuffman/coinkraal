@@ -19,7 +19,6 @@ export default class SettingPage extends React.Component {
         this.state = {
             defaultFiat: '',
             defaultCoin: '',
-            defaultChartTimeRangeDays: '',
 
             loading: true,
             updating: false,
@@ -45,8 +44,7 @@ export default class SettingPage extends React.Component {
                 this.setState({
                     loading: false,
                     defaultFiat: settings.find(s => s.name == 'defaultFiat').value,
-                    defaultCoin: settings.find(s => s.name == 'defaultCoin').value,
-                    defaultChartTimeRangeDays: settings.find(s => s.name == 'defaultChartTimeRangeDays').value,
+                    defaultCoin: settings.find(s => s.name == 'defaultCoin').value
                 })
 
             })
@@ -176,16 +174,6 @@ export default class SettingPage extends React.Component {
                                                 valueKey="symbol"
                                             />
                                         </FormGroup>
-                                        {/* <FormGroup>
-                                            <Label>Default Chart Time Range</Label>
-                                            <Input type="select" className="col-md-4">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </Input>
-                                        </FormGroup> */}
 
                                     </Form>
 
@@ -213,7 +201,7 @@ export default class SettingPage extends React.Component {
                                             Version:
                                         </div>
                                         <div className="col-md-9">
-                                            0.1
+                                            0.1 - beta
                                         </div>
                                     </div>
 
@@ -300,10 +288,10 @@ export default class SettingPage extends React.Component {
                         <button type="button" className="close" aria-label="Close" onClick={this.toggleRRDonation}><span aria-hidden="true">&times;</span></button>
                     </div>
                     <ModalBody>
-                        <iframe width="100%" height="300px" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        <iframe width="100%" height="300px" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameBorder="0" allow="autoplay; encrypted-media"></iframe>
                     </ModalBody>
                     <ModalFooter>
-                        <Button outline color="secondary" onClick={this.toggleRRDonation}>oh hell</Button>
+                        <Button outline color="secondary" onClick={this.toggleRRDonation}>got em</Button>
                     </ModalFooter>
                 </Modal>
 

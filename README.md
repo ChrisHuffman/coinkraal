@@ -14,6 +14,11 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
+- Filter by coin on transactions page
+- My holdings on summary page
+- page for summary transactions
+- sell today bug
+
 - Requery for coin summary chart is hours if low data
 - Notification on Portfolio chart to say 'TAU data only available from x date'
 - Filter on coin in transaction table

@@ -13,7 +13,8 @@ class CoinRepository {
                     if (error)
                         reject(error);
                     else {
-                        resolve(coin.links);
+                        var links = coin ? coin.links : [];
+                        resolve(links);
                     }
                 });
         })

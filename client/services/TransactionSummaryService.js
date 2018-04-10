@@ -42,7 +42,6 @@ export class TransactionSummaryService {
 
                     if (c == summary.purchaseCurrency) {
                         summary.averagePurchaseUnitPrice = averageUnitPrice;
-
                         summary.btcValue = self.getCurrentPriceInBtc(summary.currency, priceIndex) * summary.totalAmount; //Only really need this for ordering..
                     }
                     else {
@@ -60,7 +59,7 @@ export class TransactionSummaryService {
             });
 
             summaries.sort((s1, s2) => {
-                return s1.btcValue < s2.btcValue;
+                return new BigNumber(s2.btcValue.toString()).minus(s1.btcValue.toString()).toNumber();
             })
 
             resolve(summaries);

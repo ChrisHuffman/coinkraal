@@ -16,7 +16,6 @@ TODO
 ---
 - Filter by coin on transactions page
 - My holdings on summary page
-- page for summary transactions
 - sell today bug
 
 - Requery for coin summary chart is hours if low data

@@ -9,12 +9,17 @@ import TransactionSummaryPrice from './TransactionSummaryPrice'
 import TransactionSummaryProfit from './TransactionSummaryProfit'
 import TransactionSummaryValue from './TransactionSummaryValue'
 
-@inject('global', 'priceStore', 'portfolioPageState')
+@inject('global', 'priceStore', 'portfolioPageState', 'coinsPageState')
 @observer
 class TransactionSummaryTable extends React.Component {
 
     constructor(props) {
         super(props);
+        this.coinSummary = this.coinSummary.bind(this);
+    }
+
+    coinSummary(currency, event) {
+        this.props.coinsPageState.toggleCoinSummaryModal(currency);
     }
 
     render() {
@@ -53,8 +58,10 @@ class TransactionSummaryTable extends React.Component {
                         {
                             transactionSummaries.map(function (summary) {
                                 return <tr key={summary.currency}>
-                                    <td className="align-middle d-none d-sm-table-cell"><CoinLogo coin={summary.currency} /></td>
-                                    <td className="align-middle">{summary.currency}</td>
+                                    <td className="align-middle d-none d-sm-table-cell clickable" onClick={self.coinSummary.bind(this, summary.currency)}>
+                                        <CoinLogo coin={summary.currency} />
+                                    </td>
+                                    <td className="align-middle clickable" onClick={self.coinSummary.bind(this, summary.currency)}>{summary.currency}</td>
                                     <td className="align-middle">
                                         <Number amount={summary.totalAmount} />
                                     </td>

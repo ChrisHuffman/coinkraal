@@ -221,8 +221,8 @@ class TransactionTable extends React.Component {
                         </td>
                         <td className="align-middle d-none d-lg-table-cell">{this.props.commonStore.formatDate(sale.date)}</td>
                         <td className='align-middle d-none d-lg-table-cell'>
-                            <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editSale.bind(event, transaction, sale)}>Edit</Button>
-                            <Button outline color="secondary" size="xs" onClick={this.removeSale.bind(event, transaction, sale)}>Remove</Button>
+                            <Button outline color="secondary" size="xs" className="mr-10" onClick={this.editSale.bind(this, transaction, sale)}>Edit</Button>
+                            <Button outline color="secondary" size="xs" onClick={this.removeSale.bind(this, transaction, sale)}>Remove</Button>
                         </td>
                         <td className='align-middle d-table-cell d-lg-none'>
                             <UncontrolledDropdown size="sm" className="icon-dropdown">
@@ -230,8 +230,8 @@ class TransactionTable extends React.Component {
                                     <Menu className="" size={18} />
                                 </DropdownToggle>
                                 <DropdownMenu right>
-                                    <DropdownItem onClick={this.editSale.bind(event, transaction, sale)}>Edit</DropdownItem>
-                                    <DropdownItem onClick={this.removeSale.bind(event, transaction, sale)}>Remove</DropdownItem>
+                                    <DropdownItem onClick={this.editSale.bind(this, transaction, sale)}>Edit</DropdownItem>
+                                    <DropdownItem onClick={this.removeSale.bind(this, transaction, sale)}>Remove</DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
                         </td>

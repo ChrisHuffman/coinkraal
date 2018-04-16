@@ -14,6 +14,7 @@ https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-wit
 
 TODO
 ---
+
 - Filter by coin on transactions page
 - My holdings on summary page
 - sell today bug

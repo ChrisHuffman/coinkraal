@@ -219,7 +219,7 @@ export default class SettingPage extends React.Component {
                                             Contact:
                                         </div>
                                         <div className="col-md-9">
-                                            deanvniekerk@gmail.com
+                                            coinkraal.crypto@gmail.com
                                         </div>
                                     </div>
 

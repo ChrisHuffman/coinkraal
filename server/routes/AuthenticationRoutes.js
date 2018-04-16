@@ -45,6 +45,7 @@ router.post('/auth/signin', function (req, res) {
                     user.picture = payload.picture;
                     user.email = payload.email;
                     user.googleId = googleId;
+                    user.dateCreated = new Date();
                     user.settings = [];
 
                     user.save(function (err, u) {

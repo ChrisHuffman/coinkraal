@@ -49,16 +49,11 @@ router.get('/api/coins/:symbol/logo', function (req, res) {
 
             coinRepository.getCoinLogo(req.params.symbol).then(
                 function (logo) {
-                   // if(logo) {
-                        writeImageToResponse(logo, res);
-                        cache.set(cachePath, logo);
-                   // }
-                   // else {
-                   //     res.status(404).send('NOT Found');    
-                   // }
+                    writeImageToResponse(logo, res);
+                    cache.set(cachePath, logo);
                 },
                 function (err) {
-                    res.status(500).send(err);
+                    res.send(err);
                 }
             );
         }

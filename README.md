@@ -1,15 +1,7 @@
 # CoinKraal
-### keep those cryptos in check
+#### keep those cryptos in check
 
-gcloud
----
 
-gcloud app deploy -v beta-02 --promote --stop-previous-version
-
-Links:
-https://console.cloud.google.com/cloudshell/editor?project=coinkraal
-https://cloud.google.com/sdk/gcloud/reference/app/deploy
-https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
 
 
 TODO
@@ -37,8 +29,6 @@ TODO
 
 Ideas
 ---
-- setting show random Carlos Matos quotes
-- TCs no Carlos
 - Ranking
     1. Bitcoin 2009
     2. Moon
@@ -56,26 +46,83 @@ Windows
 C:\Windows\System32>taskkill /F /IM node.exe
 SUCCESS: The process "node.exe" with PID 11008 has been terminated.
 
+Deployment
+---
+
+gcloud app deploy -v beta-02 --promote --stop-previous-version
+
+Links:
+https://console.cloud.google.com/cloudshell/editor?project=coinkraal
+https://cloud.google.com/sdk/gcloud/reference/app/deploy
+https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
+
 
 Db Design
 ---
+
+### user
+
+|col name           |required   |type               |
+|-------------------|-----------|-------------------|
+|_id 	            |yes        |uuid               |
+|firstName		    |yes        |string             |
+|lastName           |yes        |string             |
+|email   	        |yes        |string             |
+|picture		    |yes        |string             |
+|googleId	        |yes        |string             |
+|dateCreated        |yes        |date               |
+|settings	        |yes        |userSettings[]     |
+
+### userSetting
+
+|col name           |required   |type               |
+|-------------------|-----------|-------------------|
+|name 	            |yes        |string             |
+|value		        |yes        |string             |
+
+
 ### transaction
 
-|col name           |required   |
-|-------------------|-----------|
-|_id 	            |yes        |
-|userId			    |yes        |
-|type(buy/sell)     |yes        |
-|in_currency   	    |no         |
-|in_amount		    |no         |
-|in_unitPriceUSD	|no         |
-|out_currency   	|no         |
-|out_amount		    |no         |
-|out_unitPriceUSD	|no         |
-|date			    |no         |
-|exchange		    |no         |
-|notes		        |no         |
-	
+|col name           |required   |type               |
+|-------------------|-----------|-------------------|
+|userId			    |yes        |uuid               |
+|date               |yes        |date               |
+|notes   	        |no         |string             |
+|currency		    |yes        |string             |
+|amount	            |yes        |float              |
+|purchaseCurrency   |yes        |string             |
+|purchaseUnitPrice	|yes        |float              |
+|exchangeRates	    |yes        |exchangeRate[]     |
+|sales			    |no         |transactionSale[]  |
 
-test
-test1
+
+### transactionSale
+
+|col name           |required   |type               |
+|-------------------|-----------|-------------------|
+|date               |yes        |date               |
+|amount   	        |yes        |float              |
+|saleCurrency		|yes        |string             |
+|saleUnitPrice	    |yes        |float              |
+|notes              |no         |string             |
+|exchangeRates	    |yes        |exchangeRate[]     |
+
+
+### exchangeRate
+
+|col name           |required   |type               |
+|-------------------|-----------|-------------------|
+|fromSymbol         |yes        |string             |
+|rates   	        |yes        |exchangeRatesRate[]|
+
+
+### exchangeRatesRate
+
+|col name           |required   |type               |
+|-------------------|-----------|-------------------|
+|symbol             |yes        |string             |
+|rate   	        |yes        |float              |
+
+
+
+	

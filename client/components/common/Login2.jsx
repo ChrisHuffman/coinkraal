@@ -9,7 +9,7 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 @inject('global', 'authStore')
 @withRouter
 @observer
-export default class Login extends React.Component {
+export default class Login2 extends React.Component {
 
     googleClientId = __GOOGLE_CLIENT_ID__;
 
@@ -72,7 +72,7 @@ export default class Login extends React.Component {
                 </div>
 
 
-                {/* <div className="row justify-content-center mt-3">
+                <div className="row justify-content-center mt-3">
 
                     <div className="col-auto">
                         <FacebookLogin
@@ -86,7 +86,7 @@ export default class Login extends React.Component {
                         />
                     </div>
 
-                </div> */}
+                </div>
 
 
             </div>

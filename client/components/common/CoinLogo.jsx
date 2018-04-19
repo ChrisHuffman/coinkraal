@@ -27,7 +27,6 @@ class CoinLogo extends React.Component {
         if(!coin)
             return (<div />)
 
-        //var url = __API_ROOT__ + `/api/coins/${coin}/logo`;
         var url = `/api/coins/${coin}/logo`;
 
         return (

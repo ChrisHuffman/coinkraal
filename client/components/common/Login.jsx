@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 
 
 @inject('global', 'authStore')
@@ -30,6 +31,11 @@ export default class Login extends React.Component {
                     this.props.history.push("/");
                 }
             });
+    }
+
+    responseFacebook(response) {
+
+       console.log(response);
     }
 
     render() {
@@ -64,6 +70,21 @@ export default class Login extends React.Component {
                     </div>
 
                 </div>
+
+
+                {/* <div className="row justify-content-center mt-5">
+
+                    <div className="col-auto">
+                        <FacebookLogin
+                            appId="432402710545930"
+                            autoLoad={true}
+                            fields="name,email,picture"
+                            callback={this.responseFacebook} 
+                        />
+                    </div>
+
+                </div> */}
+
 
             </div>
         );

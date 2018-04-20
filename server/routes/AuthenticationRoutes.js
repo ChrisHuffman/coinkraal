@@ -22,8 +22,6 @@ var authenticateUser = function (res, user, userData) {
     //If there is no user then add one
     if (user == null) {
 
-        console.log('userData: ', userData);
-
         user = new User();
         user.firstName = userData.firstName;
         user.lastName = userData.lastName;
@@ -34,8 +32,6 @@ var authenticateUser = function (res, user, userData) {
 
         user.dateCreated = new Date();
         user.settings = [];
-
-        console.log('adding user: ', user);
 
         userRespository.addUser(user)
             .then(() => {
@@ -74,8 +70,6 @@ router.post('/auth/signin/google', function (req, res) {
         userRespository.getUserByGoogleId(googleId)
             .then(user => {
 
-                console.log('user', user);
-
                 var userData = {
                     firstName: payload.given_name,
                     lastName: payload.family_name,
@@ -83,8 +77,6 @@ router.post('/auth/signin/google', function (req, res) {
                     email: payload.email,
                     googleId: googleId
                 };
-
-                console.log('userData', userData);
 
                 authenticateUser(res, user, userData);
             })

@@ -47,8 +47,6 @@ export class CoinsPageState {
                 return this.myCurrencies.indexOf(c.symbol) == -1;
             })
 
-            console.log('my coins', myCoins);
-
             myCoins.sort(this.compareValues(this.sortColumn, this.sortDirection));
         }
 

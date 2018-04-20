@@ -69,7 +69,7 @@ export class PriceStore {
     checkComplete() {
         this.loadCount--;
         if (this.loadCount == 0) {
-            console.log('Loaded prices: ', this.tempPriceIndex);
+            //console.log('Loaded prices: ', this.tempPriceIndex);
             this.priceIndex = this.tempPriceIndex;
         }
     }

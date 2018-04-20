@@ -83,7 +83,7 @@ export class ExchangeStore {
     this.loadCount--;
 
     if (this.loadCount == 0) {
-      console.log('Loaded exchanges: ', this.exchangeRates);
+      //console.log('Loaded exchanges: ', this.exchangeRates);
       resolve();
     }
   }

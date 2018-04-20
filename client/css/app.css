@@ -91,6 +91,11 @@ table .narrow {
     border-bottom-right-radius: 0.15rem !important;
 }
 
+.icon-dropdown .item-icon {
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
 .text-08 {
     font-size: 0.8rem;
 }

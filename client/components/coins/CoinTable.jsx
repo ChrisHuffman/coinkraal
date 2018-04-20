@@ -30,6 +30,7 @@ class CoinTable extends React.Component {
     render() {
         var self = this;
         var coins = this.props.coinsPageState.coins;
+
         return (
             <div>
                 <Table responsive>
@@ -48,7 +49,16 @@ class CoinTable extends React.Component {
                     <tbody>
                         {
                             coins.map(function (coin) {
-                                return <tr key={coin.symbol} onClick={self.coinSummary.bind(null, coin)} className='clickable'>
+
+                                var coinRowClass = "clickable";
+
+                                //Highlight my coins
+                                if (self.props.coinsPageState.showMyCoinsFirst && self.props.coinsPageState.pageIndex == 0) {
+                                    if(self.props.coinsPageState.myCurrencies.indexOf(coin.symbol) != -1)
+                                        coinRowClass += " bg-dark";
+                                }
+
+                                return <tr key={coin.symbol} onClick={self.coinSummary.bind(null, coin)} className={coinRowClass}>
                                     <td>{coin.rank}</td>
                                     <td><CoinLogo coin={coin.symbol} /></td>
                                     <td className="d-none d-md-table-cell">{coin.name}</td>

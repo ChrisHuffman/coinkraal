@@ -1,7 +1,9 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Button } from 'reactstrap';
+import { DropdownToggle, DropdownMenu, DropdownItem, UncontrolledButtonDropdown, Button } from 'reactstrap';
 import Filter from 'react-feather/dist/icons/filter';
+import Square from 'react-feather/dist/icons/square';
+import CheckSquare from 'react-feather/dist/icons/check-square';
 
 @inject('transactionStore', 'transactionsPageState')
 @observer
@@ -18,7 +20,6 @@ class TransactionTableControls extends React.Component {
         this.previousPage = this.previousPage.bind(this);
         this.addTransaction = this.addTransaction.bind(this);
 
-        this.toggleOptionsDropDown = this.toggleOptionsDropDown.bind(this);
         this.toggleZeroBalanceTransactions = this.toggleZeroBalanceTransactions.bind(this);
     }
 
@@ -32,12 +33,6 @@ class TransactionTableControls extends React.Component {
 
     addTransaction() {
         this.props.transactionsPageState.toggleAddTransactionModal();
-    }
-
-    toggleOptionsDropDown() {
-        this.setState({
-            optionsDropDownOpen: !this.state.optionsDropDownOpen
-        });
     }
 
     toggleZeroBalanceTransactions() {
@@ -58,22 +53,22 @@ class TransactionTableControls extends React.Component {
                 }
 
                 {this.props.transactionStore.transactions.length > 0 &&
-                    <ButtonDropdown size="sm" className="ml-2 icon-dropdown" isOpen={this.state.optionsDropDownOpen} toggle={this.toggleOptionsDropDown}>
-                        <DropdownToggle>
-                            <Filter className="" size={18} />
+                    <UncontrolledButtonDropdown size="sm" className="ml-2 icon-dropdown">
+                        <DropdownToggle className="btn-outline-secondary">
+                            <Filter size={18} />
                         </DropdownToggle>
                         <DropdownMenu right>
                             <DropdownItem onClick={this.toggleZeroBalanceTransactions}>
+                                Show Zero Balance Transactions
                                 {!this.props.transactionsPageState.showZeroBalanceTransactions &&
-                                    'Show '
+                                    <Square className="item-icon" size={16} />
                                 }
                                 {this.props.transactionsPageState.showZeroBalanceTransactions &&
-                                    'Hide '
+                                    <CheckSquare className="item-icon" size={16} />
                                 }
-                                Zero Balance Transactions
                         </DropdownItem>
                         </DropdownMenu>
-                    </ButtonDropdown>
+                    </UncontrolledButtonDropdown>
                 }
             </div>
         );

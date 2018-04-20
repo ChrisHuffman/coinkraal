@@ -77,6 +77,17 @@ export class TransactionStore {
     return new BigNumber(transaction.amount.toString()).minus(salesAmount.toString()).toNumber();
   }
 
+  getUniqueCurrencies() {
+    var currencies = this.transactions.map(t => {
+      return t.currency;
+    })
+    return currencies.filter(this.unique);
+  }
+
+  unique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+
   calculateTotalPrice(amount, purchaseUnitPrice) {
 
     if (amount == '' || purchaseUnitPrice == '')

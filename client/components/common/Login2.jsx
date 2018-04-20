@@ -12,30 +12,34 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 export default class Login2 extends React.Component {
 
     googleClientId = __GOOGLE_CLIENT_ID__;
+    facebookClientId = __FACEBOOK_CLIENT_ID__;
 
     constructor(props) {
         super(props);
         this.responseGoogle = this.responseGoogle.bind(this);
+        this.responseFacebook = this.responseFacebook.bind(this);
+        this.handleResponse = this.handleResponse.bind(this);
     }
 
     responseGoogle(response) {
-
         this.props.authStore.googleLogin(response.tokenId)
-            .then((isFirstLogin) => {
-
-                if (isFirstLogin) {
-                    this.props.global.isFirstLogin = true;
-                    this.props.history.push("/settings");
-                }
-                else {
-                    this.props.history.push("/");
-                }
-            });
+            .then(this.handleResponse);
     }
 
     responseFacebook(response) {
 
-       console.log(response);
+        this.props.authStore.facebookLogin(response.accessToken, response.email, response.userID, response.name, response.picture.data.url)
+            .then(this.handleResponse);
+    }
+
+    handleResponse(isFirstLogin) {
+        if (isFirstLogin) {
+            this.props.global.isFirstLogin = true;
+            this.props.history.push("/settings");
+        }
+        else {
+            this.props.history.push("/");
+        }
     }
 
     render() {
@@ -76,7 +80,7 @@ export default class Login2 extends React.Component {
 
                     <div className="col-auto">
                         <FacebookLogin
-                            appId="432402710545930"
+                            appId={this.facebookClientId}
                             autoLoad={true}
                             fields="name,email,picture"
                             callback={this.responseFacebook} 

@@ -13,6 +13,7 @@ var userSchema = new Schema({
   email: String,
   picture: String,
   googleId: String,
+  facebookId: String,
   dateCreated: Date,
   settings: [settingScheme]
 });

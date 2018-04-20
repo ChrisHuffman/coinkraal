@@ -201,7 +201,7 @@ export default class SettingPage extends React.Component {
                                             Version:
                                         </div>
                                         <div className="col-md-9">
-                                            0.1 - beta
+                                            0.3 - beta
                                         </div>
                                     </div>
 

@@ -2,21 +2,17 @@
 #### keep those cryptos in check
 
 
-
-
 TODO
 ---
 
 - Filter by coin on transactions page
 - My holdings on summary page
+- Accelerator Network stuck to top
 - sell today bug
 
 - Requery for coin summary chart is hours if low data
 - Notification on Portfolio chart to say 'TAU data only available from x date'
-- Filter on coin in transaction table
 - Volume on summary chart
-- why do we need to root api?
-- why do we keep getting a 401?
 - component cleanup 
     - imports that are unused
     - inject
@@ -27,34 +23,48 @@ TODO
 - nodejs warnings
     npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 
 
-Ideas
----
-- Ranking
-    1. Bitcoin 2009
-    2. Moon
-    3. Lambo
-    4. Good HODL
-    5. 
-    6. B-Cash
-    7. Heavy Bags
-    8. Ian Shillina - All Star
-    9. Total Sh*tcoin
-    10. Biitconeeeeeeect! v2.0
-
-Windows
----
-C:\Windows\System32>taskkill /F /IM node.exe
-SUCCESS: The process "node.exe" with PID 11008 has been terminated.
 
 Deployment
 ---
 
-gcloud app deploy -v beta-02 --promote --stop-previous-version
+gcloud app deploy -v beta-03 --promote --stop-previous-version
 
 Links:
+
 https://console.cloud.google.com/cloudshell/editor?project=coinkraal
 https://cloud.google.com/sdk/gcloud/reference/app/deploy
 https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
+
+
+Config Setup
+---
+
+Add config folder with 2 files
+
+    default.json
+    dev.json
+
+```json
+{
+    "db": {
+        "connection": "mongodb://user:password@address:port/db"
+    },
+    "auth": {
+        "googleClientId": "xxxxxxxxxxxxxxx.apps.googleusercontent.com",
+        "facebookClientId": "xxxxxxxxxxxxxxxxx",
+        "jwtPrivateKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+}
+```
+
+Windows Help!
+---
+
+To kill node process
+
+C:\Windows\System32>taskkill /F /IM node.exe
+
+
 
 
 Db Design
@@ -124,5 +134,16 @@ Db Design
 |rate   	        |yes        |float              |
 
 
-
-	
+Ideas
+---
+- Some king of coin Ranking??
+    1. Bitcoin 2009
+    2. Moon
+    3. Lambo
+    4. Good HODL
+    5. 
+    6. B-Cash
+    7. Heavy Bags
+    8. Ian Shillina - All Star
+    9. Total Sh*tcoin
+    10. Biitconeeeeeeect! v2.0

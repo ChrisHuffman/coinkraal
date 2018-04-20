@@ -58,8 +58,10 @@ const requests = {
 };
 
 const Auth = {
-  login: (googleTokenId) =>
-    requests.post('/auth/signin', { token: googleTokenId })
+  googleLogin: (googleTokenId) =>
+    requests.post('/auth/signin/google', { token: googleTokenId }),
+  facebookLogin: (accessToken, email, userID, name, picture) =>
+    requests.post('/auth/signin/facebook', { accessToken: accessToken, email: email, userId: userID, name: name, picture: picture })
 };
 
 const Transactions = {

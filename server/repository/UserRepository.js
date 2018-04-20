@@ -4,48 +4,46 @@ var User = require('../models/User');
 class UserRepository {
 
     getUserByGoogleId(googleId) {
+        return this.getUserByFilter({ 'googleId': googleId });
+    }
 
-        //console.log('querying for google user... Id:' + googleId);
-
-        return new Promise(function (resolve, reject) {
-
-            User.findOne({ 'googleId': googleId }, function (error, user) {
-                if (error)
-                    reject(error);
-                else
-                    resolve(user);
-            });
-        })
+    getUserByFacebookId(facebookId) {
+        return this.getUserByFilter({ 'facebookId': facebookId });
     }
 
     getUser(userId) {
+        return this.getUserByFilter({ _id: userId });
+    }
+
+    getUserByFilter(filter) {
 
         return new Promise(function (resolve, reject) {
 
-            User.findOne({ _id: userId })
+            User.findOne(filter)
                 .exec(function (error, user) {
-                    if (error)
+
+                    if (error) {
                         reject(error);
-                    else {
-
-                        if(!user) {
-                            reject();
-                            return;
-                        }
-
-                        var settings = user.settings ? user.settings : [];
-
-                        //Set defaults IF not setting exists
-                        if(!settings.find(s => s.name == 'defautFiat'))
-                            settings.push({ name: "defaultFiat", value: "USD"});
-
-                        if(!settings.find(s => s.name == 'defaultCoin'))
-                            settings.push({ name: "defaultCoin", value: "BTC"});
-
-                        user.settings = settings;
-
-                        resolve(user);
+                        return;
                     }
+
+                    if (!user) {
+                        resolve(null);
+                        return;
+                    }
+
+                    var settings = user.settings ? user.settings : [];
+
+                    //Set defaults IF not setting exists
+                    if (!settings.find(s => s.name == 'defautFiat'))
+                        settings.push({ name: "defaultFiat", value: "USD" });
+
+                    if (!settings.find(s => s.name == 'defaultCoin'))
+                        settings.push({ name: "defaultCoin", value: "BTC" });
+
+                    user.settings = settings;
+
+                    resolve(user);
                 });
         })
     }
@@ -66,6 +64,19 @@ class UserRepository {
                             resolve();
                     });
                 });
+        });
+    }
+
+    addUser(user) {
+
+        return new Promise(function (resolve, reject) {
+            user.save(function (error, user) {
+                if (error || !user) {
+                    reject(error);
+                    return;
+                }
+                resolve();
+            });
         });
     }
 

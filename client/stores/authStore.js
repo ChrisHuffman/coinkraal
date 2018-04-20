@@ -20,12 +20,20 @@ class AuthStore {
 
     @action googleLogin(googleTokenId) {
 
-        return agent.Auth.login(googleTokenId)
+        return agent.Auth.googleLogin(googleTokenId)
             .then(action((data) => {
                 this.token = data.token;
                 return data.isFirstLogin;
             }));
+    }
 
+    @action facebookLogin(accessToken, email, userID, name, picture) {
+
+        return agent.Auth.facebookLogin(accessToken, email, userID, name, picture)
+            .then(action((data) => {
+                this.token = data.token;
+                return data.isFirstLogin;
+            }));
     }
 
     @action signout() {

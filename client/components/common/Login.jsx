@@ -33,11 +33,6 @@ export default class Login extends React.Component {
             });
     }
 
-    responseFacebook(response) {
-
-       console.log(response);
-    }
-
     render() {
 
         return (
@@ -70,25 +65,6 @@ export default class Login extends React.Component {
                     </div>
 
                 </div>
-
-
-                {/* <div className="row justify-content-center mt-3">
-
-                    <div className="col-auto">
-                        <FacebookLogin
-                            appId="432402710545930"
-                            autoLoad={true}
-                            fields="name,email,picture"
-                            callback={this.responseFacebook} 
-                            render={renderProps => (
-                                <button className="btn btn-outline-primary" onClick={renderProps.onClick}>Sign in with Facebook</button>
-                              )}
-                        />
-                    </div>
-
-                </div> */}
-
-
             </div>
         );
     }

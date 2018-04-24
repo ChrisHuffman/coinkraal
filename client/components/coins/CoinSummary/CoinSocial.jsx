@@ -38,7 +38,7 @@ class CoinSocial extends React.Component {
     }
 
     getUrl(name, links) {
-        var link = this.state.links.find((l) => {
+        let link = this.state.links.find((l) => {
             return l.name == name;
         })
         return link ? link.url : '';

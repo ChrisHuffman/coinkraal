@@ -93,7 +93,7 @@ class EditSale extends React.Component {
 
     updateSale() {
 
-        var self = this;
+        let self = this;
 
         //Disable form
         self.enabled(false);
@@ -103,9 +103,9 @@ class EditSale extends React.Component {
             errors: {}
         });
 
-        var date = self.state.date ? self.state.date.toISOString() : '';
+        let date = self.state.date ? self.state.date.toISOString() : '';
 
-        var sale = {
+        let sale = {
             _id: self.state._id,
             amount: self.state.amount,
             saleCurrency: self.state.saleCurrency,
@@ -120,7 +120,7 @@ class EditSale extends React.Component {
             })
             .catch((error) => {
 
-                var errors = error.response.body.errors
+                let errors = error.response.body.errors
 
                 if (!errors) {
                     self.props.commonStore.notify('Error updating sale', 'error');
@@ -128,9 +128,9 @@ class EditSale extends React.Component {
                 }
 
                 //Format errors make sales.1.amount -> amount
-                var errorsFormatted = {};
+                let errorsFormatted = {};
                 Object.keys(errors).forEach(function (key) {
-                    var keyFormatted = key.split('.').pop();
+                    let keyFormatted = key.split('.').pop();
                     errorsFormatted[keyFormatted] = errors[key];
                 });
 

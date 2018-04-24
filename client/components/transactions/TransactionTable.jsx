@@ -78,9 +78,9 @@ class TransactionTable extends React.Component {
 
     renderTransaction(transaction) {
 
-        var clickCallback = () => this.handleRowClick(transaction._id);
+        let clickCallback = () => this.handleRowClick(transaction._id);
 
-        var expander = <span />
+        let expander = <span />
 
         if (transaction.sales && transaction.sales.length > 0) {
             expander =
@@ -89,7 +89,7 @@ class TransactionTable extends React.Component {
                 </div>
         }
 
-        var rows = [
+        let rows = [
             <tr key={'transaction-' + transaction._id} className='clickable'>
                 <td onClick={clickCallback} className='align-middle p-1'>
                     {expander}
@@ -244,10 +244,10 @@ class TransactionTable extends React.Component {
     }
 
     render() {
-        var allTransactionRows = [];
+        let allTransactionRows = [];
 
         this.props.transactionsPageState.transactions.forEach(transaction => {
-            var perTransactionRows = this.renderTransaction(transaction);
+            let perTransactionRows = this.renderTransaction(transaction);
             allTransactionRows = allTransactionRows.concat(perTransactionRows);
         });
 

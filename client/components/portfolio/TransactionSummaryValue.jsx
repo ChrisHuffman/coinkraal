@@ -18,8 +18,8 @@ class TransactionSummaryValue extends React.Component {
 
     getState(props) {
 
-        var currentPrice = props.commonStore.getCurrentPrice(props.symbol, props.summary.currency, props.priceIndex);
-        var exchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
+        let currentPrice = props.commonStore.getCurrentPrice(props.symbol, props.summary.currency, props.priceIndex);
+        let exchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
 
         return {
             value: exchanged * props.summary.totalAmount

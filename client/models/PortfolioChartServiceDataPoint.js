@@ -30,8 +30,8 @@ export class PortfolioChartServiceDataPoint {
 
     getTotal = function() {
 
-        var total = 0;
-        for (var currency in this.prices) {
+        let total = 0;
+        for (let currency in this.prices) {
             if (this.prices.hasOwnProperty(currency)) {
                 total += this.prices[currency] * this.amounts[currency];
             }

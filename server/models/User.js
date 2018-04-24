@@ -1,13 +1,13 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var settingScheme = new Schema({
+let settingScheme = new Schema({
   name: String,
   value: String
 });
 
-var userSchema = new Schema({
+let userSchema = new Schema({
   firstName: String,
   lastName: String,
   email: String,
@@ -15,6 +15,7 @@ var userSchema = new Schema({
   googleId: String,
   facebookId: String,
   dateCreated: Date,
+  lastLogin: Date,
   settings: [settingScheme]
 });
 

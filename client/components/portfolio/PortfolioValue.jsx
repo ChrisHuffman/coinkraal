@@ -18,12 +18,12 @@ class PortfolioValue extends React.Component {
 
     getState(props) {
 
-        var total = 0;
+        let total = 0;
 
         props.transactions.forEach(transaction => {
 
-            var currentPrice = props.commonStore.getCurrentPrice(props.symbol, transaction.currency, props.priceIndex);
-            var exchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
+            let currentPrice = props.commonStore.getCurrentPrice(props.symbol, transaction.currency, props.priceIndex);
+            let exchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
             
             total += (exchanged * this.props.transactionStore.getTransactionAmountBalance(transaction));
         });

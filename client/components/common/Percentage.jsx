@@ -15,12 +15,12 @@ class Percentage extends React.Component {
 
     getState(props) {
 
-        var value = '?';
+        let value = '?';
 
         if(!CommonService.isNaN(props.value)) {
             
-            var minimumFractionDigits = 2;
-            var maximumFractionDigits = 2;
+            let minimumFractionDigits = 2;
+            let maximumFractionDigits = 2;
 
             if(props.value >= 10 || props.value <= -10 || props.value % 1 == 0) {
                 maximumFractionDigits = 0;
@@ -33,7 +33,7 @@ class Percentage extends React.Component {
             }) + '%';
         }
 
-        var colorClass = '';
+        let colorClass = '';
         if(props.value < 0)
             colorClass = 'text-danger';
         if(props.value > 0)

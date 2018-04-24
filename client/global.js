@@ -67,7 +67,7 @@ export class Global {
 
                 this.setProfilePictureUrl(user.picture);
 
-                var settings = user.settings;
+                let settings = user.settings;
                 this.setSelectedFiat(settings.find(s => s.name == 'defaultFiat').value);
                 this.setSelectedCoin(settings.find(s => s.name == 'defaultCoin').value);
 

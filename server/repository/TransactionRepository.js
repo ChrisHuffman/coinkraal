@@ -239,25 +239,18 @@ class TransactionRepository {
 
         var rate = ratesIn.pop();
 
-        //console.log('=======================================')
-
         //Apply weighting
         var weighting = new BigNumber(btcExchangeRate.toString()).dividedBy(toRate.toString());
 
-        //console.log('ex1 -> ' + ex1)
-
-        //Now convert to exchange we actually 
+        //Now convert to exchange we actually need
         var baseCurrency = 'BTC';
 
         self.exchange(baseCurrency, [rate.symbol], date)
             .then(finalExchangeRate => {
 
-                //console.log('2. ------------------------------------')
-
                 //No btc conversion, nothing we can do
                 if (finalExchangeRate == 0) {
                     //console.log('No btc conversion, nothing we can do')
-                    //ratesOut.push(rate);
                     self.checkExchangeRates(fromSymbol, toSymbol, toRate, btcExchangeRate, date, ratesIn, ratesOut, resolve);
                     return;
                 }
@@ -325,6 +318,7 @@ class TransactionRepository {
             calculationType: 'MidHighLow'
         }
 
+        //Move this to call to PriceRepository?
         return superagent.get('https://min-api.cryptocompare.com/data/pricehistorical')
             .query(query)
             .end((err, resp) => {

@@ -30,7 +30,7 @@ class CoinSummaryModal extends React.Component {
     }
 
     getUrl(name, links) {
-        var link = links.find((l) => {
+        let link = links.find((l) => {
             return l.name == name;
         })
         return link ? link.url : '';
@@ -42,7 +42,7 @@ class CoinSummaryModal extends React.Component {
             return;
 
         this.props.coinsPageState.loadCoinChartData();
-        var coin =  this.props.coinStore.getCoin(nextProps.coinSymbol);
+        let coin =  this.props.coinStore.getCoin(nextProps.coinSymbol);
 
         this.props.coinStore.getCoinLinks(nextProps.coinSymbol)
             .then((links) => {

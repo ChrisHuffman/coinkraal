@@ -18,14 +18,14 @@ class CommonStore {
   }
 
   getErrorMessage(errors, fieldName, hide) {
-    var error = errors[fieldName];
+    let error = errors[fieldName];
     if (!error || hide)
       return '';
     return error.message;
   }
 
   getErrorClass(errors, fieldName, hide) {
-    var error = errors[fieldName];
+    let error = errors[fieldName];
     if (!error || hide)
       return '';
     return 'is-invalid';
@@ -36,7 +36,7 @@ class CommonStore {
     if (symbol == toSymbol)
       return price;
 
-    var rate = exchangeRates.rates.find((r) => {
+      let rate = exchangeRates.rates.find((r) => {
       return r.symbol == symbol;
     })
 
@@ -74,13 +74,13 @@ class CommonStore {
     if(this.isNaN(sellingPrice) || this.isNaN(costPrice))
       return ""
 
-    var sp = new BigNumber(sellingPrice.toString());
-    var cp = new BigNumber(costPrice.toString());
+    let sp = new BigNumber(sellingPrice.toString());
+    let cp = new BigNumber(costPrice.toString());
 
     if (sp.isEqualTo(cp))
       return 0;
 
-    var isGain = sp.isGreaterThan(cp);
+    let isGain = sp.isGreaterThan(cp);
 
     if (isGain)
       return sp.minus(cp).dividedBy(cp).multipliedBy(100).toNumber();

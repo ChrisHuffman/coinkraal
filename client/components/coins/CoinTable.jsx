@@ -28,8 +28,8 @@ class CoinTable extends React.Component {
     }
 
     render() {
-        var self = this;
-        var coins = this.props.coinsPageState.coins;
+        let self = this;
+        let coins = this.props.coinsPageState.coins;
 
         return (
             <div>
@@ -50,7 +50,7 @@ class CoinTable extends React.Component {
                         {
                             coins.map(function (coin) {
 
-                                var coinRowClass = "clickable";
+                                let coinRowClass = "clickable";
 
                                 //Highlight my coins
                                 if (self.props.coinsPageState.showMyCoinsFirst && self.props.coinsPageState.pageIndex == 0) {

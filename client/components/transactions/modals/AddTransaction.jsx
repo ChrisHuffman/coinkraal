@@ -72,7 +72,7 @@ class AddTransaction extends React.Component {
 
     addTransaction() {
 
-        var self = this;
+        let self = this;
 
         //Disable form
         self.enabled(false);
@@ -82,9 +82,9 @@ class AddTransaction extends React.Component {
             errors: {}
         });
 
-        var date = self.state.date ? self.state.date.toISOString() : '';
+        let date = self.state.date ? self.state.date.toISOString() : '';
 
-        var transaction = {
+        let transaction = {
             currency: self.state.currency,
             amount: self.state.amount,
             purchaseCurrency: self.state.purchaseCurrency,

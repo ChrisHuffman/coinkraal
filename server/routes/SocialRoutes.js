@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-const superagent = require('superagent');
+var superagent = require('superagent');
 
 var router = express.Router();
 
@@ -16,10 +16,10 @@ router.get('/api/social/reddit', function (req, res) {
             
             res.setHeader('content-type', 'text/plain');
 
-            var html = resp.text;
+            let html = resp.text;
 
-            var start = html.indexOf('.write("') + 8;
-            var end = html.indexOf('");') 
+            let start = html.indexOf('.write("') + 8;
+            let end = html.indexOf('");') 
 
             html = html.substring(start, end);
             html = html.replace(/\\/g, "");

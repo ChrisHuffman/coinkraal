@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-const superagent = require('superagent');
+var superagent = require('superagent');
 var Cacheman = require('cacheman');
 
 var CoinRepository = require('../repository/CoinRepository');
@@ -36,7 +36,7 @@ router.get('/api/coins/:symbol/links', function (req, res) {
 
 router.get('/api/coins/:symbol/logo', function (req, res) {
 
-    var cachePath = `/api/coins/${req.params.symbol}/logo`;
+    let cachePath = `/api/coins/${req.params.symbol}/logo`;
 
     cache.get(cachePath, function (err, value) {
 

@@ -65,7 +65,6 @@ export default class Layout extends React.Component {
           <div className="container-fluid">
             <div className="row justify-content-center">
               <div className="col-auto mt-40">
-                {/* <Loader visible={!this.props.global.isLoaded} /> */}
                 loading....
               </div>
             </div>

@@ -70,7 +70,7 @@ export class TransactionStore {
     if (!transaction.sales || transaction.sales.length == 0)
       return transaction.amount;
 
-    var salesAmount = transaction.sales
+    let salesAmount = transaction.sales
       .map(s => s.amount)
       .reduce((a1, a2) => a1 + a2, 0);
 
@@ -78,7 +78,7 @@ export class TransactionStore {
   }
 
   getUniqueCurrencies() {
-    var currencies = this.transactions.map(t => {
+    let currencies = this.transactions.map(t => {
       return t.currency;
     })
     return currencies.filter(this.unique);

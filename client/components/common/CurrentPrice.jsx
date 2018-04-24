@@ -18,7 +18,7 @@ class CurrentPrice extends React.Component {
 
     getState(props) {
 
-        var currentPrice = props.commonStore.getCurrentPrice(props.currentSymbol, props.targetSymbol, props.priceIndex);
+        let currentPrice = props.commonStore.getCurrentPrice(props.currentSymbol, props.targetSymbol, props.priceIndex);
 
         return {
             from: currentPrice.from,

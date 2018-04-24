@@ -91,7 +91,7 @@ class EditTransaction extends React.Component {
 
     updateTransaction() {
 
-        var self = this;
+        let self = this;
 
         //Disable form
         self.enabled(false);
@@ -101,9 +101,9 @@ class EditTransaction extends React.Component {
             errors: {}
         });
 
-        var date = self.state.date ? self.state.date.toISOString() : '';
+        let date = self.state.date ? self.state.date.toISOString() : '';
 
-        var transaction = {
+        let transaction = {
             _id: self.state._id,
             currency: self.state.currency,
             amount: self.state.amount,

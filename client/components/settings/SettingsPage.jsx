@@ -40,7 +40,7 @@ export default class SettingPage extends React.Component {
 
         this.props.userStore.getUser()
             .then(user => {
-                var settings = user.settings;
+                let settings = user.settings;
                 this.setState({
                     loading: false,
                     defaultFiat: settings.find(s => s.name == 'defaultFiat').value,
@@ -56,7 +56,7 @@ export default class SettingPage extends React.Component {
             updating: true
         });
 
-        var dto = [
+        let dto = [
             { name: 'defaultFiat', value: this.state.defaultFiat },
             { name: 'defaultCoin', value: this.state.defaultCoin }
         ];

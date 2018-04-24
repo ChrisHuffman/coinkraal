@@ -51,8 +51,8 @@ const External1 = {
   getCoinExchanges: (fromCurrency, toCurrency, limit) => requests.get(`${API_ROOT1}/data/top/exchanges/full?fsym=${fixSym(fromCurrency)}&tsym=${fixSym(toCurrency)}&limit=${limit}`).then(body => body.Data.Exchanges),
   getPrice: (fromCurrency, toCurrencies) => requests.get(`${API_ROOT1}/data/price?fsym=${fixSym(fromCurrency)}&tsyms=${fixSyms(toCurrencies).join(',')}`)
     .then(data => {
-        var d = {};
-        for (var s in data) {
+        let d = {};
+        for (let s in data) {
             if (data.hasOwnProperty(s)) {
                 d[fixSymInv(s)] = data[s];
             }

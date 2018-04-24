@@ -4,7 +4,7 @@
 
 TODO
 ---
-
+- facebook login, get my email not id
 - Dont show zero coins in coins page
 - Filter by coin on transactions page
 - My holdings on summary page

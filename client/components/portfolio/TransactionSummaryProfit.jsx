@@ -18,10 +18,10 @@ class TransactionSummaryProfit extends React.Component {
 
     getState(props) {
 
-        var purchasePrice = props.commonStore.getExchangeRate(props.symbol, props.summary.purchaseCurrency, props.summary.averagePurchaseUnitPrice, props.summary.averagedExchangeRates)
+        let purchasePrice = props.commonStore.getExchangeRate(props.symbol, props.summary.purchaseCurrency, props.summary.averagePurchaseUnitPrice, props.summary.averagedExchangeRates)
 
-        var currentPrice = props.commonStore.getCurrentPrice(props.symbol, props.summary.currency, props.priceIndex);
-        var currentPriceExchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
+        let currentPrice = props.commonStore.getCurrentPrice(props.symbol, props.summary.currency, props.priceIndex);
+        let currentPriceExchanged = props.exchangeStore.exchange(currentPrice.amount, currentPrice.from, props.symbol);
 
         return {
             value: props.commonStore.getPercentageChange(currentPriceExchanged, purchasePrice)

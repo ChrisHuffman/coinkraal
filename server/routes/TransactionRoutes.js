@@ -11,19 +11,15 @@ var transactionRepository = new TransactionRepository();
 router.get('/api/transactions', function (req, res) {
 
   transactionRepository.getTransactions(req.user._id).then(
-    function (transactions) {
-      res.json(transactions);
-    },
-    function (err) {
-      res.send(err);
-    }
+    (transactions) => { res.json(transactions); },
+    (err) => { res.send(err); }
   );
 
 });
 
 router.route('/api/transactions/add').post(function (req, res) {
 
-  var transaction = new Transaction();
+  let transaction = new Transaction();
   transaction.userId = req.user._id;
   transaction.date = req.body.date ? new Date(req.body.date) : "";
   transaction.exchange = req.body.exchange;
@@ -41,7 +37,7 @@ router.route('/api/transactions/add').post(function (req, res) {
 
 router.route('/api/transactions/update').put(function (req, res) {
 
-  var transaction = {
+  let transaction = {
     date: req.body.date ? new Date(req.body.date) : "",
     exchange: req.body.exchange,
     notes: req.body.notes,
@@ -58,7 +54,7 @@ router.route('/api/transactions/update').put(function (req, res) {
 
 router.route('/api/transactions/remove').delete(function (req, res) {
 
-  var id = req.query.id;
+  let id = req.query.id;
   transactionRepository.removeTransaction(id)
     .then(() => res.send(''))
     .catch((error) => res.status(500).send(''));

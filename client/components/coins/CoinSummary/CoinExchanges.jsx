@@ -24,7 +24,7 @@ class CoinExchanges extends React.Component {
 
     loadExchanges(coin) {
 
-        var toSymbol = "BTC";
+        let toSymbol = "BTC";
         if (coin.symbol == "BTC")
             toSymbol = "USD";
 
@@ -38,9 +38,9 @@ class CoinExchanges extends React.Component {
     }
 
     render() {
-        var self = this;
-        var exchanges = this.state.exchanges;
-        var fromSymbol = this.state.fromSymbol;
+        let self = this;
+        let exchanges = this.state.exchanges;
+        let fromSymbol = this.state.fromSymbol;
 
         return (
             <div>

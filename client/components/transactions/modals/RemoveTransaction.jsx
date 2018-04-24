@@ -21,7 +21,7 @@ class RemoveTransaction extends React.Component {
 
     removeTransaction() {
 
-        var self = this;
+        let self = this;
         self.enabled(false);
 
         self.props.transactionStore.removeTransaction(self.props.transactionsPageState.selectedTransaction._id)

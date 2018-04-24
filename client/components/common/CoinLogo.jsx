@@ -22,12 +22,12 @@ class CoinLogo extends React.Component {
 
     render() {
 
-        var coin = this.props.coin;
+        let coin = this.props.coin;
 
         if(!coin)
-            return (<div />)
+            return (<div />);
 
-        var url = `/api/coins/${coin}/logo`;
+        let url = `/api/coins/${coin}/logo`;
 
         return (
             <img src={url} width={21} height={21} />

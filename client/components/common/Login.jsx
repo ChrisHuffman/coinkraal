@@ -4,7 +4,7 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
-
+import Loader from './Loader'
 
 @inject('global', 'authStore')
 @withRouter
@@ -15,10 +15,26 @@ export default class Login extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            signingIn: false,
+            errorMessage: ''
+        };
+
         this.responseGoogle = this.responseGoogle.bind(this);
+        this.signingIn = this.signingIn.bind(this);
     }
 
     responseGoogle(response) {
+
+        if (response.error) {
+            console.log(response);
+            this.setState({
+                signingIn: false,
+                errorMessage: 'Error signing in'
+            });
+            return;
+        }
 
         this.props.authStore.googleLogin(response.tokenId)
             .then((isFirstLogin) => {
@@ -33,38 +49,68 @@ export default class Login extends React.Component {
             });
     }
 
+    signingIn = function () {
+        this.setState({
+            signingIn: true,
+            errorMessage: ''
+        });
+    }
+
     render() {
 
         return (
-            <div>
+            <div className="container-fluid">
 
-                <div className="row justify-content-center mt-5">
-                    <div className="col-8 col-sm-5 col-md-3 col-lg-2">
-                        <img src="logo_full.png" width="100%" />
+                {!this.state.signingIn &&
+                    <div>
+                        <div className="row justify-content-center mt-5">
+                            <div className="col-8 col-sm-5 col-md-3 col-lg-2">
+                                <img src="logo_full.png" width="100%" />
+                            </div>
+                        </div>
+
+                        <div className="row justify-content-center mt-4 mb-3">
+                            <div className="col-auto">
+                                <p className="text-muted font-italic">
+                                    keep those cryptos in check
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="row justify-content-center mt-5">
+
+                            <div className="col-auto">
+                                <GoogleLogin
+                                    clientId={this.googleClientId}
+                                    buttonText="Sign in with Google"
+                                    className="btn btn-outline-danger login-btn"
+                                    onRequest={this.signingIn}
+                                    onSuccess={this.responseGoogle}
+                                    onFailure={this.responseGoogle}
+                                />
+                            </div>
+
+                        </div>
+
+                        <div className="row justify-content-center mt-4 mb-3">
+                            <div className="col-auto">
+                                <p className="text-danger">
+                                    {this.state.errorMessage}
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
+                }
 
-                <div className="row justify-content-center mt-4 mb-3">
-                    <div className="col-auto">
-                        <p className="text-muted font-italic">
-                            keep those cryptos in check
-                        </p>
+                {this.state.signingIn &&
+                    <div className="row justify-content-center">
+                        <div className="col-auto mt-40">
+                            signing in....
+                        </div>
                     </div>
-                </div>
+                }
 
-                <div className="row justify-content-center mt-5">
-
-                    <div className="col-auto">
-                        <GoogleLogin
-                            clientId={this.googleClientId}
-                            buttonText="Sign in with Google"
-                            className="btn btn-outline-danger"
-                            onSuccess={this.responseGoogle}
-                            onFailure={this.responseGoogle}
-                        />
-                    </div>
-
-                </div>
             </div>
         );
     }

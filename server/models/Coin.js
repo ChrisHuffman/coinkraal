@@ -1,14 +1,14 @@
 
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var linkScheme = new Schema({
+let linkScheme = new Schema({
     name: String,
     url: String
 });
 
-var coinSchema = new Schema({
+let coinSchema = new Schema({
     name: String,
     symbol: String,
     logoUrl_32x32: String,

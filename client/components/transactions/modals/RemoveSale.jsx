@@ -21,7 +21,7 @@ class RemoveSale extends React.Component {
 
     removeSale() {
 
-        var self = this;
+        let self = this;
         self.enabled(false);
 
         self.props.transactionStore.removeSale(self.props.transactionsPageState.selectedTransaction._id, self.props.transactionsPageState.selectedSale._id)

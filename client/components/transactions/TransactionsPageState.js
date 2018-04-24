@@ -56,8 +56,8 @@ export class TransactionsPageState {
 
     @computed get transactions() {
 
-        var start = this.pageIndex * this.pageSize;
-        var page = this.filteredTransactions.slice(start, start + this.pageSize);
+        let start = this.pageIndex * this.pageSize;
+        let page = this.filteredTransactions.slice(start, start + this.pageSize);
 
         //Sort?
         return page;

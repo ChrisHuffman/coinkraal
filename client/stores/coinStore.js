@@ -14,7 +14,7 @@ export class CoinStore {
 
   @action loadCoins() {
 
-    var self = this;
+    let self = this;
     self.isLoading = true;
 
     return new Promise(function (resolve, reject) {
@@ -23,7 +23,7 @@ export class CoinStore {
         .then(action((coins) => {
           self.coins = coins.map(c => {
 
-            var coin = new Coin(c.symbol, c.name);
+            let coin = new Coin(c.symbol, c.name);
             coin.rank = parseInt(c.rank);
             coin.priceUsd = parseFloat(c.price_usd);
             coin.priceBtc = parseFloat(c.price_btc);
@@ -52,7 +52,7 @@ export class CoinStore {
 
   getUnitPrice(fromCurrency, toCurrency, date) {
 
-    var self = this;
+    let self = this;
 
     return new Promise(function (resolve, reject) {
 
@@ -61,11 +61,11 @@ export class CoinStore {
         return;
       }
 
-      var now = moment();
-      var dateParsed = moment(date);
+      let now = moment();
+      let dateParsed = moment(date);
 
-      var isToday = now.diff(dateParsed, 'days') == 0;
-      var unix = isToday ? now.unix() : dateParsed.unix();
+      let isToday = now.diff(dateParsed, 'days') == 0;
+      let unix = isToday ? now.unix() : dateParsed.unix();
 
       self.getHistoricalPrice(fromCurrency, toCurrency, unix)
         .then(price => {

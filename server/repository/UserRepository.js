@@ -1,5 +1,5 @@
 
-var User = require('../models/User');
+let User = require('../models/User');
 
 class UserRepository {
 
@@ -11,16 +11,20 @@ class UserRepository {
         return this.getUserByFilter({ 'facebookId': facebookId });
     }
 
+    getUserByEmail(email) {
+        return this.getUserByFilter({ 'email': email });
+    }
+
     getUser(userId) {
         return this.getUserByFilter({ _id: userId });
     }
 
     getUserByFilter(filter) {
 
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
 
             User.findOne(filter)
-                .exec(function (error, user) {
+                .exec((error, user) => {
 
                     if (error) {
                         reject(error);
@@ -32,7 +36,7 @@ class UserRepository {
                         return;
                     }
 
-                    var settings = user.settings ? user.settings : [];
+                    let settings = user.settings ? user.settings : [];
 
                     //Set defaults IF not setting exists
                     if (!settings.find(s => s.name == 'defautFiat'))
@@ -50,14 +54,12 @@ class UserRepository {
 
     updateSettings(userId, newSettings) {
 
-        var self = this;
+        return new Promise((resolve, reject) => {
 
-        return new Promise(function (resolve, reject) {
-
-            self.getUser(userId)
+            this.getUser(userId)
                 .then(user => {
                     user.settings = newSettings;
-                    user.save(function (err) {
+                    user.save(err => {
                         if (err)
                             reject(err);
                         else
@@ -69,14 +71,40 @@ class UserRepository {
 
     addUser(user) {
 
-        return new Promise(function (resolve, reject) {
-            user.save(function (error, user) {
+        return new Promise((resolve, reject) => {
+            user.save((error, user) => {
                 if (error || !user) {
                     reject(error);
                     return;
                 }
                 resolve();
             });
+        });
+    }
+
+    updateUser(id, user) {
+
+        return new Promise((resolve, reject) => {
+
+            this.getUser(id)
+                .then(toUpdate => {
+
+                    toUpdate.firstName = user.firstName;
+                    toUpdate.lastName = user.lastName;
+                    toUpdate.picture = user.picture;
+                    toUpdate.email = user.email;
+                    toUpdate.googleId = user.googleId;
+                    toUpdate.facebookId = user.facebookId;
+                    toUpdate.lastLogin = user.lastLogin;
+
+                    toUpdate.save(function (err) {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve();
+                    });
+
+                });
         });
     }
 

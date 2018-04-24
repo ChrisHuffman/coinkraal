@@ -1,5 +1,5 @@
 
-var Coin = require('../models/Coin');
+let Coin = require('../models/Coin');
 
 class CoinRepository {
 
@@ -13,7 +13,7 @@ class CoinRepository {
                     if (error)
                         reject(error);
                     else {
-                        var links = coin ? coin.links : [];
+                        let links = coin ? coin.links : [];
                         resolve(links);
                     }
                 });

@@ -4,11 +4,8 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var UserRespository = require('../repository/UserRepository');
 
-var router = express.Router();
-
 var User = require('../models/User')
 var userRespository = new UserRespository();
-
 
 router.get('/api/user', function (req, res) {
 

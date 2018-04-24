@@ -1,14 +1,14 @@
-var mongoose = require('mongoose');
-var moment = require('moment');
+let mongoose = require('mongoose');
+let moment = require('moment');
 
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var rateScheme = new Schema({
+let rateScheme = new Schema({
   symbol: { type: String, required: true },
   rate: { type: Number,required: true }
 });
 
-var exchangeRatesScheme = new Schema({
+let exchangeRatesScheme = new Schema({
   fromSymbol: {
     type: String,
     required: true
@@ -16,7 +16,7 @@ var exchangeRatesScheme = new Schema({
   rates: [rateScheme]
 });
 
-var saleScheme = new Schema({
+let saleScheme = new Schema({
   date: {
     type: Date,
     required: [true, 'Date required']
@@ -40,7 +40,7 @@ var saleScheme = new Schema({
   exchangeRates: exchangeRatesScheme
 });
 
-var transactionSchema = new Schema({
+let transactionSchema = new Schema({
   userId: {
     type: String,
     required: true
@@ -74,7 +74,7 @@ var transactionSchema = new Schema({
     validate: {
       validator: function (value) {
 
-        var totalSales = 0;
+        let totalSales = 0;
         this.sales.forEach(sale => {
           totalSales += sale.amount;
         });

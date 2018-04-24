@@ -22,7 +22,7 @@ export class PriceStore {
         this.loadCount = 2;
         this.tempPriceIndex = {}
 
-        var coins = this.getUniqueCurrencies(transactions);
+        let coins = this.getUniqueCurrencies(transactions);
 
         if (coins.length == 0)
             return;
@@ -35,10 +35,10 @@ export class PriceStore {
 
     @action loadIndex(fromSymbol, coins, resolve) {
 
-        var self = this;
+        let self = this;
 
-        var chunckSize = 5; //Max = 30 (5 * 4 + 5 = 25)
-        var chunck = coins.splice(0, chunckSize);
+        let chunckSize = 5; //Max = 30 (5 * 4 + 5 = 25)
+        let chunck = coins.splice(0, chunckSize);
 
         if (!self.tempPriceIndex[fromSymbol])
             self.tempPriceIndex[fromSymbol] = {};
@@ -56,7 +56,7 @@ export class PriceStore {
     }
 
     getUniqueCurrencies(transactions) {
-        var currencies = transactions.map(t => {
+        let currencies = transactions.map(t => {
             return t.currency;
         })
         return currencies.filter(this.unique);

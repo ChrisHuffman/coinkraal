@@ -89,8 +89,8 @@ export class PortfolioPageState {
     }
 
     @computed get transactions() {
-        var start = this.pageIndex * this.pageSize;
-        var page = this.transactionSummaries.slice(start, start + this.pageSize);
+        let start = this.pageIndex * this.pageSize;
+        let page = this.transactionSummaries.slice(start, start + this.pageSize);
         return page;
     }
 

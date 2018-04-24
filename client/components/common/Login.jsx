@@ -4,7 +4,7 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
-import Loader from './Loader'
+
 
 @inject('global', 'authStore')
 @withRouter
@@ -12,6 +12,7 @@ import Loader from './Loader'
 export default class Login extends React.Component {
 
     googleClientId = __GOOGLE_CLIENT_ID__;
+    facebookClientId = __FACEBOOK_CLIENT_ID__;
 
     constructor(props) {
         super(props);
@@ -22,31 +23,22 @@ export default class Login extends React.Component {
         };
 
         this.responseGoogle = this.responseGoogle.bind(this);
+        this.responseFacebook = this.responseFacebook.bind(this);
+        this.handleResponse = this.handleResponse.bind(this);
+        this.errorSigningIn = this.errorSigningIn.bind(this);
         this.signingIn = this.signingIn.bind(this);
     }
 
     responseGoogle(response) {
 
-        if (response.error) {
-            console.log(response);
-            this.setState({
-                signingIn: false,
-                errorMessage: 'Error signing in'
-            });
-            return;
-        }
-
         this.props.authStore.googleLogin(response.tokenId)
-            .then((isFirstLogin) => {
+            .then(this.handleResponse);
+    }
 
-                if (isFirstLogin) {
-                    this.props.global.isFirstLogin = true;
-                    this.props.history.push("/settings");
-                }
-                else {
-                    this.props.history.push("/");
-                }
-            });
+    responseFacebook(response) {
+
+        this.props.authStore.facebookLogin(response.accessToken, response.email, response.userID, response.name, response.picture.data.url)
+            .then(this.handleResponse);
     }
 
     signingIn = function () {
@@ -54,6 +46,24 @@ export default class Login extends React.Component {
             signingIn: true,
             errorMessage: ''
         });
+    }
+
+    errorSigningIn = function (response) {
+        console.log(response);
+        this.setState({
+            signingIn: false,
+            errorMessage: 'Error signing in'
+        });
+    }
+
+    handleResponse(isFirstLogin) {
+        if (isFirstLogin) {
+            this.props.global.isFirstLogin = true;
+            this.props.history.push("/settings");
+        }
+        else {
+            this.props.history.push("/");
+        }
     }
 
     render() {
@@ -84,9 +94,28 @@ export default class Login extends React.Component {
                                     clientId={this.googleClientId}
                                     buttonText="Sign in with Google"
                                     className="btn btn-outline-danger login-btn"
-                                    onRequest={this.signingIn}
                                     onSuccess={this.responseGoogle}
-                                    onFailure={this.responseGoogle}
+                                    onFailure={this.errorSigningIn}
+                                    onRequest={this.signingIn}
+                                />
+                            </div>
+
+                        </div>
+
+
+                        <div className="row justify-content-center mt-3">
+
+                            <div className="col-auto">
+                                <FacebookLogin
+                                    appId={this.facebookClientId}
+                                    autoLoad={true}
+                                    fields="name,email,picture"
+                                    callback={this.responseFacebook}
+                                    onFailure={this.errorSigningIn}
+                                    onClick={this.signingIn}
+                                    render={renderProps => (
+                                        <button className="btn btn-outline-primary login-btn" onClick={renderProps.onClick}>Sign in with Facebook</button>
+                                    )}
                                 />
                             </div>
 

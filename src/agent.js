@@ -1,8 +1,9 @@
 import superagentPromise from 'superagent-promise';
 import _superagent from 'superagent';
-import authStore from './stores/authStore';
+import TokenStore from './stores/tokenStore';
 
 const superagent = superagentPromise(_superagent, global.Promise);
+const tokenStore = new TokenStore();
 
 const API_ROOT = '';
 
@@ -10,7 +11,7 @@ const encode = encodeURIComponent;
 
 const handleErrors = err => {
   if (err && err.response && err.response.status === 401) {
-    authStore.signout();
+    tokenStore.signout();
   }
   return err;
 };
@@ -19,8 +20,8 @@ const responseBody = res => res.body;
 const responseText = res => res.text;
 
 const tokenPlugin = req => {
-  if (authStore.token) {
-    req.set('Authorization', `Bearer ${authStore.token}`);
+  if (tokenStore.token) {
+    req.set('Authorization', `Bearer ${tokenStore.token}`);
   }
 };
 
@@ -88,7 +89,7 @@ const Social = {
 };
 
 const User = {
-  getUser: () => requests.get(`/api/user`).catch(err => { authStore.signout() }),
+  getUser: () => requests.get(`/api/user`).catch(err => { tokenStore.signout() }),
   updateSettings: (settings) => requests.post(`/api/user/settings`, settings)
 };
 

@@ -108,7 +108,7 @@ export default class Login extends React.Component {
                             <div className="col-auto">
                                 <FacebookLogin
                                     appId={this.facebookClientId}
-                                    autoLoad={true}
+                                    autoLoad={false}
                                     fields="name,email,picture"
                                     callback={this.responseFacebook}
                                     onFailure={this.errorSigningIn}

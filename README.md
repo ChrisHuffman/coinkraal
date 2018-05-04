@@ -2,29 +2,7 @@
 #### keep those cryptos in check
 
 
-TODO
----
-- facebook login, get my email not id
-- Dont show zero coins in coins page
-- Filter by coin on transactions page
-- My holdings on summary page
-- Accelerator Network stuck to top
-- sell today bug
-
-- Requery for coin summary chart is hours if low data
-- Notification on Portfolio chart to say 'TAU data only available from x date'
-- Volume on summary chart
-- component cleanup 
-    - imports that are unused
-    - inject
-    - @withrouter
-    - @observer
-- have sell and buy dots on the chart
-
-- nodejs warnings
-    npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 
-
-Inital Setup
+Setup
 ---
 
 ```
@@ -67,6 +45,7 @@ Add config folder with 2 files
 
     default.json
     dev.json
+    
 
 ```json
 {
@@ -80,6 +59,29 @@ Add config folder with 2 files
     }
 }
 ```
+
+TODO
+---
+- Handle: getUser: () => requests.get(`/api/user`).catch(err => { authStore.signout() }),
+- Dont pass auth to ext apis
+- Dont show zero coins in coins page
+- Filter by coin on transactions page
+- My holdings on summary page
+- Accelerator Network stuck to top
+- sell today bug
+
+- Requery for coin summary chart is hours if low data
+- Notification on Portfolio chart to say 'TAU data only available from x date'
+- Volume on summary chart
+- component cleanup 
+    - imports that are unused
+    - inject
+    - @withrouter
+    - @observer
+- have sell and buy dots on the chart
+
+- nodejs warnings
+    npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 
 
 Windows Help!
 ---

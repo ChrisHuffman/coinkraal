@@ -1,45 +1,29 @@
-import { observable, action, reaction } from 'mobx';
-import agent from '../agent';
 
 class AuthStore {
 
-    @observable token = window.localStorage.getItem('jwt');
-
-    constructor() {
-        reaction(
-            () => this.token,
-            token => {
-                if (token) {
-                    window.localStorage.setItem('jwt', token);
-                } else {
-                    window.localStorage.removeItem('jwt');
-                }
-            }
-        );
+    constructor(agent, tokenStore) {
+        this.agent = agent;
+        this.tokenStore = tokenStore;
     }
 
-    @action googleLogin(googleTokenId) {
+    googleLogin(googleTokenId) {
 
-        return agent.Auth.googleLogin(googleTokenId)
-            .then(action((data) => {
-                this.token = data.token;
+        return this.agent.Auth.googleLogin(googleTokenId)
+            .then((data) => {
+                this.tokenStore.setToken(data.token);
                 return data.isFirstLogin;
-            }));
+            });
     }
 
-    @action facebookLogin(accessToken, email, userID, name, picture) {
+    facebookLogin(accessToken, email, userID, name, picture) {
 
-        return agent.Auth.facebookLogin(accessToken, email, userID, name, picture)
-            .then(action((data) => {
-                this.token = data.token;
+        return this.agent.Auth.facebookLogin(accessToken, email, userID, name, picture)
+            .then((data) => {
+                this.tokenStore.setToken(data.token);
                 return data.isFirstLogin;
-            }));
-    }
-
-    @action signout() {
-        this.token = null;
+            });
     }
 
 }
 
-export default new AuthStore();
+export default AuthStore;

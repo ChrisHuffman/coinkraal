@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 import LogOut from 'react-feather/dist/icons/log-out';
 
-@inject('global', 'authStore', 'coinStore', 'coinsPageState')
+@inject('global', 'tokenStore', 'coinStore', 'coinsPageState')
 class Header extends React.Component {
 
     constructor(props) {
@@ -39,7 +39,7 @@ class Header extends React.Component {
     }
 
     signout() {
-        this.props.authStore.signout();
+        this.props.tokenStore.signout();
     }
 
     toggle() {

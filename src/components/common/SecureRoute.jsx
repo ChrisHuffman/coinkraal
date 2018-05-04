@@ -2,14 +2,14 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
-@inject('authStore')
+@inject('tokenStore')
 @observer
 export default class SecureRoute extends React.Component {
   render() {
 
-    const { authStore, ...restProps } = this.props;
+    const { tokenStore, ...restProps } = this.props;
 
-    if (authStore.token) 
+    if (tokenStore.token) 
         return <Route {...restProps} />;
 
     return <Redirect to="/login" />;

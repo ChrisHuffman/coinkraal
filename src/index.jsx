@@ -6,6 +6,8 @@ import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
 import { defaults } from 'react-chartjs-2';
 
+import Api from 'coinkraal-api-interface';
+
 import App from './components/App';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -18,7 +20,9 @@ import './css/app.css';
 import './css/loader.css';
 
 //Stores
-import authStore from './stores/authStore';
+
+import AuthStore from './stores/authStore';
+import TokenStore from './stores/tokenStore';
 import TransactionStore from './stores/transactionStore';
 import CommonStore from './stores/commonStore';
 import CurrencyStore from './stores/currencyStore';
@@ -27,6 +31,10 @@ import SocialStore from './stores/socialStore';
 import ExchangeStore from './stores/exchangeStore';
 import PriceStore from './stores/priceStore';
 import UserStore from './stores/userStore';
+
+var tokenStore = new TokenStore();
+var agent = new Api('', tokenStore.authorizeRequest, tokenStore.handleHttpErrors);
+var authStore = new AuthStore(agent, tokenStore);
 var transactionStore = new TransactionStore();
 var commonStore = new CommonStore();
 var currencyStore = new CurrencyStore();
@@ -36,11 +44,9 @@ var exchangeStore = new ExchangeStore();
 var priceStore = new PriceStore(transactionStore);
 var userStore = new UserStore();
 
-
 //Global
 import Global from './global';
-var global = new Global(authStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore);
-
+var global = new Global(tokenStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore);
 
 //Services
 import PortfolioChartService from './services/PortfolioChartService';
@@ -65,7 +71,11 @@ var coinsPageState = new CoinsPageState(global, coinStore, transactionStore, coi
 //Start Load of App Data
 global.loadApplicationData();
 
-const stores = {
+const props = {
+
+  agent,
+
+  tokenStore,
   authStore,
   commonStore,
   transactionStore,
@@ -106,7 +116,7 @@ defaults.scale.gridLines.display = false;
 
 
 ReactDOM.render(
-  <Provider {...stores}>
+  <Provider {...props}>
     <HashRouter>
       <App />
     </HashRouter>

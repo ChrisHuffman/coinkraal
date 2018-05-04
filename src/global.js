@@ -2,7 +2,7 @@ import { computed, observable, observe, reaction, action } from 'mobx';
 
 export class Global {
 
-    authStore = null;
+    tokenStore = null;
     currencyStore = null;
     coinStore = null;
     transactionStore = null;
@@ -24,8 +24,8 @@ export class Global {
     coinOptions = [];
     purchaseTypeOptions = [];
 
-    constructor(authStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore) {
-        this.authStore = authStore;
+    constructor(tokenStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore) {
+        this.tokenStore = tokenStore;
         this.currencyStore = currencyStore;
         this.coinStore = coinStore;
         this.transactionStore = transactionStore;
@@ -91,14 +91,14 @@ export class Global {
         this.exchangeStore.load(this.fiatOptions.slice(0), this.coinOptions.slice(0)).then(this.checkLoadComplete);
 
         //Can only load transaction if the user is authenticated
-        reaction(() => this.authStore.token, (token) => {
+        reaction(() => this.tokenStore.token, (token) => {
             if(token) {
                 this.loadUserData();
             }
         });
 
         //If they are currently authenticated then load transactions
-        if(this.authStore.token) {
+        if(this.tokenStore.token) {
             this.loadUserData();
         }
     }

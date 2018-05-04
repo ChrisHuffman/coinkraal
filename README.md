@@ -24,11 +24,34 @@ TODO
 - nodejs warnings
     npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 
 
+Inital Setup
+---
+
+```
+npm install
+```
+
+Development
+---
+
+```
+npm run dev
+```
+
+Testing
+---
+
+```
+npm test
+```
 
 Deployment
 ---
 
+```
+npm run build
 gcloud app deploy -v beta-03 --promote --stop-previous-version
+```
 
 Links:
 

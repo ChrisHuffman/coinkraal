@@ -15,7 +15,7 @@ console.log("========================================");
 
 module.exports = {
 
-  entry: "./client/index.jsx",
+  entry: "./src/index.jsx",
 
   output: {
     filename: "bundle.js",

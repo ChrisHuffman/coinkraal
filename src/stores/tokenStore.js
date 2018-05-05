@@ -1,5 +1,4 @@
 import { observable, action, reaction } from 'mobx';
-import agent from '../agent';
 
 class TokenStore {
 
@@ -17,6 +16,9 @@ class TokenStore {
                 }
             }
         );
+
+        this.authorizeRequest = this.authorizeRequest.bind(this);
+        this.handleHttpErrors = this.handleHttpErrors.bind(this);
     }
 
     @action signout() {
@@ -29,7 +31,7 @@ class TokenStore {
 
     authorizeRequest(req) {
         if (this.token) {
-            req.set('Authorization', `Bearer ${tokenStore.token}`);
+            req.set('Authorization', `Bearer ${this.token}`);
         }
     }
 

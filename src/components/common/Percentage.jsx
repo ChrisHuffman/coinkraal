@@ -1,6 +1,7 @@
 import React from 'react';
-import CommonService from '../../services/CommonService'
+import { inject } from 'mobx-react';
 
+@inject('utilityService')
 class Percentage extends React.Component {
 
     constructor(props) {
@@ -17,7 +18,7 @@ class Percentage extends React.Component {
 
         let value = '?';
 
-        if(!CommonService.isNaN(props.value)) {
+        if(!this.props.utilityService.isNaN(props.value)) {
             
             let minimumFractionDigits = 2;
             let maximumFractionDigits = 2;

@@ -1,5 +1,4 @@
 import { observable, action, computed } from 'mobx';
-import { CommonService } from '../../services/CommonService';
 
 export class TransactionsPageState {
 

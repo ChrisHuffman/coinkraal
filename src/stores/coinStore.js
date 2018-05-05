@@ -1,7 +1,5 @@
 import { observable, action, computed } from 'mobx';
 import moment from 'moment';
-import agent from '../agent';
-import agentExt from '../agent-ext';
 import Coin from '../models/Coin';
 
 export class CoinStore {
@@ -9,19 +7,20 @@ export class CoinStore {
   @observable isLoading = false;
   coins = [];
 
-  constructor() {
+  constructor(agent) {
+    this.agent = agent;
   }
 
   @action loadCoins() {
 
-    let self = this;
-    self.isLoading = true;
+    this.isLoading = true;
 
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
 
-      return agentExt.External2.getCoinTopList(0, 2000)
+      return this.agent.CoinMarketCap.getCoinTopList(0, 2000)
         .then(action((coins) => {
-          self.coins = coins.map(c => {
+
+          this.coins = coins.map(c => {
 
             let coin = new Coin(c.symbol, c.name);
             coin.rank = parseInt(c.rank);
@@ -38,7 +37,9 @@ export class CoinStore {
 
             return coin;
           });
-          self.isLoading = false;
+
+          this.isLoading = false;
+
           resolve();
         }));
     });
@@ -47,14 +48,12 @@ export class CoinStore {
   
 
   getHistoricalPrice(fromCurrency, toCurrency, timestamp) {
-    return agentExt.External1.getHistoricalPrice(fromCurrency, toCurrency, timestamp);
+    return this.agent.CryptoCompare.getHistoricalPrice(fromCurrency, toCurrency, timestamp);
   }
 
   getUnitPrice(fromCurrency, toCurrency, date) {
 
-    let self = this;
-
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
 
       if (!fromCurrency || !toCurrency || !date) {
         resolve('');
@@ -67,7 +66,7 @@ export class CoinStore {
       let isToday = now.diff(dateParsed, 'days') == 0;
       let unix = isToday ? now.unix() : dateParsed.unix();
 
-      self.getHistoricalPrice(fromCurrency, toCurrency, unix)
+      this.getHistoricalPrice(fromCurrency, toCurrency, unix)
         .then(price => {
           resolve(price);
         });
@@ -75,16 +74,15 @@ export class CoinStore {
   }
 
   getCoin(symbol) {
-    return this.coins.find(function (c) {
+    return this.coins.find((c) => {
       return c.symbol == symbol;
     });
   }
 
   getCoinLinks(symbol) {
 
-    return new Promise(function (resolve, reject) {
-
-      return agent.Coins.getCoinLinks(symbol)
+    return new Promise((resolve, reject) => {
+      return this.agent.Coin.getCoinLinks(symbol)
         .then((links) => {
           resolve(links);
         });
@@ -92,15 +90,15 @@ export class CoinStore {
   }
 
   get24HrPriceChange(fromCurrency, toCurrency) {
-    return agentExt.External1.get24HrPriceChange(fromCurrency, toCurrency);
+    return this.agent.CryptoCompare.get24HrPriceChange(fromCurrency, toCurrency);
   }
 
   getCoinExchanges(fromCurrency, toCurrency, limit) {
-    return agentExt.External1.getCoinExchanges(fromCurrency, toCurrency, limit);
+    return this.agent.CryptoCompare.getCoinExchanges(fromCurrency, toCurrency, limit);
   }
 
   getGlobalData() {
-    return agent.Coins.getGlobalData();
+    return this.agent.Coin.getGlobalData();
   }
 
 }

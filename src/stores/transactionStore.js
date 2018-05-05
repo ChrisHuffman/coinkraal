@@ -1,5 +1,4 @@
 import { observable, action, computed } from 'mobx';
-import agent from '../agent';
 import { BigNumber } from 'bignumber.js';
 
 export class TransactionStore {
@@ -7,12 +6,13 @@ export class TransactionStore {
   @observable transactions = [];
   @observable isLoading = true;
 
-  constructor() {
+  constructor(agent) {
+    this.agent = agent;
   }
 
   @action loadTransactions() {
     this.isLoading = true;
-    return agent.Transactions.getTransactions()
+    return this.agent.Transaction.getTransactions()
       .then(action((transactions) => {
         this.transactions = transactions;
         //console.log('TransactionStore: transactions loaded')
@@ -21,14 +21,14 @@ export class TransactionStore {
   }
 
   addTransaction(transaction) {
-    return agent.Transactions.add(transaction)
+    return this.agent.Transaction.add(transaction)
       .then(action(() => {
         this.loadTransactions();
       }));
   }
 
   updateTransaction(transaction) {
-    return agent.Transactions.update(transaction)
+    return this.agent.Transaction.update(transaction)
       .then(action(() => {
         //TODO: rather just update the transaction in the list
         this.loadTransactions();
@@ -36,7 +36,7 @@ export class TransactionStore {
   }
 
   removeTransaction(id) {
-    return agent.Transactions.remove(id)
+    return athis.agent.Transaction.remove(id)
       .then(action(() => {
         //TODO: rather just remove the transaction from the list
         this.loadTransactions();
@@ -44,21 +44,21 @@ export class TransactionStore {
   }
 
   addSale(transactionId, sale) {
-    return agent.Sales.add(transactionId, sale)
+    return this.agent.Sale.add(transactionId, sale)
       .then(action(() => {
         this.loadTransactions();
       }));
   }
 
   updateSale(transactionId, sale) {
-    return agent.Sales.update(transactionId, sale)
+    return this.agent.Sale.update(transactionId, sale)
       .then(action(() => {
         this.loadTransactions();
       }));
   }
 
   removeSale(transactionId, saleId) {
-    return agent.Sales.remove(transactionId, saleId)
+    return this.agent.Sale.remove(transactionId, saleId)
       .then(action(() => {
         //TODO: rather just remove the sale from the list
         this.loadTransactions();

@@ -1,5 +1,4 @@
 import { observable, action, reaction } from 'mobx';
-import agent from '../agent';
 import { notify } from 'react-notify-toast';
 import moment from 'moment';
 import { BigNumber } from 'bignumber.js';

@@ -1,5 +1,4 @@
 import { observable, action, computed, reaction } from 'mobx';
-import agentExt from '../agent-ext';
 
 export class PriceStore {
 
@@ -7,8 +6,9 @@ export class PriceStore {
     tempPriceIndex = {};
     loadCount = 2;
 
-    constructor(transactionStore) {
+    constructor(agent, transactionStore) {
 
+        this.agent = agent;
         this.checkComplete = this.checkComplete.bind(this);
 
         reaction(() => transactionStore.transactions, () => {
@@ -35,23 +35,21 @@ export class PriceStore {
 
     @action loadIndex(fromSymbol, coins, resolve) {
 
-        let self = this;
-
         let chunckSize = 5; //Max = 30 (5 * 4 + 5 = 25)
         let chunck = coins.splice(0, chunckSize);
 
-        if (!self.tempPriceIndex[fromSymbol])
-            self.tempPriceIndex[fromSymbol] = {};
+        if (!this.tempPriceIndex[fromSymbol])
+        this.tempPriceIndex[fromSymbol] = {};
 
-        agentExt.External1.getPrice(fromSymbol, chunck)
+        this.agent.CryptoCompare.getPrice(fromSymbol, chunck)
             .then(action((rates) => {
 
-                self.tempPriceIndex[fromSymbol] = Object.assign(self.tempPriceIndex[fromSymbol], rates);
+                this.tempPriceIndex[fromSymbol] = Object.assign(this.tempPriceIndex[fromSymbol], rates);
 
                 if (coins.length == 0)
                     resolve();
                 else
-                    self.loadIndex(fromSymbol, coins, resolve)
+                    this.loadIndex(fromSymbol, coins, resolve)
             }));
     }
 

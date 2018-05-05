@@ -3,7 +3,6 @@ import { inject, observer } from 'mobx-react';
 import VirtualizedSelect from 'react-virtualized-select';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import CoinLogo from '../../common/CoinLogo';
-import CommonService from '../../../services/CommonService';
 import moment from 'moment';
 import {
     Button, Form, FormGroup, Label, Input, InputGroup, InputGroupText,

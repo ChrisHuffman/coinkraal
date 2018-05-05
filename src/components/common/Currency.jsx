@@ -1,13 +1,13 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import CommonService from '../../services/CommonService'
 
+@inject('utilityService')
 class Currency extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            amount: CommonService.formatCurrency(props.amount)
+            amount: this.props.utilityService.formatCurrency(props.amount)
         }
     }
 
@@ -17,7 +17,7 @@ class Currency extends React.Component {
             return;
 
         this.setState({
-            amount: CommonService.formatCurrency(nextProps.amount)
+            amount: this.props.utilityService.formatCurrency(nextProps.amount)
         });
     }
 

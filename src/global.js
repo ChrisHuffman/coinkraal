@@ -2,13 +2,6 @@ import { computed, observable, observe, reaction, action } from 'mobx';
 
 export class Global {
 
-    tokenStore = null;
-    currencyStore = null;
-    coinStore = null;
-    transactionStore = null;
-    exchangeStore = null;
-    userStore = null;
-
     @observable isLoaded = false;
     loadCount = 3;
 
@@ -24,9 +17,8 @@ export class Global {
     coinOptions = [];
     purchaseTypeOptions = [];
 
-    constructor(tokenStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore) {
+    constructor(tokenStore, coinStore, transactionStore, exchangeStore, userStore) {
         this.tokenStore = tokenStore;
-        this.currencyStore = currencyStore;
         this.coinStore = coinStore;
         this.transactionStore = transactionStore;
         this.exchangeStore = exchangeStore;

@@ -2,15 +2,8 @@ import { observable, action, reaction, computed } from 'mobx';
 
 export class PortfolioPageState {
 
-    global = null;
-    transactionStore = null;
-    priceStore = null;
-    portfolioChartService = null;
-    transactionSummaryService = null;
-    coinRiskChartService = null;
-
-    @observable portfolioChartData = { };
-    @observable portfolioRawData = { };
+    @observable portfolioChartData = {};
+    @observable portfolioRawData = {};
     portfolioChartSelectedTimeRange = 90;
     @observable isLoadingPorfolioChartData = true;
 
@@ -18,9 +11,9 @@ export class PortfolioPageState {
     @observable pageIndex = 0;
     pageSize = 7;
 
-    @observable coinRiskChartData = { };
-    
-    constructor(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService, coinRiskChartService) {
+    @observable coinRiskChartData = {};
+
+    constructor(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService, coinRiskChartService, chartJsService, utilityService) {
 
         this.global = global;
         this.transactionStore = transactionStore;
@@ -28,7 +21,9 @@ export class PortfolioPageState {
         this.portfolioChartService = portfolioChartService;
         this.transactionSummaryService = transactionSummaryService;
         this.coinRiskChartService = coinRiskChartService;
-        
+        this.chartJsService = chartJsService;
+        this.utilityService = utilityService;
+
         reaction(() => this.transactionStore.transactions, () => {
             this.loadTransactionSummaries();
             this.loadPortfolioChartData();
@@ -55,19 +50,75 @@ export class PortfolioPageState {
 
         this.isLoadingPorfolioChartData = true;
 
-        this.portfolioChartService.getData(this.transactionStore.transactions.slice(), this.global.selectedFiat, this.global.selectedCoin, this.portfolioChartSelectedTimeRange)
+        let currency1 = this.global.selectedFiat;
+        let currency2 = this.global.selectedCoin;
+
+        this.portfolioChartService.getData(this.transactionStore.transactions.slice(), currency1, currency2, this.portfolioChartSelectedTimeRange)
             .then(action(data => {
-                this.portfolioChartData = data.chartjs;
-                this.portfolioRawData = data.rawData;
+
+                let dataPoints = data.dataPoints;
+
+                if (dataPoints.length == 0) {
+                    this.isLoadingPorfolioChartData = false;
+                    return;
+                }
+
+                let datasets = [];
+                let dataPoints1 = dataPoints[0];
+                let dataPoints2 = dataPoints[1];
+
+                if (dataPoints1) {
+                    let values = dataPoints1.map(dp => dp.getTotal());
+                    datasets.push(this.chartJsService.getLineChartJsDataset(values, currency1, this.utilityService.getCurrencyColour(currency1), "y-axis-1"));
+                }
+
+                if (dataPoints2) {
+                    let values = dataPoints2.map(dp => dp.getTotal());
+                    datasets.push(this.chartJsService.getLineChartJsDataset(values, currency2, this.utilityService.getCurrencyColour(currency2), "y-axis-2"));
+                }
+
+                this.portfolioChartData = {
+                    data: {
+                        labels: this.getChartJsLabels(dataPoints1, dataPoints2),
+                        datasets: datasets
+                    },
+                    options: this.chartJsService.getLineChartJsOptions(dataPoints1, dataPoints2, currency1, currency2, data.dataFrequency),
+                    plugins: [this.chartJsService.getVerticalLinePlugin()]
+                };
+
+                this.portfolioRawData = {
+                    fiat: dataPoints1,
+                    coin: dataPoints2
+                }
+
                 this.isLoadingPorfolioChartData = false;
             }));
+    }
+
+    getChartJsLabels(dataPoints1, dataPoints2) {
+        let arr = dataPoints1 ? dataPoints1 : dataPoints2;
+
+        if (!arr)
+            return [];
+
+        return arr.map(dp => dp.date);
     }
 
     @action loadCoinRishChartData() {
 
         this.coinRiskChartService.getData(this.transactionSummaries)
-            .then(action(data => {
-                this.coinRiskChartData = data;
+            .then(action(dataPoints => {
+
+                let dataset = this.chartJsService.getPieChartJsDataset(dataPoints.map(d => d.value));
+
+                this.coinRiskChartData = {
+                    data: {
+                        labels: dataPoints.map(d => d.label),
+                        datasets: [dataset]
+                    },
+                    options: this.chartJsService.getPieChartJsOptions()
+                }
+
             }));
     }
 
@@ -79,10 +130,10 @@ export class PortfolioPageState {
     @action loadTransactionSummaries() {
 
         this.pageIndex = 0;
-        this.transactionSummaryService.getTransactionSummaries(this.transactionStore.transactions, 
-                        this.global.fiatOptions, 
-                        this.global.coinOptions,
-                        this.priceStore.priceIndex)
+        this.transactionSummaryService.getTransactionSummaries(this.transactionStore.transactions,
+            this.global.fiatOptions,
+            this.global.coinOptions,
+            this.priceStore.priceIndex)
             .then(action(summaries => {
                 this.transactionSummaries = summaries;
             }));

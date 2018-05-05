@@ -2,9 +2,6 @@ import { observable, action, computed } from 'mobx';
 
 export class CoinsPageState {
 
-    coinStore = null;
-    transactionStore = null;
-
     @observable selectedCoinSymbol = null;
     @observable coinSummaryModal = false;
 
@@ -22,11 +19,13 @@ export class CoinsPageState {
     @observable showMyCoinsFirst = false;
     myCurrencies = [];
 
-    constructor(global, coinStore, transactionStore, coinChartService) {
+    constructor(global, coinStore, transactionStore, coinChartService, chartJsService, utilityService) {
         this.global = global;
         this.coinStore = coinStore;
         this.transactionStore = transactionStore;
         this.coinChartService = coinChartService;
+        this.chartJsService = chartJsService;
+        this.utilityService = utilityService;
     }
 
     @computed get coins() {
@@ -103,11 +102,49 @@ export class CoinsPageState {
 
         this.isLoadingCoinChartData = true;
 
-        this.coinChartService.getData(this.selectedCoinSymbol, this.global.selectedFiat, this.global.selectedCoin, this.coinChartSelectedTimeRange)
+        let currency1 = this.global.selectedFiat;
+        let currency2 = this.global.selectedCoin;
+
+        this.coinChartService.getData(this.selectedCoinSymbol, currency1, currency2, this.coinChartSelectedTimeRange)
             .then(action(data => {
-                this.coinChartData = data;
+
+                let dataPoints = data.dataPoints;
+
+                let datasets = [];
+                let dataPoints1 = dataPoints[0];
+                let dataPoints2 = dataPoints[1];
+
+                if(dataPoints1.length > 0) {
+                    let values = dataPoints1.map(dp => dp.value);
+                    datasets.push(this.chartJsService.getLineChartJsDataset(values, currency1, this.utilityService.getCurrencyColour(currency1), "y-axis-1"));
+                }
+        
+                if(dataPoints2.length > 0) {
+                    let values = dataPoints2.map(dp => dp.value);
+                    datasets.push(this.chartJsService.getLineChartJsDataset(values, currency2, this.utilityService.getCurrencyColour(currency2), "y-axis-2") );
+                }
+        
+                this.coinChartData = {
+                    data: {
+                        labels: this.getChartJsLabels(dataPoints1, dataPoints2),
+                        datasets: datasets
+                    },
+                    options: this.chartJsService.getLineChartJsOptions(dataPoints1, dataPoints2, currency1, currency2, data.dataFrequency),
+                    plugins: [ this.chartJsService.getVerticalLinePlugin() ]
+                };
+
+
                 this.isLoadingCoinChartData = false;
             }));
+    }
+
+    getChartJsLabels(dataPoints1, dataPoints2) {
+        let arr = dataPoints1 ? dataPoints1 : dataPoints2;
+
+        if (!arr)
+            return [];
+
+        return arr.map(dp => dp.date);
     }
 
     coinChartSetFilters(filters) {
@@ -116,24 +153,16 @@ export class CoinsPageState {
     }
 
     compareValues(key, direction) {
-        var self = this;
-        return function (a, b) {
+        
+        return (a, b) => {
 
             if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key))
                 return 0;
 
-            // if (self.showMyCoinsFirst) {
-            //     if (uniqueCurrencies.indexOf(a.symbol) != -1 && uniqueCurrencies.indexOf(b.symbol) == -1)
-            //         return -1;
+            let varA = (typeof a[key] === 'string') ? a[key].toUpperCase() : a[key];
+            let varB = (typeof b[key] === 'string') ? b[key].toUpperCase() : b[key];
 
-            //     if (uniqueCurrencies.indexOf(b.symbol) != -1 && uniqueCurrencies.indexOf(a.symbol) == -1)
-            //         return 1;
-            // }
-
-            var varA = (typeof a[key] === 'string') ? a[key].toUpperCase() : a[key];
-            var varB = (typeof b[key] === 'string') ? b[key].toUpperCase() : b[key];
-
-            var comparison = 0;
+            let comparison = 0;
 
             if (varA > varB)
                 comparison = 1;

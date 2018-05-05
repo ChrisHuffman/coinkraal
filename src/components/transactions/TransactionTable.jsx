@@ -18,7 +18,6 @@ import Number from '../common/Number'
 import CurrentPrice from '../common/CurrentPrice'
 import MinusSquare from 'react-feather/dist/icons/minus-square';
 import PlusSquare from 'react-feather/dist/icons/plus-square';
-import CommonService from '../../services/CommonService'
 import Layout from '../Layout'
 import Menu from 'react-feather/dist/icons/menu';
 

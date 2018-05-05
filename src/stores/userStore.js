@@ -1,17 +1,17 @@
 import { observable, action, computed } from 'mobx';
-import agent from '../agent';
 
 export class UserStore {
   
-  constructor() {
+  constructor(agent) {
+    this.agent = agent;
   }
 
   getUser() {
-    return agent.User.getUser();
+    return this.agent.User.getUser();
   }
 
   updateSettings(settings) {
-    return agent.User.updateSettings(settings)
+    return this.agent.User.updateSettings(settings)
   }
 
 }

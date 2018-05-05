@@ -1,7 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Number from '../common/Number';
-import CommonService from '../../services/CommonService'
 
 @inject('commonStore', 'exchangeStore', 'transactionStore')
 @observer

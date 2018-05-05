@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 
 
-@inject('global', 'transactionsPageState', 'transactionStore', 'currencyStore', 'coinStore', 'commonStore')
+@inject('global', 'transactionsPageState', 'transactionStore', 'coinStore', 'commonStore')
 @observer
 class AddTransaction extends React.Component {
 

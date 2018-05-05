@@ -5,10 +5,8 @@ import { HashRouter } from 'react-router-dom'
 import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
 import { defaults } from 'react-chartjs-2';
-
 import Api from 'coinkraal-api-interface';
-
-import App from './components/App';
+import serviceFactory from 'coinkraal-service';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-select/dist/react-select.css'
@@ -19,87 +17,57 @@ import './css/bootstrap-theme.css';
 import './css/app.css';
 import './css/loader.css';
 
-//Stores
+import App from './components/App';
+import Global from './global';
 
 import AuthStore from './stores/authStore';
 import TokenStore from './stores/tokenStore';
 import TransactionStore from './stores/transactionStore';
 import CommonStore from './stores/commonStore';
-import CurrencyStore from './stores/currencyStore';
 import CoinStore from './stores/coinStore';
 import SocialStore from './stores/socialStore';
 import ExchangeStore from './stores/exchangeStore';
 import PriceStore from './stores/priceStore';
 import UserStore from './stores/userStore';
 
-var tokenStore = new TokenStore();
-var agent = new Api('', tokenStore.authorizeRequest, tokenStore.handleHttpErrors);
-var authStore = new AuthStore(agent, tokenStore);
-var transactionStore = new TransactionStore();
-var commonStore = new CommonStore();
-var currencyStore = new CurrencyStore();
-var coinStore = new CoinStore();
-var socialStore = new SocialStore();
-var exchangeStore = new ExchangeStore();
-var priceStore = new PriceStore(transactionStore);
-var userStore = new UserStore();
-
-//Global
-import Global from './global';
-var global = new Global(tokenStore, currencyStore, coinStore, transactionStore, exchangeStore, userStore);
-
-//Services
-import PortfolioChartService from './services/PortfolioChartService';
-import CoinChartService from './services/CoinChartService';
-import TransactionSummaryService from './services/TransactionSummaryService';
-import CoinRiskChartService from './services/CoinRiskChartService';
-var portfolioChartService = new PortfolioChartService();
-var coinChartService = new CoinChartService();
-var transactionSummaryService = new TransactionSummaryService();
-var coinRiskChartService = new CoinRiskChartService();
-
-
-//PageState
 import PortfolioPageState from './components/portfolio/PortfolioPageState';
 import TransactionsPageState from './components/transactions/TransactionsPageState'
 import CoinsPageState from './components/coins/CoinsPageState'
-var portfolioPageState = new PortfolioPageState(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService, coinRiskChartService);
-var transactionsPageState = new TransactionsPageState(transactionStore);
-var coinsPageState = new CoinsPageState(global, coinStore, transactionStore, coinChartService);
-
-
-//Start Load of App Data
-global.loadApplicationData();
-
-const props = {
-
-  agent,
-
-  tokenStore,
-  authStore,
-  commonStore,
-  transactionStore,
-  currencyStore,
-  coinStore,
-  socialStore,
-  exchangeStore,
-  priceStore,
-  userStore,
-
-  portfolioPageState,
-  transactionsPageState,
-  coinsPageState,
-
-  global
-};
 
 promiseFinally.shim();
 useStrict(true);
 
-//Chartjs Defaults
+//Stores
+let tokenStore = new TokenStore();
+let agent = new Api('', tokenStore.authorizeRequest, tokenStore.handleHttpErrors);
+let authStore = new AuthStore(agent, tokenStore);
+let transactionStore = new TransactionStore(agent);
+let commonStore = new CommonStore();
+let coinStore = new CoinStore(agent);
+let socialStore = new SocialStore(agent);
+let exchangeStore = new ExchangeStore(agent);
+let priceStore = new PriceStore(agent, transactionStore);
+let userStore = new UserStore(agent);
+
+//Global
+let global = new Global(tokenStore, coinStore, transactionStore, exchangeStore, userStore);
+
+//Services
+let utilityService = serviceFactory.utilityService();
+let chartJsService = serviceFactory.chartJsService();
+let portfolioChartService = serviceFactory.portfolioChartService();
+let coinChartService = serviceFactory.coinChartService();
+let transactionSummaryService = serviceFactory.transactionSummaryService();
+let coinRiskChartService = serviceFactory.coinRiskChartService();
+
+//PageState
+let portfolioPageState = new PortfolioPageState(global, transactionStore, priceStore, portfolioChartService, transactionSummaryService, coinRiskChartService, chartJsService, utilityService);
+let transactionsPageState = new TransactionsPageState(transactionStore);
+let coinsPageState = new CoinsPageState(global, coinStore, transactionStore, coinChartService, chartJsService, utilityService);
+
+//Chartjs Defaults - maybe move this somewhere else
 defaults.global.defaultFontFamily = 'Roboto Mono';
 defaults.global.defaultFontColor = '#f4f4f4';
-
 defaults.global.tooltips.cornerRadius = 2;
 defaults.global.tooltips.backgroundColor = 'rgba(233, 236, 239, 0.8)';
 defaults.global.tooltips.titleFontColor = 'rgba(0, 0, 0, 1)';
@@ -110,10 +78,30 @@ defaults.global.tooltips.borderWidth = 1;
 defaults.global.tooltips.bodySpacing = 6;
 defaults.global.tooltips.xPadding = 10;
 defaults.global.tooltips.yPadding = 10;
-
 defaults.scale.gridLines.display = false;
 
+//Start Load of App Data
+global.loadApplicationData();
 
+const props = {
+  global,
+  agent,
+  utilityService,
+
+  tokenStore,
+  authStore,
+  commonStore,
+  transactionStore,
+  coinStore,
+  socialStore,
+  exchangeStore,
+  priceStore,
+  userStore,
+
+  portfolioPageState,
+  transactionsPageState,
+  coinsPageState,
+};
 
 ReactDOM.render(
   <Provider {...props}>

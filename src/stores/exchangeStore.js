@@ -1,31 +1,29 @@
 import { observable, action, computed } from 'mobx';
-import agentExt from '../agent-ext';
 
 export class ExchangeStore {
 
   @observable exchangeRates = {};
   loadCount = 1;
 
-  constructor() {
+  constructor(agent) {
+    this.agent = agent;
   }
 
   load(fiats, coins) {
 
-    var self = this;
-
     //Clear
-    self.loadCount = 1;
-    self.exchangeRates = {};
+    this.loadCount = 1;
+    this.exchangeRates = {};
 
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
 
       fiats = fiats.map(f => f.symbol);
       coins = coins.map(f => f.symbol);
 
-      var currencies = fiats.concat(coins);
-      var allCurrencies = currencies.slice(0);
+      let currencies = fiats.concat(coins);
+      let allCurrencies = currencies.slice(0);
 
-      self.loadExchange(currencies, allCurrencies, () => { self.checkComplete(resolve) });
+      this.loadExchange(currencies, allCurrencies, () => { this.checkComplete(resolve) });
     });
   }
 
@@ -36,46 +34,41 @@ export class ExchangeStore {
       return;
     }
 
-    var self = this;
-    var currency = currencies.pop();
+    let currency = currencies.pop();
 
-    self.beginLoadIndividualExchange(currency, allCurrencies.slice(0))
-      .then(function () {
-        self.loadExchange(currencies, allCurrencies.slice(0), resolve);
+    this.beginLoadIndividualExchange(currency, allCurrencies.slice(0))
+      .then(() => {
+        this.loadExchange(currencies, allCurrencies.slice(0), resolve);
       });
   }
 
   beginLoadIndividualExchange(currency, allCurrencies) {
 
-    var self = this;
-
     //Remove itself from all currencies
     allCurrencies.splice(allCurrencies.indexOf(currency), 1);
 
-    return new Promise(function (resolve, reject) {
-      self.loadIndividualExchange(currency, allCurrencies, resolve);
+    return new Promise((resolve, reject) => {
+      this.loadIndividualExchange(currency, allCurrencies, resolve);
     });
   }
 
   @action loadIndividualExchange(currency, allCurrencies, resolve) {
 
-    var self = this;
+    let chunckSize = 7; //Max = 30 (7 * 3 + 7 = 28)
+    let chunck = allCurrencies.splice(0, chunckSize);
 
-    var chunckSize = 7; //Max = 30 (7 * 3 + 7 = 28)
-    var chunck = allCurrencies.splice(0, chunckSize);
+    if (!this.exchangeRates[currency])
+      this.exchangeRates[currency] = { };
 
-    if (!self.exchangeRates[currency])
-      self.exchangeRates[currency] = { };
-
-    agentExt.External1.getPrice(currency, chunck.map(c => c))
+    this.agent.CryptoCompare.getPrice(currency, chunck.map(c => c))
       .then(action((rates) => {
 
-        self.exchangeRates[currency] = Object.assign(self.exchangeRates[currency], rates);
+        this.exchangeRates[currency] = Object.assign(this.exchangeRates[currency], rates);
 
         if (allCurrencies.length == 0)
           resolve();
         else
-           self.loadIndividualExchange(currency, allCurrencies, resolve)
+          this.loadIndividualExchange(currency, allCurrencies, resolve)
       }));
   }
 
@@ -93,12 +86,12 @@ export class ExchangeStore {
     if (from == to)
       return amount;
 
-    var source = this.exchangeRates[from];
+    let source = this.exchangeRates[from];
 
     if (!source)
       return 'loading';
 
-    var rate = source[to];
+    let rate = source[to];
 
     if (!rate)
       return 'loading';

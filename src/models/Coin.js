@@ -15,7 +15,6 @@ export class Coin {
     rank = 0;
 
     priceUsd = 0;
-    priceBtc = 0;
     volumeUsd24h = 0;
     marketCapUsd = 0;
 

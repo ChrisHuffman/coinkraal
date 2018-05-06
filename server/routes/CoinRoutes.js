@@ -65,13 +65,22 @@ router.get('/api/coins/:symbol/logo', function (req, res) {
 
 router.get('/api/coins/globaldata', function (req, res) {
 
-    superagent.get('https://api.coinmarketcap.com/v1/global')
+    superagent.get('https://api.coinmarketcap.com/v2/global')
         .end((err, resp) => {
             if (err) {
                 res.status(500).send('');
                 return;
             }
-            res.json(JSON.parse(resp.text));
+
+            var json = JSON.parse(resp.text);
+
+            var data = {
+                "total_market_cap_usd": json.data.quotes.USD.total_market_cap,
+                "total_24h_volume_usd": json.data.quotes.USD.total_volume_24h,
+                "bitcoin_percentage_of_market_cap": json.data.bitcoin_percentage_of_market_cap
+            }  
+
+            res.json(data);
         });
 });
 

@@ -3,15 +3,14 @@
 
 [![Build Status](https://travis-ci.org/DeanVanNiekerk/coinkraal.svg?branch=master)](https://travis-ci.org/DeanVanNiekerk/coinkraal)
 
-### Setup
----
+https://coinkraal.io
 
+### Setup
 ```shell
 npm install
 ```
 
 ### Development
-
 ```shell
 npm run dev
 ```

@@ -1,0 +1,11 @@
+
+{
+    "db": {
+        "connection": "mongodb://xxxx"
+    },
+    "auth": {
+        "googleClientId": "xxxxxx.apps.googleusercontent.com",
+        "facebookClientId": "xxxxxxxxxx",
+        "jwtPrivateKey": "xxxxxxxxx"
+    }
+}

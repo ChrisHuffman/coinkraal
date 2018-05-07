@@ -5,7 +5,7 @@ import { HashRouter } from 'react-router-dom'
 import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
 import { defaults } from 'react-chartjs-2';
-import Api from 'coinkraal-api-interface';
+import Agent from 'coinkraal-agent';
 import serviceFactory from 'coinkraal-service';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -39,7 +39,7 @@ useStrict(true);
 
 //Stores
 let tokenStore = new TokenStore();
-let agent = new Api('', tokenStore.authorizeRequest, tokenStore.handleHttpErrors);
+let agent = new Agent('', tokenStore.authorizeRequest, tokenStore.handleHttpErrors);
 let authStore = new AuthStore(agent, tokenStore);
 let transactionStore = new TransactionStore(agent);
 let commonStore = new CommonStore();

@@ -1,52 +1,50 @@
 # CoinKraal
-#### keep those cryptos in check
+> keep those cryptos in check
 
 
-Setup
+### Setup
 ---
 
-```
+```shell
 npm install
 ```
 
-Development
----
+### Development
 
-```
+```shell
 npm run dev
 ```
 
-Testing
----
-
-```
+### Testing
+```shell
 npm test
 ```
 
-Deployment
----
-
-```
+### Deployment
+```shell
 npm run build
 gcloud app deploy -v beta-03 --promote --stop-previous-version
 ```
 
-Links:
+#### Links:
 
 https://console.cloud.google.com/cloudshell/editor?project=coinkraal
 https://cloud.google.com/sdk/gcloud/reference/app/deploy
 https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
 
 
-Config Setup
----
+### Config Setup
 
 Add config folder with 2 files
 
-    default.json
-    dev.json
-    
+```
+project
+└───config
+        default.json
+        dev.json
+```
 
+#### Sample config
 ```json
 {
     "db": {
@@ -60,8 +58,10 @@ Add config folder with 2 files
 }
 ```
 
-TODO
 ---
+
+## TODO
+
 - Handle: getUser: () => requests.get(`/api/user`).catch(err => { authStore.signout() }),
 - Dont pass auth to ext apis
 - Dont show zero coins in coins page
@@ -83,18 +83,14 @@ TODO
 - nodejs warnings
     npm WARN deprecated babel-preset-es2015@6.24.1: ߙ젠Thanks for using Babel: we recommend using babel-preset-env now: please read babeljs.io/env to update! 
 
-Windows Help!
----
 
+### Windows
 To kill node process
-
 C:\Windows\System32>taskkill /F /IM node.exe
 
-
-
-
-Db Design
 ---
+
+## Db Design
 
 ### user
 
@@ -159,9 +155,10 @@ Db Design
 |symbol             |yes        |string             |
 |rate   	        |yes        |float              |
 
-
-Ideas
 ---
+
+## Ideas
+
 - Some king of coin Ranking??
     1. Bitcoin 2009
     2. Moon

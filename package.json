@@ -10,7 +10,7 @@
     "cacheman": "^2.2.1",
     "cacheman-file": "^0.2.1",
     "chart.js": "^2.7.1",
-    "coinkraal-api-interface": "^0.2.9",
+    "coinkraal-agent": "^0.2.9",
     "coinkraal-service": "^0.2.5",
     "config": "^1.29.4",
     "ejs": "^2.5.7",

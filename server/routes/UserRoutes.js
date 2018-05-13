@@ -1,9 +1,8 @@
 //server/routes/routes.js
 var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser');
 var UserRespository = require('../repository/UserRepository');
 
+var router = express.Router();
 var User = require('../models/User')
 var userRespository = new UserRespository();
 

@@ -1,40 +1,37 @@
-var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var config = require('config');
-var jwt = require('express-jwt');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const config = require('config');
+const { graphqlExpress, graphiqlExpress  } = require('apollo-server-express');
+const routes = require('./server/routes/index')
+const auth = require('./server/authentication')
+const graphQLSchema = require('./server/graphql/schema')
 
-var defaultRoutes = require('./server/routes/DefaultRoutes.js')
-var authenticationRoutes = require('./server/routes/AuthenticationRoutes.js')
-var transactionRoutes = require('./server/routes/TransactionRoutes.js')
-var coinRoutes = require('./server/routes/CoinRoutes.js')
-var socialRoutes = require('./server/routes/SocialRoutes.js')
-var userRoutes = require('./server/routes/UserRoutes.js')
+//Mongo setup
+mongoose.connect(config.get('db.connection'));
 
-var app = express();
+const app = express();
 
-
-app.set('view engine', 'ejs'); //Dont think we need this...
-app.set('views', path.join(__dirname, './dist'));
+//Default express setup
 app.use(express.static(path.join(__dirname, './dist')));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
-app.use(jwt({ secret: config.get('auth.jwtPrivateKey')}).unless({path: ['/', '/auth/signin/google', '/auth/signin/facebook', '/api/coins/globaldata', '/favicon.ico', new RegExp('\/api\/coins\/(.*)\/logo')]}));
 
-mongoose.connect(config.get('db.connection'));
+//Auth setup
+app.use(auth);
 
-app.use('/', defaultRoutes);
-app.use('/', authenticationRoutes);
-app.use('/', transactionRoutes);
-app.use('/', coinRoutes);
-app.use('/', socialRoutes);
-app.use('/', userRoutes);
+//GraphQL setup
+app.use('/graphql', bodyParser.json(), graphqlExpress({ endpointURL: '/graphql', schema: graphQLSchema }));
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
-var port = process.env.PORT || 1337
+//Server routes
+app.use('/', routes);
+
+const port = process.env.PORT || 1337
 
 app.listen(port, function() {
- console.log('running at localhost: ' + port);
+ console.log('CoinKraal server running, port: ' + port);
 });
 
 module.exports = app;

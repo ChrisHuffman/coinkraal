@@ -49,7 +49,6 @@ export default class Login extends React.Component {
     }
 
     errorSigningIn = function (response) {
-        console.log(response);
         this.setState({
             signingIn: false,
             errorMessage: 'Error signing in'

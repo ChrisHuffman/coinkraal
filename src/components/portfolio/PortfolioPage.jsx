@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { Link } from 'react-router-dom';
 import Layout from '../Layout'
 import LineChart from '../common/LineChart'
 import DoughnutChart from '../common/DoughnutChart'
@@ -10,7 +11,7 @@ import Loader from '../common/Loader'
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 
-@inject('portfolioPageState', 'transactionStore')
+@inject('portfolioPageState', 'transactionStore', 'tokenStore')
 @observer
 class PortfolioPage extends React.Component {
 
@@ -127,6 +128,14 @@ class PortfolioPage extends React.Component {
                     <div className="row">
                         <div className="col text-center">
                             <p>You have no transactions, head over to the transactions tab to add your first one.</p>
+                        </div>
+                    </div>
+                }
+
+                {!this.props.tokenStore.token &&
+                    <div className="row">
+                        <div className="col text-center">
+                            <p>Please <Link to={`/login`}>signin</Link> to add transactions to your portfolio.</p>
                         </div>
                     </div>
                 }

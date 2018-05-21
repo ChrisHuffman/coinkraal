@@ -96,6 +96,11 @@ table .narrow {
     vertical-align: middle;
 }
 
+.icon-button {
+    padding: 0.42rem !important;
+}
+
+
 .text-08 {
     font-size: 0.8rem;
 }

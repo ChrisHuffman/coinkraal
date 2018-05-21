@@ -2,11 +2,12 @@ import { computed, observable, observe, reaction, action } from 'mobx';
 
 export class Global {
 
-    @observable isLoaded = false;
-    loadCount = 3;
+    @observable loadingCoins = false;
+    @observable loadingExchanges = false;
+    @observable loadingUserData = false;
 
-    @observable selectedFiat = "";
-    @observable selectedCoin = "";
+    @observable selectedFiat = "USD";
+    @observable selectedCoin = "BTC";
     @observable profilePictureUrl = "";
     @observable isFirstLogin = false;
 
@@ -29,8 +30,6 @@ export class Global {
         this.loadPurchaseTypeOptions();
         
         this.loadGlobalData();
-        
-        this.checkLoadComplete = this.checkLoadComplete.bind(this);
     }
 
     loadFiatOptions() {
@@ -52,10 +51,13 @@ export class Global {
         this.purchaseTypeOptions.push({ key: 'total', name: 'Total Value'});
     }
 
+    @action
     loadUserData() {
 
+        this.loadingUserData = true;
+
         this.userStore.getUser()
-            .then(user => {
+            .then(action((user) => {
 
                 this.setProfilePictureUrl(user.picture);
 
@@ -63,10 +65,10 @@ export class Global {
                 this.setSelectedFiat(settings.find(s => s.name == 'defaultFiat').value);
                 this.setSelectedCoin(settings.find(s => s.name == 'defaultCoin').value);
 
-                this.checkLoadComplete();
+                this.loadingUserData = false;
 
                 this.transactionStore.loadTransactions();
-            });
+            }));
     }
 
     loadGlobalData() {
@@ -77,10 +79,18 @@ export class Global {
             }));
     }
 
+    @action
     loadApplicationData() {
 
-        this.coinStore.loadCoins().then(this.checkLoadComplete);
-        this.exchangeStore.load(this.fiatOptions.slice(0), this.coinOptions.slice(0)).then(this.checkLoadComplete);
+        this.loadingCoins = true;
+        this.coinStore.loadCoins().then(action(() => {
+            this.loadingCoins = false;
+        }));
+
+        this.loadingExchanges = true;
+        this.exchangeStore.load(this.fiatOptions.slice(0), this.coinOptions.slice(0)).then(action(() => {
+            this.loadingExchanges = false;
+        }));
 
         //Can only load transaction if the user is authenticated
         reaction(() => this.tokenStore.token, (token) => {
@@ -95,11 +105,8 @@ export class Global {
         }
     }
 
-    @action checkLoadComplete() {
-        this.loadCount--;
-
-        if(this.loadCount == 0)
-            this.isLoaded = true;
+    @computed get isLoading() {
+        return this.loadingCoins || this.loadingExchanges || this.loadingUserData;
     }
 
     @action setSelectedFiat(currency) {

@@ -111,7 +111,7 @@ export default class SettingPage extends React.Component {
 
         return (
             <div>
-                {(this.props.global.isLoaded && !this.state.loading) &&
+                {(!this.props.global.isLoading && !this.state.loading) &&
 
                     <div>
                         <div className="container mt-3">
@@ -240,11 +240,10 @@ export default class SettingPage extends React.Component {
                     </div>
                 }
 
-                {(!this.props.global.isLoaded || this.state.loading) &&
+                {(this.props.global.isLoading || this.state.loading) &&
                     <div className="container-fluid">
                         <div className="row justify-content-center">
                             <div className="col-auto mt-40">
-                                {/* <Loader visible={!this.props.global.isLoaded} /> */}
                                 loading....
                             </div>
                         </div>

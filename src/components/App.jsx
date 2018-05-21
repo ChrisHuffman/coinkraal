@@ -23,10 +23,10 @@ export default class App extends React.Component {
       <div>
         <Switch>
           <Route path="/login" component={Login} />
-          <SecureRoute path="/settings" component={SettingsPage} />
-          <SecureRoute path="/transactions" component={TransactionsPage} />
-          <SecureRoute path="/portfolio" component={PortfolioPage} />
-          <SecureRoute path="/" component={CoinsPage} />
+          <Route path="/settings" component={SettingsPage} />
+          <Route path="/transactions" component={TransactionsPage} />
+          <Route path="/portfolio" component={PortfolioPage} />
+          <Route path="/" component={CoinsPage} />
         </Switch>
       </div>
     );

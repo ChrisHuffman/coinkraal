@@ -11,7 +11,8 @@ const path = [
     '/auth/signin/google', 
     '/auth/signin/facebook', 
     '/api/coins/globaldata', 
-    new RegExp('\/api\/coins\/(.*)\/logo')
+    '/api/social/reddit', 
+    new RegExp('\/api\/coins\/(.*)\/')
 ];
 
 if(process.env.NODE_ENV === "DEV") {

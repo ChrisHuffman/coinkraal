@@ -26,7 +26,7 @@ export default class Layout extends React.Component {
 
         <Notifications options={{ zIndex: 5000, timeout: 15000 }} />
 
-        {this.props.global.isLoaded &&
+        {!this.props.global.isLoading &&
 
           <div>
 
@@ -61,7 +61,7 @@ export default class Layout extends React.Component {
           </div>
         }
 
-        {!this.props.global.isLoaded &&
+        {this.props.global.isLoading &&
           <div className="container-fluid">
             <div className="row justify-content-center">
               <div className="col-auto mt-40">

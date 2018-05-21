@@ -1,15 +1,16 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import ReactDOM from 'react-dom';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import VirtualizedSelect from 'react-virtualized-select';
 import {
     Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
     NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem,
     ButtonDropdown, Button
 } from 'reactstrap';
-import LogOut from 'react-feather/dist/icons/log-out';
+import LogIn from 'react-feather/dist/icons/log-in';
 
+@withRouter
 @inject('global', 'tokenStore', 'coinStore', 'coinsPageState')
 class Header extends React.Component {
 
@@ -27,6 +28,7 @@ class Header extends React.Component {
 
         this.toggle = this.toggle.bind(this);
         this.signout = this.signout.bind(this);
+        this.signin = this.signin.bind(this);
         this.handleCoinChange = this.handleCoinChange.bind(this);
 
         this.toggleFiatDropDown = this.toggleFiatDropDown.bind(this);
@@ -40,6 +42,11 @@ class Header extends React.Component {
 
     signout() {
         this.props.tokenStore.signout();
+        this.props.history.push("/login");
+    }
+
+    signin() {
+        this.props.history.push("/login");
     }
 
     toggle() {
@@ -140,6 +147,7 @@ class Header extends React.Component {
                             />
                         }
 
+                        {this.props.tokenStore.token &&
                         <ButtonDropdown className="profileIcon mt-2 mt-sm-0 " isOpen={this.state.optionsDropDownOpen} toggle={this.toggleOptionsDropDown}>
                             <DropdownToggle>
                                 <img src={this.props.global.profilePictureUrl} height="34px" />
@@ -151,6 +159,13 @@ class Header extends React.Component {
                                 <DropdownItem onClick={this.signout}>Signout</DropdownItem>
                             </DropdownMenu>
                         </ButtonDropdown>
+                        }
+
+                        {!this.props.tokenStore.token &&
+                        <Button onClick={this.signin} className="icon-button">
+                            <LogIn size={18}/>
+                        </Button>
+                        }
 
                     </form>
                 </Collapse>

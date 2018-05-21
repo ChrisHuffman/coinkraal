@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
@@ -127,6 +127,14 @@ export default class Login extends React.Component {
                                 </p>
                             </div>
                         </div>
+
+                        <div className="row justify-content-center">
+                            <div className="col-auto">
+                                <p><Link className="text-muted" to={`/`}>skip</Link></p>
+                            </div>
+                        </div>
+
+                        
 
                     </div>
                 }

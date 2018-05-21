@@ -23,7 +23,9 @@ npm test
 ### Deployment
 ```shell
 npm run build
-gcloud app deploy -v beta-03 --promote --stop-previous-version
+gcloud app deploy -v beta-04 --promote --stop-previous-version
+
+gcloud config set project coinkraal
 ```
 
 #### Links:

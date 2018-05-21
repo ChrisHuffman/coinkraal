@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "set NODE_ENV=PROD&& node app.js",
-    "build": "webpack --config webpack.prod.js",
+    "build": "set NODE_ENV=PROD&& webpack --config webpack.prod.js",
     "build:dev": "webpack --watch --config webpack.dev.js",
     "nodemon": "nodemon --exec babel-node app.js",
     "dev": "set NODE_ENV=DEV&& npm-run-all --parallel build:dev nodemon",

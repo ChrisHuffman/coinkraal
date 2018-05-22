@@ -54,7 +54,7 @@ class PortfolioPage extends React.Component {
 
                 <hr />
 
-                {(!this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length > 0) &&
+                {(this.props.tokenStore.token && !this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length > 0) &&
                     <div className="row">
 
                         <div className="col-lg-6">
@@ -124,7 +124,7 @@ class PortfolioPage extends React.Component {
                     </div>
                 }
 
-                {(!this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length == 0) &&
+                {(this.props.tokenStore.token && !this.props.transactionStore.isLoading && this.props.transactionStore.transactions.length == 0) &&
                     <div className="row">
                         <div className="col text-center">
                             <p>You have no transactions, head over to the transactions tab to add your first one.</p>

@@ -25,7 +25,7 @@ class TransactionSummaryTable extends React.Component {
     render() {
 
         let self = this;
-        let transactionSummaries = this.props.portfolioPageState.transactions;
+        let transactionSummaries = this.props.portfolioPageState.transactionSummaries;
 
         return (
             <div>

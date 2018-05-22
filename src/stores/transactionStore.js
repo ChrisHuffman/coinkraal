@@ -36,7 +36,7 @@ export class TransactionStore {
   }
 
   removeTransaction(id) {
-    return athis.agent.Transaction.remove(id)
+    return this.agent.Transaction.remove(id)
       .then(action(() => {
         //TODO: rather just remove the transaction from the list
         this.loadTransactions();

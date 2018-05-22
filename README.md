@@ -1,8 +1,6 @@
 # CoinKraal
 > keep those cryptos in check
 
-[![Build Status](https://travis-ci.org/DeanVanNiekerk/coinkraal.svg?branch=master)](https://travis-ci.org/DeanVanNiekerk/coinkraal)
-
 https://coinkraal.io
 
 ### Setup

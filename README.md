@@ -64,6 +64,7 @@ project
 
 ## TODO
 
+- User settings, on save not updating correctly (list)
 - Handle: getUser: () => requests.get(`/api/user`).catch(err => { authStore.signout() }),
 - Dont pass auth to ext apis
 - Dont show zero coins in coins page
